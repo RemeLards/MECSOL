@@ -25,6 +25,50 @@ char* remove_spaces(char* string)//Returns a malloced pointer with the minimum s
 int my_strlen(char* str)
 {
     int len;
-    for(len = 0; str[len] != '\0';len++);
+    for(len = 0; str[len] != '\0';len++); // while char isn't '\0' increment the lenght number
     return len;
+}
+
+int my_atoi(char* str) //expects a string contaning only a number, and this number has to be an integer
+{
+    int str_len = my_strlen(str);
+    int multiplier = 1;
+    int number = 0;
+
+    for(int i = 1; i < str_len; i++)multiplier*=10;
+
+    for(int i = 0; i < str_len; i++)
+    {
+        if(str[i] >= '0' && str[i] <= '9')
+        {
+            number += (str[i] - '0') * multiplier; // "converting" to int
+            multiplier/= 10;
+        }
+        else return -1; //if there isn't a number in the string
+
+    }
+
+    return number;
+}
+
+int my_atof(char* str)//expects a string contaning only a number
+{
+    int str_len = my_strlen(str);
+    int multiplier = 1;
+    float number = 0;
+
+    for(int i = 1; (i < str_len || str[i-1] == '.'); i++)multiplier*=10;
+
+    for(int i = 0; i < str_len; i++)
+    {
+        if(str[i] >= '0' && str[i] <= '9')
+        {
+            number += (str[i] - '0') * multiplier; // "converting" to int
+            multiplier/= 10;
+        }
+        else return -1; //if there isn't a number in the string
+
+    }
+
+    return number;    
 }

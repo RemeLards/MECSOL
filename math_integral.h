@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "my_strings.h"
-#include <conio.h>
 
 #ifndef _MATH_INTEGRAL
 #define _MATH_INTEGRAL
