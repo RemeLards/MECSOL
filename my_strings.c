@@ -29,6 +29,16 @@ int my_strlen(char* str)
     return len;
 }
 
+int findchr(char* str, char chr) // Returns "chr" pos in the "str"
+{
+    int pos;
+    for(pos = 0; str[pos] != chr;pos++) // while char isn't "chr" increment the lenght number
+    {
+        if(str[pos] == '\0')return -1; // if "chr" isn`t in str
+    }
+    return pos;   
+}
+
 int my_atoi(char* str) //expects a string contaning only a number, and this number has to be an integer
 {
     int str_len = my_strlen(str);
@@ -51,13 +61,17 @@ int my_atoi(char* str) //expects a string contaning only a number, and this numb
     return number;
 }
 
-int my_atof(char* str)//expects a string contaning only a number
+float my_atof(char* str) //expects a string contaning only a number
 {
     int str_len = my_strlen(str);
     int multiplier = 1;
     float number = 0;
 
-    for(int i = 1; (i < str_len || str[i-1] == '.'); i++)multiplier*=10;
+    for(int i = 1; (i < str_len || str[i-1] == '.'); i++)
+    {
+        multiplier*=10;
+        if(str[i] == '.')multiplier/=10;
+    }
 
     for(int i = 0; i < str_len; i++)
     {

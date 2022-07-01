@@ -124,7 +124,9 @@ int main(int argc, char** argv)
     printf("The Indefinite Integral of %s is %s\n", function , indef_integral_str);
     printf("The Definite Integral of %s from %.2f to %.2f is %.2f\n", function , inf_lim, sup_lim, def_integral_value);
     free(indef_integral_str);
-    printf("%d\n",my_atoi("0"));
+    printf("%d\n",my_atoi("12934621"));
+    printf("%d\n",findchr("13214.",'.'));
+
     
     return 0;
 }
