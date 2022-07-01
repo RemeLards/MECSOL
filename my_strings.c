@@ -66,11 +66,11 @@ float my_atof(char* str) //expects a string contaning only a number
     int str_len = my_strlen(str);
     int multiplier = 1;
     float number = 0;
+    int char_pos = findchr(str,'.');
 
-    for(int i = 1; (i < str_len || str[i-1] == '.'); i++)
+    if(char_pos != -1)
     {
-        multiplier*=10;
-        if(str[i] == '.')multiplier/=10;
+            
     }
 
     for(int i = 0; i < str_len; i++)
