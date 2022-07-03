@@ -109,14 +109,14 @@ int main(int argc, char** argv)
     if(argc == 3)
     {
         function = argv[1];
-        sup_lim = atof(argv[2]);
+        sup_lim = my_atof(argv[2]);
         inf_lim = 0;
     }
     if(argc >= 4)
     {
         function = argv[1];
-        sup_lim = atof(argv[2]);
-        inf_lim = atof(argv[3]);
+        sup_lim = my_atof(argv[2]);
+        inf_lim = my_atof(argv[3]);
     }
     
     char* indef_integral_str = indef_integral(function); //Getting the Indefinite Integral (retuns a malloced string)
@@ -124,9 +124,6 @@ int main(int argc, char** argv)
     printf("The Indefinite Integral of %s is %s\n", function , indef_integral_str);
     printf("The Definite Integral of %s from %.2f to %.2f is %.2f\n", function , inf_lim, sup_lim, def_integral_value);
     free(indef_integral_str);
-    printf("%d\n",my_atoi("12934621"));
-    printf("%d\n",findchr("13214.",'.'));
-
     
     return 0;
 }

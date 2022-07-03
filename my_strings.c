@@ -1,4 +1,6 @@
 #include "my_strings.h"
+#include <stdio.h>
+
 
 char* remove_spaces(char* string)//Returns a malloced pointer with the minimum space needed to "save" the string; 
 {
@@ -29,59 +31,97 @@ int my_strlen(char* str)
     return len;
 }
 
-int findchr(char* str, char chr) // Returns "chr" pos in the "str"
+int str_find_char(char* str, char str_char) // Returns "chr" pos in the "str"
 {
     int pos;
-    for(pos = 0; str[pos] != chr;pos++) // while char isn't "chr" increment the lenght number
+    for(pos = 0; str[pos] != str_char;pos++) // while char isn't "chr" increment the lenght number
     {
         if(str[pos] == '\0')return -1; // if "chr" isn`t in str
     }
     return pos;   
 }
 
-int my_atoi(char* str) //expects a string contaning only a number, and this number has to be an integer
+int my_atoi(char* str) // Converts strings to integers
 {
-    int str_len = my_strlen(str);
-    int multiplier = 1;
-    int number = 0;
+    int multiplier = 1; // decimal base multiplier
+    int number = 0; // number converted
+    int number_start = -1; // first number pos
+    int number_end = 0; // last number pos
+    int negative = 0; // if number is negative (negative = 1) or no (negative = 0) 
+    int i = 0; // iterators
 
-    for(int i = 1; i < str_len; i++)multiplier*=10;
-
-    for(int i = 0; i < str_len; i++)
+    if(str[0] == '-') // if number is negative
     {
-        if(str[i] >= '0' && str[i] <= '9')
+        negative = 1;
+        
+        for(i = 1; (str[i] >= '0' && str[i] <= '9'); i++)
         {
-            number += (str[i] - '0') * multiplier; // "converting" to int
-            multiplier/= 10;
+            if(number_start < 0 && (str[i] >= '0' && str[i] <= '9')) number_start = i;
         }
-        else return -1; //if there isn't a number in the string
+        if (i == 1)return INT_MIN;// second char is a invalid char to transform to int
+    }
+    else
+    {
+        if(str[0] == '+') // if has the + sign
+        {
+            for(i = 1; (str[i] >= '0' && str[i] <= '9'); i++)
+            {
+                if(number_start < 0 && (str[i] >= '0' && str[i] <= '9')) number_start = i;
+            }
+            if (i == 1)return INT_MIN;// second char is a invalid char to transform to int
+        }
+        else
+        {
+            for(i = 0; (str[i] >= '0' && str[i] <= '9'); i++)
+            {
+                if(number_start < 0 && (str[i] >= '0' && str[i] <= '9')) number_start = i;
+            }
+            if (i == 0)return INT_MIN;// second char is a invalid char to transform to int
+        }
 
     }
+
+    number_end = i - 1; // Last number pos
+
+    for(i = number_start; i < number_end; i++)multiplier*=10; // getting first number base 10 exponent to represent it in decimal base
+
+    for(i = number_start; i <= number_end; i++)
+    {
+        number += (str[i] - '0') * multiplier; // "converting" to int
+        multiplier/= 10;
+    }
+
+    if(negative == 1) number *= -1;
 
     return number;
 }
 
-float my_atof(char* str) //expects a string contaning only a number
+double my_atof(char* str) // Converts string to float 
 {
-    int str_len = my_strlen(str);
-    int multiplier = 1;
-    float number = 0;
-    int char_pos = findchr(str,'.');
-
-    if(char_pos != -1)
+    double number = my_atoi(str); // int number
+    double decimal_multiplier = 1; // decimal base multiplier
+    int negative_multiplier = 1; // if it's negative, it equals -1, else equals 1
+    int number_end = 0; // last number pos
+    int i = 0; // iterators
+    
+    if (number != INT_MIN);
     {
-            
-    }
+        int dot_pos = str_find_char(str,'.'); // find dot position
 
-    for(int i = 0; i < str_len; i++)
-    {
-        if(str[i] >= '0' && str[i] <= '9')
+        if(dot_pos != -1)
         {
-            number += (str[i] - '0') * multiplier; // "converting" to int
-            multiplier/= 10;
-        }
-        else return -1; //if there isn't a number in the string
+            for(i = dot_pos+1; (str[i] >= '0' && str[i] <= '9'); i++); // counts string lenght
+            number_end = i - 1; // can be a number or a '.'
+            if(number_end == dot_pos) return number; //if there's nothing after the '.'
 
+            if(number < 0)negative_multiplier = -1;
+
+            for(i = dot_pos+1; i <= number_end; i++)
+            {
+                decimal_multiplier/= 10;
+                number += (str[i] - '0') * decimal_multiplier * negative_multiplier; // adding the pos '.' float numbers
+            } 
+        }
     }
 
     return number;    
