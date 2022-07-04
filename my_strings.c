@@ -1,16 +1,15 @@
 #include "my_strings.h"
-#include <stdio.h>
-
 
 char* remove_spaces(char* string)//Returns a malloced pointer with the minimum space needed to "save" the string; 
 {
-    char character_name[31];
+    char character_name[my_strlen(string)];
     int x = 0, y = 0;
     int strlen;
+    char* str_nspaces;
     while(string[x] == ' ')x++;//Erasing Initial Spaces
     while(string[x] != '\0')
     {
-        if (!(string[x] == ' ' && string[x+1] == ' '))//If next char is a space, the while jumps to the next till find a non-space character
+        if (!(string[x] == ' '))//If next char is a space, the while jumps to the next till find a non-space character
         {
             character_name[y] = string[x];
             y++;
@@ -21,7 +20,18 @@ char* remove_spaces(char* string)//Returns a malloced pointer with the minimum s
     strlen = my_strlen(character_name) - 1; //Retuns the string lenght without counting the '\0' char
     if(character_name[strlen] == ' ')character_name[strlen] = '\0'; //If there´s a space at the end of the str it's removed, and the last char becomes a '\0' char
 
-    return strdup(character_name); //Returns a malloced pointer with the minimum space needed to "save" the string; 
+
+
+    return my_strdup(character_name); //Returns a malloced pointer with the minimum space needed to "save" the string; 
+}
+
+char* my_strdup(char* str) //Alocates and retuns the str; 
+{
+    int string_lenght = my_strlen(str);
+    char* str_duplicated =(char*)malloc(sizeof(char) * (string_lenght + 1));
+
+    for(int i = 0; i < string_lenght+1; i++)str_duplicated[i] = str[i]; // "+1" because my_strlen() doesn't count '\0' char
+    return str_duplicated;
 }
 
 int my_strlen(char* str)
@@ -39,6 +49,16 @@ int str_find_char(char* str, char str_char) // Returns "chr" pos in the "str"
         if(str[pos] == '\0')return -1; // if "chr" isn`t in str
     }
     return pos;   
+}
+
+int str_count_char(char* str, char str_char) // counts ammount of "str_char" in a str
+{
+    int count = 0;
+    for(int i = 0; str[i] != '\0';i++)
+    {
+        if(str[i] == str_char)count++;
+    }
+    return count;
 }
 
 int my_atoi(char* str) // Converts strings to integers

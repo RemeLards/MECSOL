@@ -1,14 +1,14 @@
 #include "math_integral.h"
-
-#define CHARS_NEEDED 6
+ 
+#define CHARS_NEEDED 5 //adding chars 'x','^', '(' ,')','/' 
 
 char* indef_integral(char* function) // polynomials only that have exponents between 2 and 8
 {
     char* indef_integral_str = NULL; // Indefinite Integral
     char* exponent = NULL; // Exponent of the function
-    int function_len; // Lenght of function str
-    int exponent_len; // Lenght of expoent str 
-    int exponent_i,function_i; // exponent and function Iterators
+    int function_len = 0; // Lenght of function str
+    int exponent_len = 0; // Lenght of expoent str 
+    int exponent_i = 0,function_i = 0,integral_i = 0; // exponent, function and integral Iterators
 
     function_len = my_strlen(function); // Getting string lenght 
 
@@ -29,18 +29,84 @@ char* indef_integral(char* function) // polynomials only that have exponents bet
     exponent[exponent_i] = '\0'; // Setting end of "exponent" str
     
     exponent_len = my_strlen(exponent); // Getting string lenght
-    indef_integral_str = (char*)malloc(exponent_len * sizeof(char) + CHARS_NEEDED + 1);// adding chars 'x','^', '(' ,')','/','number' (if number is in 2-8 range)
+    
+    if(exponent_len == str_count_char(exponent,'9')) // if it's true, we need one more byte because the next number string will have lenght "exponent_len + 1"
+    {
+        indef_integral_str = (char*)malloc(sizeof(char) * (2*exponent_len + CHARS_NEEDED + 3));
+    }
+    else indef_integral_str = (char*)malloc(sizeof(char) * (2*exponent_len + CHARS_NEEDED + 1));
 
-    indef_integral_str[0] = '(';
-    indef_integral_str[1] = 'x';
-    indef_integral_str[2] = '^';
-    indef_integral_str[3] = exponent[0] + 1;
-    indef_integral_str[4] = ')';
-    indef_integral_str[5] = '/';
-    indef_integral_str[6] = exponent[0] + 1;
-    indef_integral_str[7] = '\0';
+    // setting up polinomial integration string 
+    indef_integral_str[integral_i++] ='(';
+    indef_integral_str[integral_i++] ='x';
+    indef_integral_str[integral_i++] ='^';
 
-    if (exponent != NULL)free(exponent);;
+    // adding +1 to the exponent
+
+    if(exponent_len == str_count_char(exponent,'9'))
+    {
+        indef_integral_str[integral_i++] = '1';
+        for(int i = 0; i < exponent_len; i++)indef_integral_str[integral_i++] = '0';
+    }
+    else
+    {
+        if(str_find_char(exponent,'9') == -1) // there isn't any '9' on the string
+        {
+            for(int i = 0; i < exponent_len; i++)
+            {
+                if(i == exponent_len -1)
+                {
+                    indef_integral_str[integral_i + i] = exponent[i] + 1;
+                    integral_i += i + 1;
+                }
+                else
+                {
+                    indef_integral_str[integral_i + i] = exponent[i];
+                }
+            }
+        }
+        else
+        {
+
+        }
+    }
+
+    // setting up polinomial integration string 
+    indef_integral_str[integral_i++] =')';
+    indef_integral_str[integral_i++] ='/';
+
+    if(exponent_len == str_count_char(exponent,'9'))
+    {
+        indef_integral_str[integral_i++] = '1';
+        for(int i = 0; i < exponent_len; i++)indef_integral_str[integral_i++] = '0';
+    }
+    else
+    {
+        if(str_find_char(exponent,'9') == -1) // there isn't any '9' on the string
+        {
+            for(int i = 0; i < exponent_len; i++)
+            {
+                if(i == exponent_len -1)
+                {
+                    indef_integral_str[integral_i + i] = exponent[i] + 1;
+                    integral_i += i + 1;
+                }
+                else
+                {
+                    indef_integral_str[integral_i + i] = exponent[i];
+                }
+            }
+        }
+        else
+        {
+
+        }
+    }
+    
+    // ending the string
+    indef_integral_str[integral_i++] = '\0';
+
+    if (exponent != NULL)free(exponent);
 
     return indef_integral_str;
 }
@@ -96,7 +162,7 @@ int main(int argc, char** argv)
     
     if(argc <= 1)
     {
-        function = "x^8";
+        function = "x^99";
         sup_lim = 2.546;
         inf_lim = 0;
     }
@@ -120,9 +186,9 @@ int main(int argc, char** argv)
     }
     
     char* indef_integral_str = indef_integral(function); //Getting the Indefinite Integral (retuns a malloced string)
-    float def_integral_value = def_integral(function,sup_lim,inf_lim);
+    //float def_integral_value = def_integral(function,sup_lim,inf_lim);
     printf("The Indefinite Integral of %s is %s\n", function , indef_integral_str);
-    printf("The Definite Integral of %s from %.2f to %.2f is %.2f\n", function , inf_lim, sup_lim, def_integral_value);
+    //printf("The Definite Integral of %s from %.2f to %.2f is %.2f\n", function , inf_lim, sup_lim, def_integral_value);
     free(indef_integral_str);
     
     return 0;
