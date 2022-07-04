@@ -1,7 +1,0 @@
-make --dry-run --always-make --keep-going --print-directory
-make: Entering directory '/home/rafael/MECSOL'
-gcc -c math_integral.c
-gcc -c my_strings.c
-gcc -o mathi.exe math_integral.o my_strings.o -Wall
-make: Leaving directory '/home/rafael/MECSOL'
- 
