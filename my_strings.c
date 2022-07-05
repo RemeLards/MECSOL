@@ -25,14 +25,8 @@ char* remove_spaces(char* string)//Returns a malloced pointer with the minimum s
     return my_strdup(character_name); //Returns a malloced pointer with the minimum space needed to "save" the string; 
 }
 
-char* my_strdup(char* str) //Alocates and retuns the str; 
-{
-    int string_lenght = my_strlen(str);
-    char* str_duplicated =(char*)malloc(sizeof(char) * (string_lenght + 1));
 
-    for(int i = 0; i < string_lenght+1; i++)str_duplicated[i] = str[i]; // "+1" because my_strlen() doesn't count '\0' char
-    return str_duplicated;
-}
+
 
 int my_strlen(char* str)
 {
@@ -61,7 +55,20 @@ int str_count_char(char* str, char str_char) // counts ammount of "str_char" in 
     return count;
 }
 
-int my_atoi(char* str) // Converts strings to integers
+char* my_strdup(char* str) //Alocates and retuns the str; 
+{
+    int string_lenght = my_strlen(str);
+    char* str_duplicated =(char*)malloc(sizeof(char) * (string_lenght + 1));
+
+    for(int i = 0; i < string_lenght+1; i++)str_duplicated[i] = str[i]; // "+1" because my_strlen() doesn't count '\0' char
+    return str_duplicated;
+}
+
+
+
+
+
+int my_atoi(char* str) // Converts strings to integers in decimal base
 {
     int multiplier = 1; // decimal base multiplier
     int number = 0; // number converted
@@ -116,7 +123,7 @@ int my_atoi(char* str) // Converts strings to integers
     return number;
 }
 
-double my_atof(char* str) // Converts string to float 
+double my_atof(char* str) // Converts string to float in decimal base
 {
     double number = my_atoi(str); // int number
     double decimal_multiplier = 1; // decimal base multiplier
@@ -145,4 +152,29 @@ double my_atof(char* str) // Converts string to float
     }
 
     return number;    
+}
+
+char* my_itoa(int int_n) // Converts an integer number in decimal base, and returns it as a malloced str
+{
+    int multiplier = 1; // decimal base multiplier
+    int int_n_copy = int_n/10; // "int_n" have atleast 1 number, if that`s the case, "int_n_copy" will be 0;
+    int int_n_lenght = 1; // "int_n" is atleast 1;
+    char* n_str; // str to be returned
+    int i = 0; // iterator
+
+    // Calculates Integer lenght
+    for(int_n_lenght; int_n_copy != 0; int_n_lenght++)int_n_copy/= 10;
+    for(int i = 1; i < int_n_lenght; i++)multiplier*=10;
+
+    n_str = (char*)malloc(sizeof(char)*(int_n_lenght + 1)); // +1 for the '\0' char
+
+    for(i = 0; i < int_n_lenght; i++)
+    {
+        int n_to_char = (int_n/multiplier) - (int_n/(multiplier*10))*10; // calculates the number that will be converted to char
+        n_str[i] = n_to_char + '0';
+        multiplier/=10;
+    }
+    n_str[i] = '\0';
+
+    return n_str;
 }

@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include "my_strings.h"
 
@@ -7,6 +6,6 @@
 
 
 char* indef_integral(char* function); //Returns a malloced str containing the indifinite integral
-float def_integral(char* function, float sup_lim, float inf_lim);
+float def_integral(char* function, float inf_lim, float sup_lim);
 
 #endif

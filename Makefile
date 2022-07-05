@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS = -Wall
-OBJECTS = math_integral.o my_strings.o
+OBJECTS = math_integral.o my_strings.o trabmecsol.o
 BINARY = mathi.exe
 
 $(BINARY): $(OBJECTS)
