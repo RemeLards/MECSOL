@@ -1,8 +1,9 @@
 #include "math_integral.h"
+#include <stdio.h>
  
 #define CHARS_NEEDED 5 //adding chars 'x','^', '(' ,')','/' 
 
-char* indef_integral(char* function) // polynomials only that have exponents between 2 and 8
+char* indef_integral(char* function) // polynomials only 2-inf+
 {
     char* indef_integral_str = NULL; // Indefinite Integral
     char* exponent = NULL; // Exponent of the function
@@ -17,13 +18,13 @@ char* indef_integral(char* function) // polynomials only that have exponents bet
     {
         if(exponent_len >= 0)
         {
-            if(!(function[function_i]>= '0' && function[function_i]<= '9') || function[function_i]== '.')break; //if there isn't any integer or float 
+            if(!((function[function_i]>= '0' && function[function_i]<= '9') || function[function_i]== '.'))break; //if there isn't any integer or float 
             else exponent_len++;
         }
         if(function[function_i] == '^')exponent_len++;
     }
 
-    if(exponent_len >= 0)
+    if(exponent_len > 0)
     {
         exponent = (char*)malloc(sizeof(char) *(exponent_len+1));
 
@@ -94,14 +95,15 @@ double def_integral(char* function, float inf_lim, float sup_lim) // polynomials
 
     //gets number length before the 'x' expression
     for(mult_const_len  = 0; (function[mult_const_len ]>= '0' && function[mult_const_len ]<= '9') || function[mult_const_len ]== '.'; mult_const_len ++);
-    
-    if(mult_const_len  >= 0)
+
+    if(mult_const_len  > 0)
     {
         //allocates the string of the constant
         str_mult_const = (char*)malloc(sizeof(char) *(mult_const_len+1));
 
         if(str_mult_const != NULL)
         {
+
             //copies the constant string
             for(i = 0; i < mult_const_len; i++)str_mult_const[i] = function[i];
             
@@ -121,16 +123,18 @@ double def_integral(char* function, float inf_lim, float sup_lim) // polynomials
     //gets number length after the 'x' expression
     for(i = 0; function[i] != '\0'; i++)
     {
+        printf("%c",function[i]);
         if(div_const_len >= 0)
         {
-            if(!(function[i]>= '0' && function[i]<= '9') || function[i]== '.')break; //if there isn't any integer or float 
+            if(!((function[i]>= '0' && function[i]<= '9') || function[i]== '.'))break; //if there isn't any integer or float 
             else div_const_len++;
         }
         if(function[i] == '/')div_const_len++;
     }
+    printf("\n");
 
     
-    if(div_const_len >= 0)
+    if(div_const_len > 0)
     {
         //allocates the string of the constant
         str_div_const = (char*)malloc(sizeof(char) *(div_const_len+1));
