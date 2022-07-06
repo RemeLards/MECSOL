@@ -5,7 +5,7 @@
 #define _MATH_INTEGRAL
 
 
-char* indef_integral(char* function); //Returns a malloced str containing the indifinite integral
-float def_integral(char* function, float inf_lim, float sup_lim);
+char* indef_integral(char* function); //Returns a allocated str containing the indifinite integral
+double def_integral(char* function, float inf_lim, float sup_lim);
 
 #endif

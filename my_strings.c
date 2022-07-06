@@ -1,6 +1,6 @@
 #include "my_strings.h"
 
-char* remove_spaces(char* string)//Returns a malloced pointer with the minimum space needed to "save" the string; 
+char* remove_spaces(char* string)//Returns a allocated pointer with the minimum space needed to "save" the string; 
 {
     char character_name[my_strlen(string)];
     int x = 0, y = 0;
@@ -17,12 +17,12 @@ char* remove_spaces(char* string)//Returns a malloced pointer with the minimum s
         x++;//If current and next char is a "space", we jump to the next char
     }
     character_name[y] = '\0'; //Terminates the string with atleast one space;
-    strlen = my_strlen(character_name) - 1; //Retuns the string lenght without counting the '\0' char
+    strlen = my_strlen(character_name) - 1; //Retuns the string length without counting the '\0' char
     if(character_name[strlen] == ' ')character_name[strlen] = '\0'; //If there´s a space at the end of the str it's removed, and the last char becomes a '\0' char
 
 
 
-    return my_strdup(character_name); //Returns a malloced pointer with the minimum space needed to "save" the string; 
+    return my_strdup(character_name); //Returns a allocated pointer with the minimum space needed to "save" the string; 
 }
 
 
@@ -31,14 +31,14 @@ char* remove_spaces(char* string)//Returns a malloced pointer with the minimum s
 int my_strlen(char* str)
 {
     int len;
-    for(len = 0; str[len] != '\0';len++); // while char isn't '\0' increment the lenght number
+    for(len = 0; str[len] != '\0';len++); // while char isn't '\0' increment the length number
     return len;
 }
 
 int str_find_char(char* str, char str_char) // Returns "chr" pos in the "str"
 {
     int pos;
-    for(pos = 0; str[pos] != str_char;pos++) // while char isn't "chr" increment the lenght number
+    for(pos = 0; str[pos] != str_char;pos++) // while char isn't "chr" increment the length number
     {
         if(str[pos] == '\0')return -1; // if "chr" isn`t in str
     }
@@ -57,10 +57,10 @@ int str_count_char(char* str, char str_char) // counts ammount of "str_char" in 
 
 char* my_strdup(char* str) //Alocates and retuns the str; 
 {
-    int string_lenght = my_strlen(str);
-    char* str_duplicated =(char*)malloc(sizeof(char) * (string_lenght + 1));
+    int str_len = my_strlen(str);
+    char* str_duplicated =(char*)malloc(sizeof(char) * (str_len + 1));
 
-    for(int i = 0; i < string_lenght+1; i++)str_duplicated[i] = str[i]; // "+1" because my_strlen() doesn't count '\0' char
+    for(int i = 0; i < str_len+1; i++)str_duplicated[i] = str[i]; // "+1" because my_strlen() doesn't count '\0' char
     return str_duplicated;
 }
 
@@ -137,8 +137,8 @@ double my_atof(char* str) // Converts string to float in decimal base
 
         if(dot_pos != -1)
         {
-            for(i = dot_pos+1; (str[i] >= '0' && str[i] <= '9'); i++); // counts string lenght
-            number_end = i - 1; // can be a number or a '.'
+            for(i = dot_pos+1; (str[i] >= '0' && str[i] <= '9'); i++); // counts string length
+            number_end = i - 1; // can be an integer or a float
             if(number_end == dot_pos) return number; //if there's nothing after the '.'
 
             if(number < 0)negative_multiplier = -1;
@@ -154,21 +154,21 @@ double my_atof(char* str) // Converts string to float in decimal base
     return number;    
 }
 
-char* my_itoa(int int_n) // Converts an integer number in decimal base, and returns it as a malloced str
+char* my_itoa(int int_n) // Converts an integer number in decimal base, and returns it as a allocated str
 {
     int multiplier = 1; // decimal base multiplier
     int int_n_copy = int_n/10; // "int_n" have atleast 1 number, if that`s the case, "int_n_copy" will be 0;
-    int int_n_lenght = 1; // "int_n" is atleast 1;
+    int int_n_len = 1; // "int_n" is atleast 1;
     char* n_str; // str to be returned
     int i = 0; // iterator
 
-    // Calculates Integer lenght
-    for(int_n_lenght; int_n_copy != 0; int_n_lenght++)int_n_copy/= 10;
-    for(int i = 1; i < int_n_lenght; i++)multiplier*=10;
+    // Calculates Integer length
+    for(int_n_len; int_n_copy != 0; int_n_len++)int_n_copy/= 10;
+    for(int i = 1; i < int_n_len; i++)multiplier*=10;
 
-    n_str = (char*)malloc(sizeof(char)*(int_n_lenght + 1)); // +1 for the '\0' char
+    n_str = (char*)malloc(sizeof(char)*(int_n_len + 1)); // +1 for the '\0' char
 
-    for(i = 0; i < int_n_lenght; i++)
+    for(i = 0; i < int_n_len; i++)
     {
         int n_to_char = (int_n/multiplier) - (int_n/(multiplier*10))*10; // calculates the number that will be converted to char
         n_str[i] = n_to_char + '0';
