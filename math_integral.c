@@ -188,6 +188,25 @@ char* indef_integral_ncosnt(char* function) // polynomials only 2-inf+
 
         free(exponent); // freeing allocated str that won't return;
     }
+    else
+    {
+        if(str_count_char(function,'x') >= 1)
+        {
+            exponent_len == 1;
+            indef_integral_str = (char*)malloc(sizeof(char) * (2*exponent_len + CHARS_NEEDED + 1));
+
+            // setting up polinomial integration string 
+            indef_integral_str[integral_i++] ='(';
+            indef_integral_str[integral_i++] ='x';
+            indef_integral_str[integral_i++] ='^';
+            indef_integral_str[integral_i++] ='2';
+            indef_integral_str[integral_i++] =')';
+            indef_integral_str[integral_i++] ='/';
+            indef_integral_str[integral_i++] ='2';
+            indef_integral_str[integral_i] ='\0';
+
+        }
+    }
 
     return indef_integral_str;
 }

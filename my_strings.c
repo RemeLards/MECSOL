@@ -2,27 +2,30 @@
 
 char* remove_spaces(char* string)//Returns a allocated pointer with the minimum space needed to "save" the string; 
 {
-    char character_name[my_strlen(string)];
-    int x = 0, y = 0;
-    int strlen;
-    char* str_nspaces;
-    while(string[x] == ' ')x++;//Erasing Initial Spaces
-    while(string[x] != '\0')
+    if(string != NULL)
     {
-        if (!(string[x] == ' '))//If next char is a space, the while jumps to the next till find a non-space character
+        char character_name[my_strlen(string)];
+        int x = 0, y = 0;
+        int strlen;
+        char* str_nspaces;
+        while(string[x] == ' ')x++;//Erasing Initial Spaces
+        while(string[x] != '\0')
         {
-            character_name[y] = string[x];
-            y++;
+            if (!(string[x] == ' '))//If next char is a space, the while jumps to the next till find a non-space character
+            {
+                character_name[y] = string[x];
+                y++;
+            }
+            x++;//If current and next char is a "space", we jump to the next char
         }
-        x++;//If current and next char is a "space", we jump to the next char
+        character_name[y] = '\0'; //Terminates the string with atleast one space;
+        strlen = my_strlen(character_name) - 1; //Retuns the string length without counting the '\0' char
+        if(character_name[strlen] == ' ')character_name[strlen] = '\0'; //If there´s a space at the end of the str it's removed, and the last char becomes a '\0' char
+
+        return my_strdup(character_name);//Returns a allocated pointer with the minimum space needed to "save" the string; 
     }
-    character_name[y] = '\0'; //Terminates the string with atleast one space;
-    strlen = my_strlen(character_name) - 1; //Retuns the string length without counting the '\0' char
-    if(character_name[strlen] == ' ')character_name[strlen] = '\0'; //If there´s a space at the end of the str it's removed, and the last char becomes a '\0' char
 
-
-
-    return my_strdup(character_name); //Returns a allocated pointer with the minimum space needed to "save" the string; 
+    return string; //Else Retuns the same string, because it's NULL
 }
 
 
@@ -37,10 +40,14 @@ int my_strlen(char* str)
 
 int str_find_char(char* str, char str_char) // Returns "chr" pos in the "str"
 {
-    int pos;
-    for(pos = 0; str[pos] != str_char;pos++) // while char isn't "chr" increment the length number
+    int pos = 0;
+    
+    if(str != NULL)
     {
-        if(str[pos] == '\0')return -1; // if "chr" isn`t in str
+        for(pos = 0; str[pos] != str_char;pos++) // while char isn't "chr" increment the length number
+        {
+            if(str[pos] == '\0')return -1; // if "chr" isn`t in str
+        }
     }
     return pos;   
 }
@@ -48,19 +55,28 @@ int str_find_char(char* str, char str_char) // Returns "chr" pos in the "str"
 int str_count_char(char* str, char str_char) // counts ammount of "str_char" in a str
 {
     int count = 0;
-    for(int i = 0; str[i] != '\0';i++)
+    
+    if(str != NULL)
     {
-        if(str[i] == str_char)count++;
+        for(int i = 0; str[i] != '\0';i++)
+        {
+            if(str[i] == str_char)count++;
+        }
     }
     return count;
 }
 
 char* my_strdup(char* str) //Alocates and retuns the str; 
 {
-    int str_len = my_strlen(str);
-    char* str_duplicated =(char*)malloc(sizeof(char) * (str_len + 1));
+    char* str_duplicated = NULL;
+    
+    if(str != NULL)
+    {
+        int str_len = my_strlen(str);
+        char* str_duplicated =(char*)malloc(sizeof(char) * (str_len + 1));
 
-    for(int i = 0; i < str_len+1; i++)str_duplicated[i] = str[i]; // "+1" because my_strlen() doesn't count '\0' char
+        for(int i = 0; i < str_len+1; i++)str_duplicated[i] = str[i]; // "+1" because my_strlen() doesn't count '\0' char
+    }
     return str_duplicated;
 }
 
@@ -70,27 +86,19 @@ char* my_strdup(char* str) //Alocates and retuns the str;
 
 int my_atoi(char* str) // Converts strings to integers in decimal base
 {
-    int multiplier = 1; // decimal base multiplier
     int number = 0; // number converted
-    int number_start = -1; // first number pos
-    int number_end = 0; // last number pos
-    int negative = 0; // if number is negative (negative = 1) or no (negative = 0) 
-    int i = 0; // iterators
+    if(str != NULL)
+    {
+        int multiplier = 1; // decimal base multiplier
+        int number_start = -1; // first number pos
+        int number_end = 0; // last number pos
+        int negative = 0; // if number is negative (negative = 1) or no (negative = 0) 
+        int i = 0; // iterators
 
-    if(str[0] == '-') // if number is negative
-    {
-        negative = 1;
-        
-        for(i = 1; (str[i] >= '0' && str[i] <= '9'); i++)
+        if(str[0] == '-') // if number is negative
         {
-            if(number_start < 0 && (str[i] >= '0' && str[i] <= '9')) number_start = i;
-        }
-        if (i == 1)return INT_MIN;// second char is a invalid char to transform to int
-    }
-    else
-    {
-        if(str[0] == '+') // if has the + sign
-        {
+            negative = 1;
+            
             for(i = 1; (str[i] >= '0' && str[i] <= '9'); i++)
             {
                 if(number_start < 0 && (str[i] >= '0' && str[i] <= '9')) number_start = i;
@@ -99,27 +107,39 @@ int my_atoi(char* str) // Converts strings to integers in decimal base
         }
         else
         {
-            for(i = 0; (str[i] >= '0' && str[i] <= '9'); i++)
+            if(str[0] == '+') // if has the + sign
             {
-                if(number_start < 0 && (str[i] >= '0' && str[i] <= '9')) number_start = i;
+                for(i = 1; (str[i] >= '0' && str[i] <= '9'); i++)
+                {
+                    if(number_start < 0 && (str[i] >= '0' && str[i] <= '9')) number_start = i;
+                }
+                if (i == 1)return INT_MIN;// second char is a invalid char to transform to int
             }
-            if (i == 0)return INT_MIN;// second char is a invalid char to transform to int
+            else
+            {
+                for(i = 0; (str[i] >= '0' && str[i] <= '9'); i++)
+                {
+                    if(number_start < 0 && (str[i] >= '0' && str[i] <= '9')) number_start = i;
+                }
+                if (i == 0)return INT_MIN;// second char is a invalid char to transform to int
+            }
+
         }
 
+        number_end = i - 1; // Last number pos
+
+        for(i = number_start; i < number_end; i++)multiplier*=10; // getting first number base 10 exponent to represent it in decimal base
+
+        for(i = number_start; i <= number_end; i++)
+        {
+            number += (str[i] - '0') * multiplier; // "converting" to int
+            multiplier/= 10;
+        }
+
+        if(negative == 1) number *= -1;
     }
-
-    number_end = i - 1; // Last number pos
-
-    for(i = number_start; i < number_end; i++)multiplier*=10; // getting first number base 10 exponent to represent it in decimal base
-
-    for(i = number_start; i <= number_end; i++)
-    {
-        number += (str[i] - '0') * multiplier; // "converting" to int
-        multiplier/= 10;
-    }
-
-    if(negative == 1) number *= -1;
-
+    number = INT_MIN;
+    
     return number;
 }
 
