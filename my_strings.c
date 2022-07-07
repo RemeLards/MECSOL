@@ -30,8 +30,8 @@ char* remove_spaces(char* string)//Returns a allocated pointer with the minimum 
 
 int my_strlen(char* str)
 {
-    int len;
-    for(len = 0; str[len] != '\0';len++); // while char isn't '\0' increment the length number
+    int len = 0;
+    if(str != NULL) for(len = 0; str[len] != '\0';len++); // while char isn't '\0' increment the length number
     return len;
 }
 

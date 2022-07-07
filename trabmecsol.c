@@ -29,10 +29,10 @@ int main(int argc, char** argv)
         sup_lim = my_atof(argv[3]);
     }
     
-    char* indef_integral_str = indef_integral(function); //Getting the Indefinite Integral (retuns a allocated string)
-    float def_integral_value = def_integral(function,inf_lim,sup_lim);
-    printf("The Indefinite Integral of %s is %s\n", function , indef_integral_str);
-    printf("The Definite Integral of %s from %.2f to %.2f is %.2f\n", function , inf_lim, sup_lim, def_integral_value);
+    char* indef_integral_str = indef_integral_ncosnt(function); //Getting the Indefinite Integral without constants included (retuns a allocated string)
+    float def_integral = def_integral_value(function,inf_lim,sup_lim);
+    printf("The Indefinite Integral (without constants included) of %s is %s\n", function , indef_integral_str);
+    printf("The Definite Integral of %s from %.2f to %.2f is %.2f\n", function , inf_lim, sup_lim, def_integral);
     free(indef_integral_str);
     
     return 0;

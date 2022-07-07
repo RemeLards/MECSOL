@@ -1,208 +1,223 @@
 #include "math_integral.h"
-#include <stdio.h>
  
 #define CHARS_NEEDED 5 //adding chars 'x','^', '(' ,')','/' 
 
-char* indef_integral(char* function) // polynomials only 2-inf+
+char* exponent_str(char* function)
 {
-    char* indef_integral_str = NULL; // Indefinite Integral
-    char* exponent = NULL; // Exponent of the function
-    int function_len = 0; // length of function str
-    int exponent_len = -1; // length of expoent str
-    int exponent_n = 0; // Exponent 
-    int exponent_i = 0,function_i = 0,integral_i = 0; // exponent, function and integral Iterators
+    int function_len = my_strlen(function); // Getting function string length
+    int exponent_len = -1; // Getting exponent string length
+    int func_i = 0, expo_i = 0; // Iterators 
+    char* exponent = NULL; // Exponent string 
 
-    function_len = my_strlen(function); // Getting string length 
 
-    for(function_i = 0; function[function_i]; function_i++) //Setting the size of the "exponent" str
+    for(func_i = 0; function[func_i]; func_i++) //Setting the size of the "exponent" str
     {
         if(exponent_len >= 0)
         {
-            if(!((function[function_i]>= '0' && function[function_i]<= '9') || function[function_i]== '.'))break; //if there isn't any integer or float 
+            if(!((function[func_i]>= '0' && function[func_i]<= '9') || function[func_i]== '.'))break; //if there isn't any integer or float 
             else exponent_len++;
         }
-        if(function[function_i] == '^')exponent_len++;
+        if(function[func_i] == '^')exponent_len++;
     }
 
-    if(exponent_len > 0)
+    if(exponent_len > 0) //if there's a exponent
     {
-        exponent = (char*)malloc(sizeof(char) *(exponent_len+1));
+        exponent = (char*)malloc(sizeof(char) *(exponent_len+1)); // +1 because of the '\0' char
 
-        if(exponent != NULL)
+        if(exponent != NULL) // if exponent was allocated
         {
-            for(exponent_i = 0;exponent_i < exponent_len; exponent_i++)exponent[exponent_i] = function[(function_i-exponent_len) + exponent_i];
+            for(expo_i = 0;expo_i < exponent_len; expo_i++)exponent[expo_i] = function[(func_i-exponent_len) +expo_i];
 
-            exponent[exponent_i] = '\0'; // Setting end of "exponent" str
-            
-            exponent_len = my_strlen(exponent); // Getting string length
-            
-            if(exponent_len == str_count_char(exponent,'9')) // if it's true, we need one more byte because the next number string will have length "exponent_len + 1"
-            {
-                indef_integral_str = (char*)malloc(sizeof(char) * (2*(++exponent_len) + CHARS_NEEDED + 1));
-            }
-            else indef_integral_str = (char*)malloc(sizeof(char) * (2*exponent_len + CHARS_NEEDED + 1));
-
-            // setting up polinomial integration string 
-            indef_integral_str[integral_i++] ='(';
-            indef_integral_str[integral_i++] ='x';
-            indef_integral_str[integral_i++] ='^';
-
-            // adding +1 to the exponent
-            exponent_n = my_atoi(exponent) + 1;
-            free(exponent); // Don't need "old" exponent
-            exponent = my_itoa(exponent_n); // getting new exponent
-
-            // copying the new exponent to the indefinite integral 
-            for(int i = 0; i < exponent_len; integral_i++, i++)indef_integral_str[integral_i] = exponent[i]; 
-
-            // setting up polinomial integration string 
-            indef_integral_str[integral_i++] =')';
-            indef_integral_str[integral_i++] ='/';
-
-            // dividing the polinomial by the new exponent
-            for(int i = 0; i < exponent_len; integral_i++, i++)indef_integral_str[integral_i] = exponent[i]; 
-            
-            // ending the string
-            indef_integral_str[integral_i] = '\0';
-
-            free(exponent); // freeing allocated str that won't return;
-
-
-            return indef_integral_str;
-        }
-        
-        return NULL; // if couldn't find any exponent
+            exponent[expo_i] = '\0'; // Setting end of "exponent" str
+        }  
     }
-    return NULL;
+
+    return exponent; //if there's a exponent it returns a allocated str, else it will return "NULL"
 }
 
-double def_integral(char* function, float inf_lim, float sup_lim) // polynomials only that have exponents between 2 and 8
+int exponent_value(char* function)
 {
-    int i = 0, j = 0,exponent_i = 0,integral_i = 0; // Iterators
-    int exponent_n = 0; // exponent number
-    int exponent_len = 0,indef_integral_str_len = 0, mult_const_len = 0, div_const_len = -1; // length of the strings
-    double inf_n = 1, sup_n = 1; // Inferior Number and Superior Number, Numbers that we get after applying the inferior and superior limits
-    double mult_const_n = 1, div_const_n = 1; // constants values
-    double def_integral_value = 0, constant_value = 0; // integral value
-    char* indef_integral_str = NULL; // Integral Indefinite string
-    char* exponent = NULL; // Exponent of the function 
-    char* str_mult_const = NULL; // String of the constant multiplying the 'x' function
-    char* str_div_const = NULL; // String of the constant dividing the 'x 'function
+    char* exponent = exponent_str(function);
+    int exponent_value = 0;
 
-    //Calculating Constants
+    if(exponent != NULL)
+    {
+        exponent_value = my_atoi(exponent);
+        free(exponent);
+    }
 
-        // Multiplying Constant
+    return exponent_value;
+}
 
-    //gets number length before the 'x' expression
-    for(mult_const_len  = 0; (function[mult_const_len ]>= '0' && function[mult_const_len ]<= '9') || function[mult_const_len ]== '.'; mult_const_len ++);
+char* mult_const_str(char* function)
+{
+    int mult_const_len = 0;
+    char* mult_const = NULL;
+    int const_i = 0; 
 
-    if(mult_const_len  > 0)
+    //while the string is an integer or a float point, it'll count its length
+    for(mult_const_len = 0; (function[mult_const_len]>= '0' && function[mult_const_len]<= '9') || function[mult_const_len]== '.'; mult_const_len++);
+
+    if(mult_const_len > 0)
     {
         //allocates the string of the constant
-        str_mult_const = (char*)malloc(sizeof(char) *(mult_const_len+1));
+        mult_const = (char*)malloc(sizeof(char) *(mult_const_len+1));
 
-        if(str_mult_const != NULL)
+        if(mult_const != NULL)
         {
 
             //copies the constant string
-            for(i = 0; i < mult_const_len; i++)str_mult_const[i] = function[i];
+            for(const_i = 0; const_i < mult_const_len; const_i++)mult_const[const_i] = function[const_i];
             
             //finalizing str
-            str_mult_const[i] = '\0';
+            mult_const[const_i] = '\0';
 
-            //getting multiplying constant value, if str is null const value is 1
-            
-            mult_const_n = my_atof(str_mult_const);
-            free(str_mult_const);
         }
+    } 
+
+    return  mult_const; //if there's a constant it returns a allocated str, else it will return "NULL"
+}
+
+double mult_const_value(char* function)
+{
+    char* mult_const = mult_const_str(function);
+    double mult_const_value = 1;
+
+    if(mult_const != NULL)
+    {
+        mult_const_value = my_atof(mult_const);
+        free(mult_const);
     }
 
+    return mult_const_value;    
+}
 
-        // Diving Constant
-
+char* div_const_str(char* function)
+{
+    int div_const_len = -1;
+    char* div_const = NULL;
+    int func_i = 0,const_i = 0;
     //gets number length after the 'x' expression
-    for(i = 0; function[i] != '\0'; i++)
+    for(func_i = 0; function[func_i] != '\0'; func_i++)
     {
-        printf("%c",function[i]);
         if(div_const_len >= 0)
         {
-            if(!((function[i]>= '0' && function[i]<= '9') || function[i]== '.'))break; //if there isn't any integer or float 
+            if(!((function[func_i] >= '0' && function[func_i]<= '9') || function[func_i]== '.'))break; //if there isn't any integer or float 
             else div_const_len++;
         }
-        if(function[i] == '/')div_const_len++;
+        if(function[func_i] == '/')div_const_len++;
     }
-    printf("\n");
 
     
     if(div_const_len > 0)
     {
         //allocates the string of the constant
-        str_div_const = (char*)malloc(sizeof(char) *(div_const_len+1));
+        div_const = (char*)malloc(sizeof(char) *(div_const_len+1));
 
-        if(str_div_const != NULL)
+        if(div_const != NULL)
         {
             //copies the constant string
-            for(j = 0; j < div_const_len; j++)str_div_const[j] = function[(i - div_const_len) + j];
+            for(const_i = 0; const_i < div_const_len; const_i++)div_const[const_i] = function[(func_i - div_const_len) + const_i];
 
             //finalizing str
-            str_div_const[j] = '\0';
-            
-            //getting diving constant value,  if str is null const value is 1
-            
-            div_const_n = my_atof(str_div_const);
-            free(str_div_const);
+            div_const[const_i] = '\0';
+        
         }
     }
 
-        //Calculating Final Constant
+    return div_const; //if there's a constant diving the function it returns a allocated str, else it will return "NULL"
+}
 
-    constant_value = (mult_const_n/div_const_n);
+double div_const_value(char* function)
+{
+    char* div_const = div_const_str(function);
+    double div_const_value = 1;
 
+    if(div_const != NULL)
+    {
+        div_const_value = my_atof(div_const);
+        free(div_const);
+    }
+    
+    return div_const_value;
+}
+
+char* indef_integral_ncosnt(char* function) // polynomials only 2-inf+
+{
+    char* indef_integral_str = NULL; // Indefinite Integral
+    char* exponent = NULL; // Exponent of the function
+    int exponent_len = 0; // length of expoent str
+    int exponent_value = 0; // Exponent value
+    int integral_i = 0; // exponent, function and integral Iterators
+
+    exponent = exponent_str(function); // gets exponent string
+
+    if(exponent != NULL)
+    {   
+        exponent_len = my_strlen(exponent); // Getting string length
+
+
+        // if it's true, one more byte is needed because the next number string will have length "exponent_len + 1"
+        // and the integral will be divided by the same number, that's why is multiplied by 2 
+        if(exponent_len == str_count_char(exponent,'9')) indef_integral_str = (char*)malloc(sizeof(char) * (2*(++exponent_len) + CHARS_NEEDED + 1));
+    
+        else indef_integral_str = (char*)malloc(sizeof(char) * (2*exponent_len + CHARS_NEEDED + 1));
+
+        // setting up polinomial integration string 
+        indef_integral_str[integral_i++] ='(';
+        indef_integral_str[integral_i++] ='x';
+        indef_integral_str[integral_i++] ='^';
+
+        // adding +1 to the exponent
+        exponent_value = my_atoi(exponent) + 1;
+        free(exponent); // Don't need "old" exponent
+        exponent = my_itoa(exponent_value); // getting new exponent
+
+        // copying the new exponent to the indefinite integral 
+        for(int i = 0; i < exponent_len; integral_i++, i++)indef_integral_str[integral_i] = exponent[i]; 
+
+        // setting up polinomial integration string 
+        indef_integral_str[integral_i++] =')';
+        indef_integral_str[integral_i++] ='/';
+
+        // dividing the polinomial by the new exponent
+        for(int i = 0; i < exponent_len; integral_i++, i++)indef_integral_str[integral_i] = exponent[i]; 
+        
+        // ending the string
+        indef_integral_str[integral_i] = '\0';
+
+        free(exponent); // freeing allocated str that won't return;
+    }
+
+    return indef_integral_str;
+}
+
+double def_integral_value(char* function, float inf_lim, float sup_lim) // polynomials only that have exponents between 2 and 8
+{
+    int exponent = 0; // exponent number
+    double inf_value = 1, sup_value = 1; // Inferior Number and Superior Number, Numbers that we get after applying the inferior and superior limits
+    double def_integral = 0, constant = 0; // integral value
+    char* indef_integral_str = NULL; // Integral Indefinite string
+
+    //Calculating Constants Value
+
+    constant = (mult_const_value(function)/div_const_value(function));
 
     // Calculating Integral
 
+    indef_integral_str = indef_integral_ncosnt(function); // Getting the Indefinite Integral (retuns a allocated string)
+    exponent = exponent_value(indef_integral_str); // Getting exponent value of the Indefinite Integral
+    if(indef_integral_str != NULL)free(indef_integral_str); // Dont need the Indefinite Integral
 
-    indef_integral_str = indef_integral(function); // Getting the Indefinite Integral (retuns a allocated string)
-    indef_integral_str_len = my_strlen(indef_integral_str); // Size of indefinite integral str
-    exponent_len = (indef_integral_str_len - CHARS_NEEDED - 1)/2; // length of exponent number
-
-    for(exponent_i = -1,integral_i = 0; indef_integral_str[integral_i] != ')'; integral_i++) // Getting the Exponent from the function
+    if(exponent > 0)
     {
-        if(exponent_i >= 0) // Extracting Exponent from the function
+        for(int i = 0; i < exponent;i++)
         {
-            exponent[exponent_i] = indef_integral_str[integral_i];
-            exponent_i++;
+            inf_value*=inf_lim;
+            sup_value*=sup_lim;
         }
-
-        if(indef_integral_str[integral_i] == '^') //Setting the size of the "exponent" str
-        {
-            exponent_i++;
-            exponent = (char*)malloc((exponent_len+1)*sizeof(char)); // +1 because of the '\0' char
-        }
+        def_integral = constant*((sup_value-inf_value)/exponent); 
     }
 
-
-    if(exponent != NULL && indef_integral_str != NULL)
-    {
-        exponent[exponent_i] = '\0';
-
-        exponent_n = my_atoi(exponent);
-
-        for(int i = 0; i < exponent_n;i++)
-        {
-            inf_n*=inf_lim;
-            sup_n*=sup_lim;
-        }
-        def_integral_value = constant_value*((sup_n-inf_n)/exponent_n); 
-
-        free(indef_integral_str);
-        free(exponent);
-
-        return def_integral_value;
-    }
-
-    if(exponent == NULL && indef_integral_str != NULL)free(indef_integral_str);
-    if(exponent != NULL && indef_integral_str == NULL)free(exponent);
-
-    return 0;
+    return def_integral;
 }
