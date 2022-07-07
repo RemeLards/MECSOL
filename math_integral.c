@@ -206,6 +206,13 @@ char* indef_integral_ncosnt(char* function) // polynomials only 2-inf+
             indef_integral_str[integral_i] ='\0';
 
         }
+        else
+        {
+            exponent_len = 0;
+            indef_integral_str = (char*)malloc(sizeof(char) * (1 + 1));// for the 'x' and for the '\0'
+            indef_integral_str[integral_i++] ='x';
+            indef_integral_str[integral_i] ='\0';      
+        }
     }
 
     return indef_integral_str;
