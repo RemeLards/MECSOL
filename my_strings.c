@@ -86,7 +86,7 @@ char* my_strdup(char* str) //Alocates and retuns the str;
 
 int my_atoi(char* str) // Converts strings to integers in decimal base
 {
-    int number = 0; // number converted
+    int number = INT_MIN; // number converted
     if(str != NULL)
     {
         int multiplier = 1; // decimal base multiplier
@@ -103,7 +103,7 @@ int my_atoi(char* str) // Converts strings to integers in decimal base
             {
                 if(number_start < 0 && (str[i] >= '0' && str[i] <= '9')) number_start = i;
             }
-            if (i == 1)return INT_MIN;// second char is a invalid char to transform to int
+            if (i == 1)return number;// second char is a invalid char to transform to int
         }
         else
         {
@@ -113,7 +113,7 @@ int my_atoi(char* str) // Converts strings to integers in decimal base
                 {
                     if(number_start < 0 && (str[i] >= '0' && str[i] <= '9')) number_start = i;
                 }
-                if (i == 1)return INT_MIN;// second char is a invalid char to transform to int
+                if (i == 1)return number;// second char is a invalid char to transform to int
             }
             else
             {
@@ -121,7 +121,7 @@ int my_atoi(char* str) // Converts strings to integers in decimal base
                 {
                     if(number_start < 0 && (str[i] >= '0' && str[i] <= '9')) number_start = i;
                 }
-                if (i == 0)return INT_MIN;// second char is a invalid char to transform to int
+                if (i == 0)return number;// second char is a invalid char to transform to int
             }
 
         }
@@ -129,6 +129,8 @@ int my_atoi(char* str) // Converts strings to integers in decimal base
         number_end = i - 1; // Last number pos
 
         for(i = number_start; i < number_end; i++)multiplier*=10; // getting first number base 10 exponent to represent it in decimal base
+
+        number = 0;
 
         for(i = number_start; i <= number_end; i++)
         {
@@ -138,7 +140,6 @@ int my_atoi(char* str) // Converts strings to integers in decimal base
 
         if(negative == 1) number *= -1;
     }
-    number = INT_MIN;
     
     return number;
 }
@@ -150,7 +151,7 @@ double my_atof(char* str) // Converts string to float in decimal base
     int negative_multiplier = 1; // if it's negative, it equals -1, else equals 1
     int number_end = 0; // last number pos
     int i = 0; // iterators
-    
+
     if (number != INT_MIN);
     {
         int dot_pos = str_find_char(str,'.'); // find dot position

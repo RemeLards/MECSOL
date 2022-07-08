@@ -10,4 +10,4 @@ $(BINARY): $(OBJECTS)
 	$(CC) -c $<
 
 clean:
-	rm *.o $(BINARY)
+	del *.o $(BINARY)

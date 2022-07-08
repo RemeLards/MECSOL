@@ -38,12 +38,17 @@ char* exponent_str(char* function)
 int exponent_value(char* function)
 {
     char* exponent = exponent_str(function);
-    int exponent_value = 0;
+    int exponent_value = -1;
 
     if(exponent != NULL)
     {
         exponent_value = my_atoi(exponent);
         free(exponent);
+    }
+    else
+    {
+        if(str_count_char(function,'x') == 1 && str_count_char(function,'^') == 0)exponent_value = 1; // it means the function is "C * x" , so the its exponent is 1
+        if(str_count_char(function,'x') == 0 && str_count_char(function,'^') == 0)exponent_value = 0; // it means the function is "C"
     }
 
     return exponent_value;
@@ -190,23 +195,18 @@ char* indef_integral_ncosnt(char* function) // polynomials only 2-inf+
     }
     else
     {
-        if(str_count_char(function,'x') >= 1)
+        if(str_count_char(function,'x') == 1 && str_count_char(function,'^') == 0)
         {
-            exponent_len == 1;
+            exponent_len = 1;
             indef_integral_str = (char*)malloc(sizeof(char) * (2*exponent_len + CHARS_NEEDED + 1));
+            char* integral_of_x = "(x^2)/2";
 
             // setting up polinomial integration string 
-            indef_integral_str[integral_i++] ='(';
-            indef_integral_str[integral_i++] ='x';
-            indef_integral_str[integral_i++] ='^';
-            indef_integral_str[integral_i++] ='2';
-            indef_integral_str[integral_i++] =')';
-            indef_integral_str[integral_i++] ='/';
-            indef_integral_str[integral_i++] ='2';
+            for(integral_i = 0; integral_i < (2*exponent_len + CHARS_NEEDED); integral_i++)indef_integral_str[integral_i] = integral_of_x[integral_i];
             indef_integral_str[integral_i] ='\0';
 
         }
-        else
+        if(str_count_char(function,'x') == 0 && str_count_char(function,'^') == 0)
         {
             exponent_len = 0;
             indef_integral_str = (char*)malloc(sizeof(char) * (1 + 1));// for the 'x' and for the '\0'
