@@ -37,10 +37,10 @@ char* exponent_str(char* function)
 
 int exponent_value(char* function)
 {
-    char* exponent = exponent_str(function);
-    int exponent_value = -1;
+    char* exponent = exponent_str(function); // gets exponent string
+    int exponent_value = -1; // default exponent value
 
-    if(exponent != NULL)
+    if(exponent != NULL) // if there is a exponent
     {
         exponent_value = my_atoi(exponent);
         free(exponent);
@@ -85,10 +85,10 @@ char* mult_const_str(char* function)
 
 double mult_const_value(char* function)
 {
-    char* mult_const = mult_const_str(function);
-    double mult_const_value = 1;
+    char* mult_const = mult_const_str(function); // getting constant multiplying the function 
+    double mult_const_value = 1; // default multiplier value
 
-    if(mult_const != NULL)
+    if(mult_const != NULL) // if there is a multiplier
     {
         mult_const_value = my_atof(mult_const);
         free(mult_const);
@@ -102,8 +102,8 @@ char* div_const_str(char* function)
     int div_const_len = -1;
     char* div_const = NULL;
     int func_i = 0,const_i = 0;
-    //gets number length after the 'x' expression
-    for(func_i = 0; function[func_i] != '\0'; func_i++)
+    
+    for(func_i = 0; function[func_i] != '\0'; func_i++) //gets number length after the 'x' expression
     {
         if(div_const_len >= 0)
         {
@@ -135,10 +135,10 @@ char* div_const_str(char* function)
 
 double div_const_value(char* function)
 {
-    char* div_const = div_const_str(function);
-    double div_const_value = 1;
+    char* div_const = div_const_str(function); // getting number diving the function
+    double div_const_value = 1; // default value
 
-    if(div_const != NULL)
+    if(div_const != NULL) // if there's a number dividing the function
     {
         div_const_value = my_atof(div_const);
         free(div_const);
@@ -195,6 +195,8 @@ char* indef_integral_ncosnt(char* function) // polynomials only 2-inf+
     }
     else
     {
+        //if the function is "C*x"
+
         if(str_count_char(function,'x') == 1 && str_count_char(function,'^') == 0)
         {
             exponent_len = 1;
@@ -206,6 +208,9 @@ char* indef_integral_ncosnt(char* function) // polynomials only 2-inf+
             indef_integral_str[integral_i] ='\0';
 
         }
+
+        //if the function is "C"
+
         if(str_count_char(function,'x') == 0 && str_count_char(function,'^') == 0)
         {
             exponent_len = 0;
@@ -235,7 +240,7 @@ double def_integral_value(char* function, float inf_lim, float sup_lim) // polyn
     exponent = exponent_value(indef_integral_str); // Getting exponent value of the Indefinite Integral
     if(indef_integral_str != NULL)free(indef_integral_str); // Dont need the Indefinite Integral
 
-    if(exponent > 0)
+    if(exponent > 0) // only works with positive integer
     {
         for(int i = 0; i < exponent;i++)
         {
