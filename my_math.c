@@ -1,4 +1,4 @@
-#include "math_integral.h"
+#include "my_math.h"
  
 #define CHARS_NEEDED 5 //adding chars 'x','^', '(' ,')','/' 
 
@@ -147,7 +147,7 @@ double div_const_value(char* function)
     return div_const_value;
 }
 
-char* indef_integral_ncosnt(char* function) // polynomials only 2-inf+
+char* indef_integral_ncosnt(char* function) // positive integer polynomials only 
 {
     char* indef_integral_str = NULL; // Indefinite Integral
     char* exponent = NULL; // Exponent of the function
@@ -223,7 +223,7 @@ char* indef_integral_ncosnt(char* function) // polynomials only 2-inf+
     return indef_integral_str;
 }
 
-double def_integral_value(char* function, float inf_lim, float sup_lim) // polynomials only that have exponents between 2 and 8
+double def_integral_value(char* function, float inf_lim, float sup_lim) // positive integer polynomials only 
 {
     int exponent = 0; // exponent number
     double inf_value = 1, sup_value = 1; // Inferior Number and Superior Number, Numbers that we get after applying the inferior and superior limits
@@ -251,4 +251,42 @@ double def_integral_value(char* function, float inf_lim, float sup_lim) // polyn
     }
 
     return def_integral;
+}
+
+char** function_list(char* function)
+{
+    int function_list_len = 1; // counts how many functions the string has
+    int first_char_is_sing = 0;
+    int i = 0, j = 0;
+    char** function_list = NULL;
+
+    if(function != NULL)
+    {
+        if(function[0] == '+' || function[0] == '-')
+        {
+            i++;
+            first_char_is_sing++;
+        }
+
+        for(i; function[i] != '\0'; i++)if((function[i] == '+' || function[i] == '-')) function_list_len++;
+        
+        function_list = (char*)malloc(sizeof(char*) * function_list_len);
+
+        
+        for(j; j < function_list_len; j++)
+        {
+            for(i; function[i] != '\0'; i++)
+            {
+                function_list[j][i] = function[i];
+                if(function[i+1] == '+' || function[i+1] == '-')break;
+
+            }
+            i+= 2;
+            function_list[j][i] = '\0';
+        }
+
+    }
+
+    return function_list;
+
 }
