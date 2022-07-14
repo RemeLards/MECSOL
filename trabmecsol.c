@@ -2,7 +2,7 @@
 
 int main(int argc, char** argv)
 {
-    char* function;
+    /*char* function;
     float inf_lim ,sup_lim;
     if(argc <= 1)
     {
@@ -33,7 +33,15 @@ int main(int argc, char** argv)
     float def_integral = def_integral_value(function,inf_lim,sup_lim);
     printf("The Indefinite Integral (without constants included) of %s is %s\n", function , indef_integral_str);
     printf("The Definite Integral of %s from %.2f to %.2f is %.2f\n", function , inf_lim, sup_lim, def_integral);
-    free(indef_integral_str);
+    free(indef_integral_str);*/
+
+    char** f_list = function_divider("+x^2-x+5");
+
+    printf("%s\n",f_list[0]);
+    printf("%s\n",f_list[1]);
+    printf("%s\n",f_list[2]);
+
+    free(f_list);
     
     return 0;
 }
