@@ -1,0 +1,85 @@
+Leituras do usuário 
+ - Quantidade, posiçvoid oião e intensidade das ações externas (forças e momentos), para o caso de cargas distribuidas fazer a leitura da função caso haja e se não houver ler  os pontos incial e final e o tipo da função (uniforme, linear, parabólica)
+ - Tipos dos apoios (engaste, apoio simples [apenas reação normal] ou livre [somente em conjunto com engaste])
+
+ Terminal 1:
+ =============================================================
+ ===== Calculadora de forças internas em vigas apoiadas  =====
+ =============================================================
+  1 - Criar uma situação;
+ =============================================================
+ Entre com a opção desejada:
+ 	-
+ Terminal 2 (entrada 1):
+ =============================================================
+ ===== Calculadora de forças internas em vigas apoiadas  =====
+ =============================================================
+  * Tipos de apoio:
+ 	1. Apoio Simples;
+ 	2. Engaste;
+ 	3. Livre;
+ =============================================================  
+ 
+  Qual o tipo do primeiro apoio, localizado na posição '0x':
+	-
+  Qual o tipo do segundo apoio e sua poisição:
+	 -
+   &Tratamento de erro, se um dos apoios for livre, nescessariamente o outro será engaste
+
+ =============================================================
+ ===== Calculadora de forças internas em vigas apoiadas  =====
+ =============================================================
+  Agora que ja temos os apoios definidos, entre com a quantia
+  de ações externas atuantes na viga:
+ ============================================================= 
+	-
+
+ =============================================================
+ ===== Calculadora de forças internas em vigas apoiadas  =====
+ =============================================================
+  Para a ação 'x', determine se é uma força pontual, carga 
+  distribuida ou momento:
+	1. Força Pontual;
+	2. Momento;
+	3. Carga Distribuida;
+ =============================================================
+	-
+ clear
+ Para força ou momento
+	=============================================================
+	===== Calculadora de forças internas em vigas apoiadas  =====
+ 	=============================================================
+	  Qual a posição relativa, em metros, que essa ação atua em
+	  relação ao começo da viga?
+	=============================================================
+	 	- 
+	 	===========================================================
+	 	Tomando força para cima e momento horário como positivos,
+	 	qual a intensidade dessa ação? 
+	 	===========================================================
+	 		-
+	 clear
+	 Para carga destribuida
+	 ===========================================================
+	 Qual a posição relativa ao inicio da viga onde inicia a
+	 distribuição de carga?
+	 ===========================================================
+	 	-
+	 	===========================================================
+	 	E a posição final da distribuição da carga? 
+	 	Tambem em relação ao início da viga
+	 	===========================================================
+	 		-
+	 		============================================================== 
+	 		Qual a função da distribução de carga? 
+	 		 - Se sua distribuição for uniforme, entre com o valor de 'x';
+	 		 - Se sua distribuição for linear, entre com 'ax+b';
+	 		 - Se sua distribuição for parabólica, entre com 'ax²+bx+c';
+	 		==============================================================
+	 			-
+	 			===========================================================
+	 			Sua função distriubuição é 'func'?
+	 			Y prossegue pros calculos
+	 			N retorna a perguntar os valores dos coef
+		                ===========================================================
+	
