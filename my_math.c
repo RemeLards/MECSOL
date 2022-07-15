@@ -255,8 +255,9 @@ double def_integral_value(char* function, float inf_lim, float sup_lim) // posit
 
 char** function_divider(char* all_functions)
 {
-    int function_list_len = 1; // counts how many functions the string has
-    int first_char_is_sing = 0;
+    int functions_count = 1; // counts how many functions the string has
+    int first_char_is_sign = 0;
+    int past_i_value = 0;
     int i = 0, j = 0;
     char** function_list = NULL;
     char* single_function = NULL;
@@ -264,79 +265,97 @@ char** function_divider(char* all_functions)
 
     if(all_functions != NULL)
     {
-        if(all_functions[0] == '+' || all_functions[0] == '-')
+        if(all_functions[0] == '+' || all_functions[0] == '-') // checks if the first char of the function it´s a sign, it´s needed for the for loop
         {
             i++;
-            first_char_is_sing++;
+            first_char_is_sign++;
         }
 
-        for(i; all_functions[i] != '\0'; i++)if((all_functions[i] == '+' || all_functions[i] == '-')) function_list_len++;
+        // counts how many functions the function has 
+        // for example the function "x^2 + x + 5" it's a sum of 3 functions, "x^2", "x" and "5" 
+        for(i; all_functions[i] != '\0'; i++)if((all_functions[i] == '+' || all_functions[i] == '-')) functions_count++; 
 
-        function_lens = (int*)malloc(sizeof(int) * function_list_len);
+        function_lens = (int*)malloc(sizeof(int) * functions_count); //stores the lenght of each individual function
 
-        if(function_lens != NULL)
+        if(function_lens != NULL) // if we could allocate the int pointer
         {
         
-            function_list = (char**)malloc(sizeof(char*) * function_list_len);
+            function_list = (char**)malloc(sizeof(char*) * functions_count); //it stores the ammount of functions that we will allocate in it
 
-            if(function_list != NULL)
+            if(function_list != NULL) //if we could allocate the list of strings
             {
+                // setting up iterators values before entering the for loop
+                i = 0;
+                
+                for(i; i < functions_count; i++)function_list[i] = NULL; // initialize each pointers in "function_list" as NULL 
 
+                // setting up iterators values before entering the for loop
                 j = 0;
+                i = 0;
+                if(first_char_is_sign == 1)i++;
 
-                if(first_char_is_sing == 1)i++;
-                else i = 0;
-
-                for(i;all_functions[i] != '\0'; i++)
+                for(i;all_functions[i] != '\0'; i++) // counts each function length based on signs and '\0' chars
                 {
                     if(all_functions[i] == '+' || all_functions[i] == '-')
                     {
                         if(j > 0)
                         {
-                            function_lens[j] = i;
-                            j++;             
+                            function_lens[j] = i - function_lens[j-1]; // calculates the rest of the function length (cointaining it's sign)
+                            j++; // goes to the next "function_lens" pos          
                         }
                         else
                         {
-                            function_lens[j] = i - function_lens[j-1];
-                            j++;
+                            function_lens[j] = i; // calculates the first function length
+                            j++;  // goes to the next "function_lens" pos  
                         } 
                     }   
                 }
-                function_lens[j] = i - function_lens[j-1]; //last lenght value;
+                function_lens[j] = i - function_lens[j-1]; //last function lenght value;
 
+                // setting up iterators values before entering the for loop
                 j = 0;
                 i = 0;
+                past_i_value = 0;
 
-                for(j; j < function_list_len; j++)
+                for(j; j < functions_count; j++) // storing each individual function string
                 {
-                    single_function = malloc(sizeof(char) *(function_lens[j] + 1));
+                    single_function = malloc(sizeof(char) *(function_lens[j] + 1)); // +1 because of the '\0' char
 
-                    for(i; i < function_lens[j]; i++)
+                    if(single_function != NULL) // if the string was allocated
                     {
-                        if(j > 0)
+                        for(i; i < function_lens[j] + past_i_value; i++)
                         {
-                            single_function[i-function_lens[j]] = all_functions[i];
+                            single_function[i-past_i_value] = all_functions[i]; // copies the function with it's sign 
                         }
-                        else
-                        {
-                            single_function[i] = all_functions[i];
-                        }
+                        single_function[i-past_i_value] = '\0'; // terminates the function string
+
+                        function_list[j] = single_function; // stores the function string
+
+                        past_i_value = i; // saves the "i" value from the for loop;
                     }
+                    
+                    else //some string couldn't be allocated for some reason (error or memory insufficient)
+                    {
+                        // setting up iterators values before entering the for loop
+                        i = 0;
+                        
+                        for(i; i < functions_count; i++)
+                        {
+                            if(function_list[i] != NULL) free(function_list[i]); // freeing all strings allocated
+                        }
+                        
+                        free(function_list); // freeing the string pointer to indicate that something went wrong
 
-                    if(j > 0)single_function[i-function_lens[j]] = '\0';
-                    else single_function[i] = '\0';
-
-                    function_list[j] = single_function;
+                        break;
+                    }
                 }
 
             }
         }
 
-        if(function_lens != NULL)free(function_lens);
-        if(single_function != NULL)free(single_function);
-
     }
+
+    if(function_lens != NULL)free(function_lens); // frees the pointer if it isn't NULL
 
     return function_list;
 
