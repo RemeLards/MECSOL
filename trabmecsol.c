@@ -41,8 +41,8 @@ int main(int argc, char** argv)
     //***************************************************************************TESTING FUNCTION DIVIDER***************************************************************************
     //Uncomment to test it
 
-    /*                                
-    char* all_functions = "x^1111+x^111+x^11-x^4+x^3+x^2-x+5"; // any function (without spaces between chars)
+                                    
+    char* all_functions = "+x^1111+1"; // any function (without spaces between chars)
     int i = 0; // iterator
     int first_char_is_sign = 0; // checks if the first char is a sign
     int functions_count = 1; // simulating that the string that we put is a function, so it has atleast one function
@@ -75,7 +75,7 @@ int main(int argc, char** argv)
     }
 
     free(f_list);
-    */
+    
     
     return 0;
 }

@@ -57,9 +57,9 @@ int exponent_value(char* function)
 
 char* mult_const_str(char* function)
 {
-    int mult_const_len = 0;
-    char* mult_const = NULL;
-    int const_i = 0; 
+    int mult_const_len = 0; // default multiplicative constant str length
+    char* mult_const = NULL; // mltiplicative constant str 
+    int const_i = 0; // constant iterator
 
     //while the string is an integer or a float point, it'll count its length
     for(mult_const_len = 0; (function[mult_const_len]>= '0' && function[mult_const_len]<= '9') || function[mult_const_len]== '.'; mult_const_len++);
@@ -100,9 +100,9 @@ double mult_const_value(char* function)
 
 char* div_const_str(char* function)
 {
-    int div_const_len = -1;
-    char* div_const = NULL;
-    int func_i = 0,const_i = 0;
+    int div_const_len = -1; // default dividing constant str length
+    char* div_const = NULL; // dividing constant str 
+    int func_i = 0,const_i = 0; // iterators (function iterator, constant iterator)
     
     for(func_i = 0; function[func_i] != '\0'; func_i++) //gets number length after the 'x' expression
     {
@@ -241,7 +241,7 @@ double def_integral_value(char* function, float inf_lim, float sup_lim) // posit
     exponent = exponent_value(indef_integral_str); // Getting exponent value of the Indefinite Integral
     if(indef_integral_str != NULL)free(indef_integral_str); // Dont need the Indefinite Integral
 
-    if(exponent > 0) // only works with positive integer
+    if(exponent > 0) // calculating definite integral (only works with positive integer)
     {
         for(int i = 0; i < exponent;i++)
         {
@@ -257,12 +257,12 @@ double def_integral_value(char* function, float inf_lim, float sup_lim) // posit
 char** function_divider(char* all_functions)
 {
     int functions_count = 1; // counts how many functions the string has
-    int first_char_is_sign = 0;
-    int past_i_value = 0;
-    int i = 0, j = 0;
-    char** function_list = NULL;
-    char* single_function = NULL;
-    int* function_lens = NULL;
+    int first_char_is_sign = 0; // checks if the first char is a sign
+    int i = 0, j = 0; // iterators
+    int past_i_value = 0; // store the past value of "i" iterator 
+    char** function_list = NULL; // vector containing all functions
+    char* single_function = NULL; // single function string
+    int* function_lens = NULL; // vector containing all functions lenghts
 
     if(all_functions != NULL)
     {

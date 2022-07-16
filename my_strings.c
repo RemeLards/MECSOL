@@ -195,7 +195,7 @@ char* my_itoa(int int_n) // Converts an integer number in decimal base, and retu
         n_str[i] = n_to_char + '0';
         multiplier/=10;
     }
-    n_str[i] = '\0';
+    n_str[i] = '\0'; // finalizing str
 
     return n_str;
 }
