@@ -7,7 +7,9 @@
 
 char* indef_integral_ncosnt(char* function); // Returns a allocated str containing the indifinite integral without constants included
 double def_integral_value(char* function, float inf_lim, float sup_lim); // Returns integral value
-char** function_divider(char* function); 
+char** function_divider(char* function); // Divides polynomial function sums in a vector cointaining each polynomial of the function
+double function_centroid(char* function);  // Retuns function "x" value centroid 
+char* x_power_increment(char* function); // increments "x" power in a function by 1 , only works with positive integers numbers
 
 char* exponent_str(char* function); // Returns the string containing the exponent
 char* mult_const_str(char* function); // Returns the string containing the constant multiplying the integral

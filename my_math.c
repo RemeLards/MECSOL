@@ -152,72 +152,90 @@ char* indef_integral_ncosnt(char* function) // positive integer polynomials only
 {
     char* indef_integral_str = NULL; // Indefinite Integral
     char* exponent = NULL; // Exponent of the function
-    int exponent_len = 0; // length of expoent str
+    int exponent_len = 0; // length of exponent str
     int exponent_value = 0; // Exponent value
     int integral_i = 0; // exponent, function and integral Iterators
 
-    exponent = exponent_str(function); // gets exponent string
-
-    if(exponent != NULL)
-    {   
-        exponent_len = my_strlen(exponent); // Getting string length
-
-
-        // if it's true, one more byte is needed because the next number string will have length "exponent_len + 1"
-        // and the integral will be divided by the same number, that's why is multiplied by 2 
-        if(exponent_len == str_count_char(exponent,'9')) indef_integral_str = (char*)malloc(sizeof(char) * (2*(++exponent_len) + CHARS_NEEDED + 1));
-    
-        else indef_integral_str = (char*)malloc(sizeof(char) * (2*exponent_len + CHARS_NEEDED + 1));
-
-        // setting up polinomial integration string 
-        indef_integral_str[integral_i++] ='(';
-        indef_integral_str[integral_i++] ='x';
-        indef_integral_str[integral_i++] ='^';
-
-        // adding +1 to the exponent
-        exponent_value = my_atoi(exponent) + 1;
-        free(exponent); // Don't need "old" exponent
-        exponent = my_itoa(exponent_value); // getting new exponent
-
-        // copying the new exponent to the indefinite integral 
-        for(int i = 0; i < exponent_len; integral_i++, i++)indef_integral_str[integral_i] = exponent[i]; 
-
-        // setting up polinomial integration string 
-        indef_integral_str[integral_i++] =')';
-        indef_integral_str[integral_i++] ='/';
-
-        // dividing the polinomial by the new exponent
-        for(int i = 0; i < exponent_len; integral_i++, i++)indef_integral_str[integral_i] = exponent[i]; 
-        
-        // ending the string
-        indef_integral_str[integral_i] = '\0';
-
-        free(exponent); // freeing allocated str that won't return;
-    }
-    else
+    if(function != NULL)
     {
-        //if the function is "C*x"
+        exponent = exponent_str(function); // gets exponent string
 
-        if(str_count_char(function,'x') == 1 && str_count_char(function,'^') == 0)
-        {
-            exponent_len = 1;
-            indef_integral_str = (char*)malloc(sizeof(char) * (2*exponent_len + CHARS_NEEDED + 1));
-            char* integral_of_x = "(x^2)/2";
+        if(exponent != NULL)
+        {   
+            exponent_len = my_strlen(exponent); // Getting string length
 
-            // setting up polinomial integration string 
-            for(integral_i = 0; integral_i < (2*exponent_len + CHARS_NEEDED); integral_i++)indef_integral_str[integral_i] = integral_of_x[integral_i];
-            indef_integral_str[integral_i] ='\0';
 
+            // if it's true, one more byte is needed because the next number string will have length "exponent_len + 1"
+            // and the integral will be divided by the same number, that's why is multiplied by 2 
+            if(exponent_len == str_count_char(exponent,'9')) indef_integral_str = (char*)malloc(sizeof(char) * (2*(++exponent_len) + CHARS_NEEDED + 1));
+        
+            else indef_integral_str = (char*)malloc(sizeof(char) * (2*exponent_len + CHARS_NEEDED + 1));
+
+            if(indef_integral_str != NULL)
+            {
+
+                // setting up polinomial integration string 
+                indef_integral_str[integral_i++] ='(';
+                indef_integral_str[integral_i++] ='x';
+                indef_integral_str[integral_i++] ='^';
+
+                // adding +1 to the exponent
+                exponent_value = my_atoi(exponent) + 1;
+                free(exponent); // Don't need "old" exponent
+                exponent = my_itoa(exponent_value); // getting new exponent
+
+                if(exponent != NULL)
+                {
+                    // copying the new exponent to the indefinite integral 
+                    for(int i = 0; i < exponent_len; integral_i++, i++)indef_integral_str[integral_i] = exponent[i]; 
+
+                    // setting up polinomial integration string 
+                    indef_integral_str[integral_i++] =')';
+                    indef_integral_str[integral_i++] ='/';
+
+                    // dividing the polinomial by the new exponent
+                    for(int i = 0; i < exponent_len; integral_i++, i++)indef_integral_str[integral_i] = exponent[i]; 
+                    
+                    // ending the string
+                    indef_integral_str[integral_i] = '\0';
+                }
+            }
+            
+            if(exponent != NULL) free(exponent); // freeing allocated str that won't return;
         }
-
-        //if the function is "C"
-
-        if(str_count_char(function,'x') == 0 && str_count_char(function,'^') == 0)
+        else
         {
-            exponent_len = 0;
-            indef_integral_str = (char*)malloc(sizeof(char) * (1 + 1));// for the 'x' and for the '\0'
-            indef_integral_str[integral_i++] ='x';
-            indef_integral_str[integral_i] ='\0';      
+            //if the function is "C*x"
+
+            if(str_count_char(function,'x') == 1 && str_count_char(function,'^') == 0)
+            {
+                exponent_len = 1;
+                indef_integral_str = (char*)malloc(sizeof(char) * (2*exponent_len + CHARS_NEEDED + 1));
+
+                if(indef_integral_str != NULL)
+                {
+                    char* integral_of_x = "(x^2)/2";
+
+                    // setting up polinomial integration string 
+                    for(integral_i = 0; integral_i < (2*exponent_len + CHARS_NEEDED); integral_i++)indef_integral_str[integral_i] = integral_of_x[integral_i];
+                    indef_integral_str[integral_i] ='\0';
+                }
+
+            }
+
+            //if the function is "C"
+
+            if(str_count_char(function,'x') == 0 && str_count_char(function,'^') == 0)
+            {
+                exponent_len = 0;
+                indef_integral_str = (char*)malloc(sizeof(char) * (1 + 1));// for the 'x' and for the '\0'
+
+                if(indef_integral_str != NULL)
+                {
+                    indef_integral_str[integral_i++] ='x';
+                    indef_integral_str[integral_i] ='\0';
+                }  
+            }
         }
     }
 
@@ -355,4 +373,124 @@ char** function_divider(char* all_functions)
 
     return function_list;
 
+}
+
+char* x_power_increment(char* function)
+{
+    char* exponent = NULL; // Exponent of the function
+    char* x_incremented_function = NULL; // function with the "x" power incremented
+    int exponent_len = 0; // length of exponent str
+    int function_exponent_len = 0; // lenght of exponent in the function
+    int function_len = 0; // length of function str
+    int exponent_value = 0; // Exponent value 
+    int i = 0,j = 0; // iterators
+
+    if(function != NULL)
+    {
+        exponent = exponent_str(function); // gets exponent string
+
+        if(exponent != NULL) // There´s a number after the '^' char
+        {
+            function_len = my_strlen(function); // Getting function length
+            function_exponent_len = my_strlen(exponent); // Getting string length
+
+            // if it's true, one more byte is needed because the next number string will have length "function_len + 1" 
+            if(function_exponent_len == str_count_char(exponent,'9'))
+            {
+                x_incremented_function = (char*)malloc(sizeof(char) * (++function_len + 1));
+                exponent_len = function_exponent_len + 1;
+            }  
+            else
+            {
+                x_incremented_function = (char*)malloc(sizeof(char) * (function_len + 1));
+                exponent_len = function_exponent_len;
+            }
+
+            if(x_incremented_function != NULL)
+            {
+                // adding +1 to the exponent
+                exponent_value = my_atoi(exponent) + 1;
+                free(exponent); // Don't need "old" exponent
+                exponent = my_itoa(exponent_value); // getting new exponent
+
+                if(exponent != NULL)
+                {
+                    // copying the function till the '^' char
+                    for(i = 0; function[i] != '^'; i++)x_incremented_function[i] = function[i];
+                    x_incremented_function[i] = '^'; // putting the power symbol
+
+                    // copying the new exponent to the function
+                    for(j = 0; j < exponent_len; j++)x_incremented_function[i+j+1] = exponent[j];
+                    i += function_exponent_len + 1; // next loop will start after the exponent number of the function
+
+                    int len_diff = exponent_len - function_exponent_len; //length difference between the two exponents strings
+
+                    for(i; function[i] != '\0'; i++)x_incremented_function[i+len_diff] = function[i]; // copying the rest of the function str
+                    x_incremented_function[i+len_diff] = '\0'; //finalizing the str
+
+                }            
+            }
+            if(exponent != NULL) free(exponent); // freeing allocated str that won't return;
+        }
+        
+        else
+        {
+            //if the function is "C*x"
+
+            if(str_count_char(function,'x') == 1 && str_count_char(function,'^') == 0)
+            {
+                function_len = my_strlen(function); // Getting function length
+                x_incremented_function = (char*)malloc(sizeof(char) * (function_len + 1 + 1 + 1)); // putting the "^", "2" and "\0" 
+
+                if(x_incremented_function != NULL)
+                {
+                    char* increment_of_function_x = "x^2";
+
+                    // copying function and increment_of_function_x
+                    for(i = 0; function[i] != 'x'; i++)
+                    {
+                        x_incremented_function[i] = function[i];
+                        printf("%c\n",function[i]);
+                    }
+                    for(j = 0; j < 3; j++)
+                    {
+                        printf("%c\n",increment_of_function_x[j]);
+                        x_incremented_function[i+j] = increment_of_function_x[j];
+                    }
+                    for(i += 1; function[i] != '\0'; i++)
+                    {
+                        printf("%c\n",function[i]);
+                        x_incremented_function[i+j-1] = function[i];
+                    }
+
+                    x_incremented_function[i] ='\0'; //finalizing str
+                }
+
+            }
+
+            //if the function is "C"
+
+            if(str_count_char(function,'x') == 0 && str_count_char(function,'^') == 0)
+            {
+                function_len = my_strlen(function); // Getting function length
+                x_incremented_function = (char*)malloc(sizeof(char) * (function_len + 1 + 1));// for the 'x' and for the '\0'
+
+                if(x_incremented_function != NULL)
+                {
+                    char increment_of_function_C = 'x';
+
+                    // copying function and increment_of_function_C
+                    for(i = 0; function[i] >= '0' && function[i] <= '9'; i++)x_incremented_function[i] = function[i];
+                    x_incremented_function[i] = increment_of_function_C;
+                    for(i; function[i] != '\0'; i++)x_incremented_function[i+1] = function[i];
+
+                    printf("function_len : %d\n",function_len + 1 + 1);
+                    
+                    x_incremented_function[i] ='\0'; //finalizing str
+                }  
+            }
+        }
+    }
+
+    return x_incremented_function; 
 }

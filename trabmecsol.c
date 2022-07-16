@@ -41,7 +41,7 @@ int main(int argc, char** argv)
     //***************************************************************************TESTING FUNCTION DIVIDER***************************************************************************
     //Uncomment to test it
 
-                                    
+     /*                               
     char* all_functions = "+x^1111+1"; // any function (without spaces between chars)
     int i = 0; // iterator
     int first_char_is_sign = 0; // checks if the first char is a sign
@@ -74,7 +74,11 @@ int main(int argc, char** argv)
         }
     }
 
-    free(f_list);
+    free(f_list);*/
+
+    char* function_incremented = x_power_increment("4x");
+    printf("%s\n",function_incremented);
+    free(function_incremented);
     
     
     return 0;

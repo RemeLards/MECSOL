@@ -180,7 +180,7 @@ char* my_itoa(int int_n) // Converts an integer number in decimal base, and retu
     int multiplier = 1; // decimal base multiplier
     int int_n_copy = int_n/10; // "int_n" have atleast 1 number, if that`s the case, "int_n_copy" will be 0;
     int int_n_len = 1; // "int_n" is atleast 1;
-    char* n_str; // str to be returned
+    char* n_str = NULL; // str to be returned
     int i = 0; // iterator
 
     // Calculates Integer length
@@ -189,13 +189,16 @@ char* my_itoa(int int_n) // Converts an integer number in decimal base, and retu
 
     n_str = (char*)malloc(sizeof(char)*(int_n_len + 1)); // +1 for the '\0' char
 
-    for(i = 0; i < int_n_len; i++)
+    if(n_str != NULL)
     {
-        int n_to_char = (int_n/multiplier) - (int_n/(multiplier*10))*10; // calculates the number that will be converted to char
-        n_str[i] = n_to_char + '0';
-        multiplier/=10;
+        for(i = 0; i < int_n_len; i++)
+        {
+            int n_to_char = (int_n/multiplier) - (int_n/(multiplier*10))*10; // calculates the number that will be converted to char
+            n_str[i] = n_to_char + '0';
+            multiplier/=10;
+        }
+        n_str[i] = '\0'; // finalizing str
     }
-    n_str[i] = '\0'; // finalizing str
 
     return n_str;
 }
