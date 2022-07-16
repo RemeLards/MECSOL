@@ -1,4 +1,5 @@
 #include "my_math.h"
+#include <stdio.h>
  
 #define CHARS_NEEDED 5 //adding chars 'x','^', '(' ,')','/' 
 
@@ -287,30 +288,25 @@ char** function_divider(char* all_functions)
                 // setting up iterators values before entering the for loop
                 i = 0;
                 
-                for(i; i < functions_count; i++)function_list[i] = NULL; // initialize each pointers in "function_list" as NULL 
+                for(i; i < functions_count; i++)function_list[i] = NULL; // initialize each pointers in "function_list" as NULL      
 
                 // setting up iterators values before entering the for loop
                 j = 0;
                 i = 0;
                 if(first_char_is_sign == 1)i++;
+                past_i_value = 0;
+
 
                 for(i;all_functions[i] != '\0'; i++) // counts each function length based on signs and '\0' chars
                 {
                     if(all_functions[i] == '+' || all_functions[i] == '-')
                     {
-                        if(j > 0)
-                        {
-                            function_lens[j] = i - function_lens[j-1]; // calculates the rest of the function length (cointaining it's sign)
-                            j++; // goes to the next "function_lens" pos          
-                        }
-                        else
-                        {
-                            function_lens[j] = i; // calculates the first function length
-                            j++;  // goes to the next "function_lens" pos  
-                        } 
+                        function_lens[j] = i - past_i_value; // calculates  the function length 
+                        j++;  // goes to the next "function_lens" pos 
+                        past_i_value = i;  //saves the "i" value from the for loop;
                     }   
                 }
-                function_lens[j] = i - function_lens[j-1]; //last function lenght value;
+                function_lens[j] = i - past_i_value; //last function lenght value;
 
                 // setting up iterators values before entering the for loop
                 j = 0;

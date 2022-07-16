@@ -2,7 +2,10 @@
 
 int main(int argc, char** argv)
 {
-    char* function;
+    //***************************************************************************TESTING INTEGRALS***************************************************************************
+    //Uncomment to test it
+
+    /* char* function;
     float inf_lim ,sup_lim;
     if(argc <= 1)
     {
@@ -33,12 +36,18 @@ int main(int argc, char** argv)
     float def_integral = def_integral_value(function,inf_lim,sup_lim);
     printf("The Indefinite Integral (without constants included) of %s is %s\n", function , indef_integral_str);
     printf("The Definite Integral of %s from %.2f to %.2f is %.2f\n", function , inf_lim, sup_lim, def_integral);
-    free(indef_integral_str);
+    free(indef_integral_str);*/
 
-    /* char* all_functions = "+x^3+x+x^2-x+5"; // any function (without spaces between chars)
+    //***************************************************************************TESTING FUNCTION DIVIDER***************************************************************************
+    //Uncomment to test it
+
+    /*                                
+    char* all_functions = "x^1111+x^111+x^11-x^4+x^3+x^2-x+5"; // any function (without spaces between chars)
     int i = 0; // iterator
     int first_char_is_sign = 0; // checks if the first char is a sign
     int functions_count = 1; // simulating that the string that we put is a function, so it has atleast one function
+
+    printf("all_functions : %s\n",all_functions); 
 
     if(all_functions[0] == '+' || all_functions[0] == '-') // checks if the first char of the function it´s a sign, it´s needed for the for loop
     {
@@ -65,7 +74,8 @@ int main(int argc, char** argv)
         }
     }
 
-    free(f_list);*/
+    free(f_list);
+    */
     
     return 0;
 }
