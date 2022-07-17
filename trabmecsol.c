@@ -76,7 +76,7 @@ int main(int argc, char** argv)
 
     free(f_list);*/
 
-    char* function_incremented = x_power_increment("4x");
+    char* function_incremented = x_power_increment("");
     printf("%s\n",function_incremented);
     free(function_incremented);
     

@@ -447,23 +447,11 @@ char* x_power_increment(char* function)
                     char* increment_of_function_x = "x^2";
 
                     // copying function and increment_of_function_x
-                    for(i = 0; function[i] != 'x'; i++)
-                    {
-                        x_incremented_function[i] = function[i];
-                        printf("%c\n",function[i]);
-                    }
-                    for(j = 0; j < 3; j++)
-                    {
-                        printf("%c\n",increment_of_function_x[j]);
-                        x_incremented_function[i+j] = increment_of_function_x[j];
-                    }
-                    for(i += 1; function[i] != '\0'; i++)
-                    {
-                        printf("%c\n",function[i]);
-                        x_incremented_function[i+j-1] = function[i];
-                    }
+                    for(i = 0; function[i] != 'x'; i++)x_incremented_function[i] = function[i];
+                    for(j = 0; j < 3; j++)x_incremented_function[i+j] = increment_of_function_x[j];
+                    for(i += 1; function[i] != '\0'; i++)x_incremented_function[i+j-1] = function[i];
 
-                    x_incremented_function[i] ='\0'; //finalizing str
+                    x_incremented_function[i+j-1] ='\0'; //finalizing str
                 }
 
             }
@@ -483,10 +471,8 @@ char* x_power_increment(char* function)
                     for(i = 0; function[i] >= '0' && function[i] <= '9'; i++)x_incremented_function[i] = function[i];
                     x_incremented_function[i] = increment_of_function_C;
                     for(i; function[i] != '\0'; i++)x_incremented_function[i+1] = function[i];
-
-                    printf("function_len : %d\n",function_len + 1 + 1);
                     
-                    x_incremented_function[i] ='\0'; //finalizing str
+                    x_incremented_function[i+1] ='\0'; //finalizing str
                 }  
             }
         }
