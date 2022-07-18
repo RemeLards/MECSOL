@@ -60,9 +60,16 @@ char* mult_const_str(char* function)
     int mult_const_len = 0; // default multiplicative constant str length
     char* mult_const = NULL; // mltiplicative constant str 
     int const_i = 0; // constant iterator
+    int first_char_is_sign = 0;
+
+    if(function[0] == '+' || function[0] == '-')
+    {
+        const_i++; //if first char is a sign, we skip it
+        first_char_is_sign++;
+    }
 
     //while the string is an integer or a float point, it'll count its length
-    for(mult_const_len = 0; (function[mult_const_len]>= '0' && function[mult_const_len]<= '9') || function[mult_const_len]== '.'; mult_const_len++);
+    for(const_i; (function[const_i]>= '0' && function[const_i]<= '9') || function[const_i]== '.'; mult_const_len++,const_i++);
 
     if(mult_const_len > 0)
     {
@@ -73,7 +80,7 @@ char* mult_const_str(char* function)
         {
 
             //copies the constant string
-            for(const_i = 0; const_i < mult_const_len; const_i++)mult_const[const_i] = function[const_i];
+            for(const_i = 0; const_i < mult_const_len; const_i++)mult_const[const_i] = function[const_i+first_char_is_sign];
             
             //finalizing str
             mult_const[const_i] = '\0';
@@ -242,131 +249,139 @@ char* indef_integral_ncosnt(char* function) // positive integer polynomials only
     return indef_integral_str;
 }
 
-double def_integral_value(char* function, float inf_lim, float sup_lim) // positive integer polynomials only 
+double def_integral_value(char* function, double inf_lim, double sup_lim) // positive integer polynomials only 
 {
     int exponent = 0; // exponent number
     double inf_value = 1, sup_value = 1; // Inferior Number and Superior Number, Numbers that we get after applying the inferior and superior limits
     double def_integral = 0, constant = 0; // integral value
     char* indef_integral_str = NULL; // Integral Indefinite string
+    char** function_list = NULL; // list containing individual functions
+    int functions_count = 0; // number of functions in function_list
+    int function_sign = 1; // number is positive (1) or negative(-1) 
 
-    //Calculating Constants Value
-
-    constant = (mult_const_value(function)/div_const_value(function));
-
-    // Calculating Integral
-
-    indef_integral_str = indef_integral_ncosnt(function); // Getting the Indefinite Integral (retuns a allocated string)
-    exponent = exponent_value(indef_integral_str); // Getting exponent value of the Indefinite Integral
-    if(indef_integral_str != NULL)free(indef_integral_str); // Dont need the Indefinite Integral
-
-    if(exponent > 0) // calculating definite integral (only works with positive integer)
+    if(function != NULL)
     {
-        for(int i = 0; i < exponent;i++)
+        functions_count = my_math_function_count(function);
+        
+        if(functions_count > 0)
         {
-            inf_value*=inf_lim;
-            sup_value*=sup_lim;
+            function_list = my_math_function_divider(function);
+
+            if(function_list != NULL)
+            {
+                for(int i = 0; i < functions_count; i++)
+                {
+                    if(function_list[i][0] == '-')function_sign = -1;
+                    else function_sign = 1; 
+                    //Calculating Constants Value
+
+                    constant = (mult_const_value(function_list[i])/div_const_value(function_list[i]));
+
+                    // Calculating Integral
+
+                    indef_integral_str = indef_integral_ncosnt(function_list[i]); // Getting the Indefinite Integral (retuns a allocated string)
+                    exponent = exponent_value(indef_integral_str); // Getting exponent value of the Indefinite Integral
+                    if(indef_integral_str != NULL)free(indef_integral_str); // Dont need the Indefinite Integral
+
+                    if(exponent > 0) // calculating definite integral (only works with positive integer)
+                    {
+                        for(int j = 0; j < exponent;j++)
+                        {
+                            inf_value*=inf_lim;
+                            sup_value*=sup_lim;
+                        }
+                        def_integral += function_sign * constant*((sup_value-inf_value)/exponent); 
+                    }
+                    printf("function : %s\n",function_list[i]);
+                    printf("exponent : %d\n",exponent);
+                    printf("constant : %.5f\n",constant);
+                    printf("function sign : %d\n",function_sign);
+                    printf("\n");
+
+                    inf_value = 1;
+                    sup_value = 1;
+                }
+            }
         }
-        def_integral = constant*((sup_value-inf_value)/exponent); 
+    }
+    if(function_list != NULL)
+    {
+        for(int i = 0; i < functions_count; i++)free(function_list[i]);
+        free(function_list);
     }
 
     return def_integral;
 }
 
-char** function_divider(char* all_functions)
+double my_math_function_centroid(char* function,double inf_lim, double sup_lim)
 {
-    int functions_count = 1; // counts how many functions the string has
-    int first_char_is_sign = 0; // checks if the first char is a sign
+    double function_area = 0;
+    double centroid_x = 0;
+    double function_moment = 0;
+
+    function_area = def_integral_value(function,inf_lim,sup_lim);
+
+}
+
+char** my_math_function_divider(char* all_functions)
+{
+    int functions_count = 0; // counts how many functions the string has
     int i = 0, j = 0; // iterators
     int past_i_value = 0; // store the past value of "i" iterator 
     char** function_list = NULL; // vector containing all functions
     char* single_function = NULL; // single function string
     int* function_lens = NULL; // vector containing all functions lenghts
 
-    if(all_functions != NULL)
+    if(all_functions != NULL) //if function string isn't NULL
     {
-        if(all_functions[0] == '+' || all_functions[0] == '-') // checks if the first char of the function it´s a sign, it´s needed for the for loop
-        {
-            i++;
-            first_char_is_sign++;
-        }
+        functions_count = my_math_function_count(all_functions);
 
-        // counts how many functions the function has 
-        // for example the function "x^2 + x + 5" it's a sum of 3 functions, "x^2", "x" and "5" 
-        for(i; all_functions[i] != '\0'; i++)if((all_functions[i] == '+' || all_functions[i] == '-')) functions_count++; 
+        if(functions_count > 0)
+        { 
+            function_lens = my_math_function_lens(all_functions); //stores the lenght of each individual function
 
-        function_lens = (int*)malloc(sizeof(int) * functions_count); //stores the lenght of each individual function
-
-        if(function_lens != NULL) // if we could allocate the int pointer
-        {
-        
-            function_list = (char**)malloc(sizeof(char*) * functions_count); //it stores the ammount of functions that we will allocate in it
-
-            if(function_list != NULL) //if we could allocate the list of strings
+            if(function_lens != NULL) // if we could allocate the int pointer
             {
-                // setting up iterators values before entering the for loop
-                i = 0;
-                
-                for(i; i < functions_count; i++)function_list[i] = NULL; // initialize each pointers in "function_list" as NULL      
+                //it stores the ammount of functions that we will allocate in it
+                function_list = (char**)malloc(sizeof(char*) * (functions_count));
 
-                // setting up iterators values before entering the for loop
-                j = 0;
-                i = 0;
-                if(first_char_is_sign == 1)i++;
-                past_i_value = 0;
-
-
-                for(i;all_functions[i] != '\0'; i++) // counts each function length based on signs and '\0' chars
+                if(function_list != NULL) //if we could allocate the list of strings
                 {
-                    if(all_functions[i] == '+' || all_functions[i] == '-')
+                    for(i = 0; i < functions_count; i++)function_list[i] = NULL; // initialize each pointers in "function_list" as NULL      
+
+                    // setting up iterators values before entering the for loop
+                    i = 0;
+                    past_i_value = 0;
+
+                    for(j = 0; j < functions_count; j++) // storing each individual function string
                     {
-                        function_lens[j] = i - past_i_value; // calculates  the function length 
-                        j++;  // goes to the next "function_lens" pos 
-                        past_i_value = i;  //saves the "i" value from the for loop;
-                    }   
-                }
-                function_lens[j] = i - past_i_value; //last function lenght value;
+                        single_function = (char*)malloc(sizeof(char) *(function_lens[j] + 1)); // +1 because of the '\0' char
 
-                // setting up iterators values before entering the for loop
-                j = 0;
-                i = 0;
-                past_i_value = 0;
-
-                for(j; j < functions_count; j++) // storing each individual function string
-                {
-                    single_function = malloc(sizeof(char) *(function_lens[j] + 1)); // +1 because of the '\0' char
-
-                    if(single_function != NULL) // if the string was allocated
-                    {
-                        for(i; i < function_lens[j] + past_i_value; i++)
+                        if(single_function != NULL) // if the string was allocated
                         {
-                            single_function[i-past_i_value] = all_functions[i]; // copies the function with it's sign 
-                        }
-                        single_function[i-past_i_value] = '\0'; // terminates the function string
+                            for(i; i < function_lens[j] + past_i_value; i++)
+                            {
+                                single_function[i-past_i_value] = all_functions[i]; // copies the function with it's sign 
+                            }
+                            single_function[i-past_i_value] = '\0'; // terminates the function string
 
-                        function_list[j] = single_function; // stores the function string
+                            function_list[j] = single_function; // stores the function string
 
-                        past_i_value = i; // saves the "i" value from the for loop;
-                    }
-                    
-                    else //some string couldn't be allocated for some reason (error or memory insufficient)
-                    {
-                        // setting up iterators values before entering the for loop
-                        i = 0;
-                        
-                        for(i; i < functions_count; i++)
-                        {
-                            if(function_list[i] != NULL) free(function_list[i]); // freeing all strings allocated
+                            past_i_value = i; // saves the "i" value from the for loop;
                         }
                         
-                        free(function_list); // freeing the string pointer to indicate that something went wrong
+                        else //some string couldn't be allocated for some reason (error or memory insufficient)
+                        {   
+                            for(i = 0; i < functions_count; i++) if(function_list[i] != NULL) free(function_list[i]); // freeing all strings allocated
+                            
+                            free(function_list); // freeing the string pointer to indicate that something went wrong
 
-                        break;
+                            break;
+                        }
                     }
                 }
-
             }
         }
-
     }
 
     if(function_lens != NULL)free(function_lens); // frees the pointer if it isn't NULL
@@ -479,4 +494,60 @@ char* x_power_increment(char* function)
     }
 
     return x_incremented_function; 
+}
+
+int my_math_function_count(char* all_functions)
+{
+    int i = 0; // iterator
+    int functions_count = 0; // counts how many functions the string has
+
+    if(all_functions != NULL)
+    {
+        functions_count = 1; // There's atleast one function
+
+        if(all_functions[0] == '+' || all_functions[0] == '-')i++; // checks if the first char of the function it´s a sign, it´s needed for the for loop
+
+        // counts how many functions the function has 
+        // for example the function "x^2 + x + 5" it's a sum of 3 functions, "x^2", "x" and "5" 
+        for(i; all_functions[i] != '\0'; i++)if((all_functions[i] == '+' || all_functions[i] == '-')) functions_count++;
+    }
+
+    return functions_count;
+}
+
+int* my_math_function_lens(char* all_functions)
+{
+    int j = 0, i = 0; // Iterators
+    int past_i_value = 0; // save past "i" iterator value
+    int* function_lens = NULL; 
+    int functions_count = 0; // Counts how many functions the function is made of
+
+    if(all_functions != NULL)
+    {
+        if(all_functions[0] == '+' || all_functions[0] == '-')i++; // checks if the first char of the function it´s a sign, it´s needed for the for loop
+
+        functions_count = my_math_function_count(all_functions); // gets ammount of functions
+        
+        if(functions_count > 0) //There's atleast one function
+        {
+            function_lens = (int*)malloc(sizeof(int) * functions_count); // allocate the ammount 
+
+            if(function_lens != NULL) // function_lens could be allocated
+            {
+
+                for(i;all_functions[i] != '\0'; i++) // counts each function length based on signs and '\0' chars
+                {
+                    if(all_functions[i] == '+' || all_functions[i] == '-')
+                    {
+                        function_lens[j] = i - past_i_value; // calculates  the function length 
+                        j++;  // goes to the next "function_lens" pos 
+                        past_i_value = i;  //saves the "i" value from the for loop;
+                    }   
+                }
+                function_lens[j] = i - past_i_value; //last function lenght value;]
+            }
+        }
+    }
+
+    return function_lens;
 }

@@ -1,0 +1,64 @@
+    //***************************************************************************TESTING INTEGRALS***************************************************************************
+    //Uncomment to test it
+
+    /* char* function;
+    float inf_lim ,sup_lim;
+    if(argc <= 1)
+    {
+        function = "2";
+        sup_lim = 1;
+        inf_lim = 0;
+    }
+    if(argc == 2)
+    {
+        function = argv[1];
+        sup_lim = 1;
+        inf_lim = 0;
+    }
+    if(argc == 3)
+    {
+        function = argv[1];
+        inf_lim = my_atof(argv[2]);;
+        sup_lim = 1;
+    }
+    if(argc >= 4)
+    {
+        function = argv[1];
+        inf_lim = my_atof(argv[2]);
+        sup_lim = my_atof(argv[3]);
+    }
+    
+    char* indef_integral_str = indef_integral_ncosnt(function); //Getting the Indefinite Integral without constants included (retuns a allocated string)
+    float def_integral = def_integral_value(function,inf_lim,sup_lim);
+    printf("The Indefinite Integral (without constants included) of %s is %s\n", function , indef_integral_str);
+    printf("The Definite Integral of %s from %.2f to %.2f is %.2f\n", function , inf_lim, sup_lim, def_integral);
+    free(indef_integral_str);*/
+
+    //***************************************************************************TESTING FUNCTION DIVIDER***************************************************************************
+    //Uncomment to test it
+
+     /*                               
+    char* all_functions = "5"; // any function (without spaces between chars)
+    int functions_count = 0; // simulating that the string that we put is a function, so it has atleast one function
+
+    printf("all_functions : %s\n",all_functions); 
+
+    functions_count = my_math_function_size(all_functions);
+    char** f_list = my_math_function_divider(all_functions);
+
+    if(f_list != NULL) // if "f_list" isn't NULL, that means that the function could allocate every function, that's why it isn't needed to check if each string is NULL
+    {
+        for(int j = 0; j < functions_count; j++)
+        {
+            printf("function number %d : %s\n",j+1,f_list[j]);
+        }
+
+        for(int j = 0; j < functions_count; j++)
+        {
+            free(f_list[j]);
+        }
+    }
+
+    printf("functions_count : %d\n",functions_count);
+
+    free(f_list);*/
