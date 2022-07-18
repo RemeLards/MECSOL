@@ -292,11 +292,6 @@ double def_integral_value(char* function, double inf_lim, double sup_lim) // pos
                         }
                         def_integral += function_sign * constant*((sup_value-inf_value)/exponent); 
                     }
-                    printf("function : %s\n",function_list[i]);
-                    printf("exponent : %d\n",exponent);
-                    printf("constant : %.5f\n",constant);
-                    printf("function sign : %d\n",function_sign);
-                    printf("\n");
 
                     inf_value = 1;
                     sup_value = 1;
@@ -318,8 +313,56 @@ double my_math_function_centroid(char* function,double inf_lim, double sup_lim)
     double function_area = 0;
     double centroid_x = 0;
     double function_moment = 0;
+    char* function_times_x = NULL;
+    char** function_list = NULL; // list containing individual functions
+    int function_list_len = 0;
 
     function_area = def_integral_value(function,inf_lim,sup_lim);
+
+    if(function_area != 0)
+    {
+        function_list_len = my_math_function_count(function);
+        
+        if(function_list_len > 0)
+        {
+            function_list = my_math_function_divider(function);
+            
+            if(function_list != NULL)
+            {
+                for(int i = 0; i < function_list_len; i++)
+                {
+                    function_times_x = x_power_increment(function_list[i]);
+
+                    if(function_times_x != NULL)
+                    {
+                        printf("function : %s\n",function_times_x);
+                        function_moment = def_integral_value(function_times_x,inf_lim,sup_lim);
+                        printf("function moment : %.5f\n\n",function_moment);
+
+                        
+                        centroid_x+= function_moment;
+
+                        free(function_times_x);
+                    }
+                    else
+                    {
+                        centroid_x = 0;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    if(function_list != NULL)
+    {
+        for(int i = 0; i < function_list_len; i++)free(function_list[i]);
+        free(function_list);
+    }
+    printf("centroid without dividing by moment of a function : %.5f\n\n",centroid_x);
+    if(centroid_x != 0)centroid_x/=function_area;
+
+    return centroid_x;
 
 }
 
@@ -480,11 +523,17 @@ char* x_power_increment(char* function)
 
                 if(x_incremented_function != NULL)
                 {
+                    // setting up iterator for the loop
+                    i = 0;
+
                     char increment_of_function_C = 'x';
 
                     // copying function and increment_of_function_C
-                    for(i = 0; function[i] >= '0' && function[i] <= '9'; i++)x_incremented_function[i] = function[i];
+                    if(function[0] == '+' || function[0] == '-')x_incremented_function[i++] = function[0];
+
+                    for(i; function[i] >= '0' && function[i] <= '9'; i++)x_incremented_function[i] = function[i];
                     x_incremented_function[i] = increment_of_function_C;
+
                     for(i; function[i] != '\0'; i++)x_incremented_function[i+1] = function[i];
                     
                     x_incremented_function[i+1] ='\0'; //finalizing str
