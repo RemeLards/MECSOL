@@ -17,6 +17,8 @@
 5. Escreva no CMD "git status" para ver quais arquivos novos e/ou quais arquivos alterados você fez mudanças (se tive a pasta .vscode exclua ela e repita tudo a partir do passo 4) 
 6. Escreva no CMD "git commit -m "mensagem" ", a mensagem deve descrever algo que você fez, como uma alteração em tal arquivo, adição e modificação de funções
 7. Após tudo isso, escreva no CMD "git push" para subir as suas alterações para este repositório do GitHub
+8. Para atualizar a pasta como o código mais novo abra o CMD, e escreva "cd Desktop" e depois "cd MECSOL", após isso escreva "git pull"
+
 
 #Usando o MakeFile
 1. Abra o CMD, e escreva "cd Desktop" e depois "cd MECSOL"
