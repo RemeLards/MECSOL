@@ -1,5 +1,4 @@
 #include "my_math.h"
-#include <stdio.h>
  
 #define CHARS_NEEDED 5 //adding chars 'x','^', '(' ,')','/' 
 
@@ -335,11 +334,8 @@ double my_math_function_centroid(char* function,double inf_lim, double sup_lim)
 
                     if(function_times_x != NULL)
                     {
-                        printf("function : %s\n",function_times_x);
                         function_moment = def_integral_value(function_times_x,inf_lim,sup_lim);
-                        printf("function moment : %.5f\n\n",function_moment);
 
-                        
                         centroid_x+= function_moment;
 
                         free(function_times_x);
@@ -359,7 +355,6 @@ double my_math_function_centroid(char* function,double inf_lim, double sup_lim)
         for(int i = 0; i < function_list_len; i++)free(function_list[i]);
         free(function_list);
     }
-    printf("centroid without dividing by moment of a function : %.5f\n\n",centroid_x);
     if(centroid_x != 0)centroid_x/=function_area;
 
     return centroid_x;
