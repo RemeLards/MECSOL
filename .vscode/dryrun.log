@@ -1,4 +1,0 @@
-gcc -c trabmecsol.c
-gcc -o trab.exe my_math.o my_strings.o trabmecsol.o -Wall
-make.exe: Leaving directory 'c:/Users/rafae/Desktop/Programacao/C_Code/Projects/MECSOL'
- 
