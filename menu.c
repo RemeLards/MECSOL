@@ -6,7 +6,7 @@
 #define ENGASTE 2
 #define LIVRE 3
 
-int main ()
+/*int main ()
 {   // Declaracao de variaveis:
     int userOp, opcaoApoio1, opcaoApoio2, qntdForcas, valida = 0, op1 = 0;
     double forca, momento, posicao;
@@ -104,4 +104,4 @@ int main ()
     double posForca [qntdForcas];
     //continuar a leitura da intensidade e posicao das forcas
     return 0;
-}
+}*/

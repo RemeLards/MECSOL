@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS = -Wall
 OBJECTS = my_math.o my_strings.o trabmecsol.o
-BINARY = mathi.exe
+BINARY = trab.exe
 
 $(BINARY): $(OBJECTS)
 	$(CC) -o $@ $^ $(CFLAGS)
@@ -10,4 +10,4 @@ $(BINARY): $(OBJECTS)
 	$(CC) -c $<
 
 clean:
-	rm *.o $(BINARY)
+	del *.o $(BINARY)

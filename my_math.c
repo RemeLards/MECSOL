@@ -9,27 +9,29 @@ char* exponent_str(char* function)
     int func_i = 0, expo_i = 0; // Iterators 
     char* exponent = NULL; // Exponent string 
 
-
-    for(func_i = 0; function[func_i]; func_i++) //Setting the size of the "exponent" str
+    if(function_len > 0)
     {
-        if(exponent_len >= 0)
+        for(func_i = 0; function[func_i]; func_i++) //Setting the size of the "exponent" str
         {
-            if(!((function[func_i]>= '0' && function[func_i]<= '9') || function[func_i]== '.'))break; //if there isn't any integer or float 
-            else exponent_len++;
+            if(exponent_len >= 0)
+            {
+                if(!((function[func_i]>= '0' && function[func_i]<= '9') || function[func_i]== '.'))break; //if there isn't any integer or float 
+                else exponent_len++;
+            }
+            if(function[func_i] == '^')exponent_len++;
         }
-        if(function[func_i] == '^')exponent_len++;
-    }
 
-    if(exponent_len > 0) //if there's a exponent
-    {
-        exponent = (char*)malloc(sizeof(char) *(exponent_len+1)); // +1 because of the '\0' char
-
-        if(exponent != NULL) // if exponent was allocated
+        if(exponent_len > 0) //if there's a exponent
         {
-            for(expo_i = 0;expo_i < exponent_len; expo_i++)exponent[expo_i] = function[(func_i-exponent_len) +expo_i];
+            exponent = (char*)malloc(sizeof(char) *(exponent_len+1)); // +1 because of the '\0' char
 
-            exponent[expo_i] = '\0'; // Setting end of "exponent" str
-        }  
+            if(exponent != NULL) // if exponent was allocated
+            {
+                for(expo_i = 0;expo_i < exponent_len; expo_i++)exponent[expo_i] = function[(func_i-exponent_len) +expo_i];
+
+                exponent[expo_i] = '\0'; // Setting end of "exponent" str
+            }  
+        }
     }
 
     return exponent; //if there's a exponent it returns a allocated str, else it will return "NULL"

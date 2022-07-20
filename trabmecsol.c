@@ -1,20 +1,20 @@
 #include "trabmecsol.h"
 
-double force_distribution_validation(double bar_size, double force_distribution_pos, char* function, double inf_lim, double sup_lim)
+double force_distribution_validation(double bar_size, double force_distribution_pos, char* function, double inf_lim, double* sup_lim)
 {
     double centroid_bar_pos = 0;
 
     if(function != NULL)
     {
-        if(bar_size - (force_distribution_pos + (sup_lim-inf_lim)) >= 0 )
+        if(bar_size - (force_distribution_pos + (*sup_lim-inf_lim)) >= 0 )
         {
-            centroid_bar_pos = my_math_function_centroid(function,inf_lim,sup_lim) - inf_lim + force_distribution_pos;
+            centroid_bar_pos = my_math_function_centroid(function,inf_lim,*sup_lim) - inf_lim + force_distribution_pos;
         }
         else
         {
-            sup_lim += bar_size - (force_distribution_pos + (sup_lim-inf_lim));
-            printf("\nO Maior Limite Superior que pode ser colocado foi : %.5f\n\n",sup_lim);
-            centroid_bar_pos = my_math_function_centroid(function,inf_lim,sup_lim) - inf_lim + force_distribution_pos;
+            *sup_lim += bar_size - (force_distribution_pos + (*sup_lim-inf_lim));
+            printf("\nO Maior Limite Superior que pode ser colocado foi : %.5f\n\n",*sup_lim);
+            centroid_bar_pos = my_math_function_centroid(function,inf_lim,*sup_lim) - inf_lim + force_distribution_pos;
         }
     }
    
@@ -76,6 +76,7 @@ int main(int argc, char** argv)
     {
         printf("Write the distance from the bar left edge  :  ");
         scanf("%s",distance_scanf);
+        force_distribution_pos = my_atof(distance_scanf);
         printf("\n\n");
 
         printf("Write your force distribution function :  ");
@@ -84,27 +85,28 @@ int main(int argc, char** argv)
 
         printf("Write your inferior limit :  ");
         scanf("%s",inf_lim_scanf);
+        inf_lim = my_atof(inf_lim_scanf);
         printf("\n\n");
 
         printf("Write your superior limit :  ");
         scanf("%s",sup_lim_scanf);
+        sup_lim = my_atof(sup_lim_scanf);
         printf("\n\n");
         
-        force_distribution_pos = my_atof(distance_scanf);
-        force_func = def_integral_value(function_scanf,my_atof(inf_lim_scanf),my_atof(sup_lim_scanf));
-        centroid = force_distribution_validation(barra.size,force_distribution_pos,function,inf_lim,sup_lim);
+        force_func = def_integral_value(function_scanf,inf_lim,sup_lim);
+        centroid = force_distribution_validation(barra.size,force_distribution_pos,function,inf_lim,&sup_lim);
 
         user_wanna_continue = 0;
 
     }
 
     printf("A funcao e : %s\n",function_scanf);
-    printf("O limite inferior e : %.5f\n",my_atof(inf_lim_scanf));
-    printf("o limite superior e : %.5f\n",my_atof(sup_lim_scanf));
-    printf("A posicao do Centroide na Barra e : %.5f\n",centroid);
-    printf("A forca e : %.5f\n",force_func);
-    printf("A distancia e : %.5f\n",force_distribution_pos);
-    printf("O momento e : %.5f\n",force_func * centroid);
+    printf("O limite inferior e : %.2f\n",inf_lim);
+    printf("o limite superior e : %.2f\n",sup_lim);
+    printf("A posicao do Centroide na Barra e : %.2f\n",centroid);
+    printf("A forca e : %.2f\n",force_func);
+    printf("A distancia e : %.2f\n",force_distribution_pos);
+    printf("O momento e : %.2f\n",force_func * centroid);
 
     return 0;
 }
