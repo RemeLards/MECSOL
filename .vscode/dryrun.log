@@ -1,0 +1,7 @@
+make.exe: Entering directory 'c:/Users/rafae/Desktop/Programacao/C_Code/Projects/MECSOL'
+gcc -c my_math.c
+gcc -c my_strings.c
+gcc -c trabmecsol.c
+gcc -o mathi.exe my_math.o my_strings.o trabmecsol.o -Wall
+make.exe: Leaving directory 'c:/Users/rafae/Desktop/Programacao/C_Code/Projects/MECSOL'
+ 

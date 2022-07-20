@@ -21,7 +21,7 @@ double force_distribution_validation(double bar_size, double force_distribution_
     return centroid_bar_pos;
 }
 
-int* int_vector_one_more_space(int* int_vector, int vector_size)// if int_vector is allocated
+/*int* int_vector_one_more_space(int* int_vector, int vector_size)// if int_vector is allocated
 {
     int* new_int_vector = NULL;
     
@@ -76,4 +76,4 @@ int main(int argc, char** argv)
     printf("A posicao do Centroide na Barra e : %.5f\n",force_distribution_validation(barra.size,force_distribution_pos,function,inf_lim,sup_lim));
 
     return 0;
-}
+}/*
