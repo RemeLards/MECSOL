@@ -21,7 +21,7 @@ double force_distribution_validation(double bar_size, double force_distribution_
     return centroid_bar_pos;
 }
 
-/*int* int_vector_one_more_space(int* int_vector, int vector_size)// if int_vector is allocated
+int* int_vector_one_more_space(int* int_vector, int vector_size)// if int_vector is allocated
 {
     int* new_int_vector = NULL;
     
@@ -92,7 +92,7 @@ int main(int argc, char** argv)
         
         force_distribution_pos = my_atof(distance_scanf);
         force_func = def_integral_value(function_scanf,my_atof(inf_lim_scanf),my_atof(sup_lim_scanf));
-        centroid = my_math_function_centroid(function_scanf,my_atof(inf_lim_scanf),my_atof(sup_lim_scanf)) + my_atof(distance_scanf);
+        centroid = force_distribution_validation(barra.size,force_distribution_pos,function,inf_lim,sup_lim);
 
         user_wanna_continue = 0;
 
@@ -107,4 +107,4 @@ int main(int argc, char** argv)
     printf("O momento e : %.5f\n",force_func * centroid);
 
     return 0;
-}/*
+}
