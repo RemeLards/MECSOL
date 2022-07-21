@@ -50,8 +50,6 @@ double* malloc_more_double_space(double* double_vector, int vector_size)// if in
         for(int i = 0; i < vector_size; i++)new_double_vector[i] = double_vector[i]; // copies old vector
         if(double_vector!= NULL)free(double_vector); // free old vector
     }
-
-    printf("passei aqui\n");
     return new_double_vector;
 }
 
@@ -93,7 +91,9 @@ int main(int argc, char** argv)
 
     char user_option = '\0';
 
-    double* all_double_vectors[AMMOUNT_OF_DOUBLE_VECTORS] = {vector_forces_func, vector_inf_lims, vector_sup_lims, vector_centroids_func, vector_moments_func};
+    //************************** NAO SEI PORQUE NAO FUNCIONA **************************
+    //double* all_double_vectors[AMMOUNT_OF_DOUBLE_VECTORS] = {vector_forces_func, vector_inf_lims, vector_sup_lims, vector_centroids_func, vector_moments_func};
+    
     int all_vectors_len = 0;
 
     char function_scanf[30];
@@ -106,8 +106,15 @@ int main(int argc, char** argv)
     while(user_wanna_quit == 0) //********************FAZER TRATAMENTO DE ERRO DEPOIS********************//
     {
         // allocating one more space for each vector
-        for(int i = 0; i < AMMOUNT_OF_DOUBLE_VECTORS; i++)all_double_vectors[i] = malloc_more_double_space(all_double_vectors[i],all_vectors_len);
+        //************************** NAO SEI PORQUE NAO FUNCIONA **************************
+        //for(int i = 0; i < AMMOUNT_OF_DOUBLE_VECTORS; i++)all_double_vectors[i] = malloc_more_double_space(all_double_vectors[i],all_vectors_len);
+
         vector_of_functions = malloc_more_str_vector_space(vector_of_functions,all_vectors_len);
+        vector_inf_lims = malloc_more_double_space(vector_inf_lims,all_vectors_len);
+        vector_sup_lims = malloc_more_double_space(vector_sup_lims,all_vectors_len);
+        vector_forces_func = malloc_more_double_space(vector_forces_func,all_vectors_len);
+        vector_centroids_func = malloc_more_double_space(vector_centroids_func,all_vectors_len);
+        vector_moments_func = malloc_more_double_space(vector_moments_func,all_vectors_len);
 
         printf("Escreva a distancia de onde sua funcao de carga partira (levando em consideracao que a coordenada x = 0, esta situada a esquerda da barra)  :  ");
         scanf("%s",distance_scanf);
@@ -116,7 +123,7 @@ int main(int argc, char** argv)
 
         printf("Escreva sua funcao carga :  ");
         scanf("%s",function_scanf);
-        vector_of_functions[all_vectors_len] = remove_spaces(function_scanf); // getting and saving the force_density function
+        vector_of_functions[all_vectors_len] = my_strdup(function_scanf); // getting and saving the force_density function
         printf("\n\n");
 
         printf("Escreva o limite inferior :  ");
@@ -130,10 +137,10 @@ int main(int argc, char** argv)
         printf("\n\n");
 
         //getting total force 
-        vector_forces_func[all_vectors_len] = def_integral_value(vector_of_functions[all_vectors_len],vector_inf_lims[all_vectors_len],vector_sup_lims[all_vectors_len]); 
+        vector_forces_func[all_vectors_len] = def_integral_value(function_scanf,vector_inf_lims[all_vectors_len],vector_sup_lims[all_vectors_len]); 
 
         //getting function centroid considering bar coordinates /max centroid considering bar coordinates  if the (force_density_pos + (sup_lim - inf_lim)) exceeds the bar length 
-        vector_centroids_func[all_vectors_len] = force_distribution_validation(barra.size,force_density_pos,vector_of_functions[all_vectors_len],
+        vector_centroids_func[all_vectors_len] = force_distribution_validation(barra.size,force_density_pos,function_scanf,
                                                                                 vector_inf_lims[all_vectors_len],&vector_sup_lims[all_vectors_len]);
 
         // getting moment done by the force * centroid 
@@ -142,10 +149,12 @@ int main(int argc, char** argv)
         // saving information that all vectors went up by one size of its type
         all_vectors_len++;
 
-        while( ((user_option!= 's' || user_option!= 'S' ) || user_option != 'n') || user_option != 'N' )
+        while(1)
         {
             printf("Quer colocar mais funcoes carga? (digite S ou N) : ");
-            scanf("%c",&user_option);
+            scanf(" %c",&user_option);
+            if(user_option == 's' || user_option == 'S')break;
+            if(user_option == 'n' || user_option == 'N')break;
         }
         
         if(user_option == 'n' || user_option == 'N')user_wanna_quit = 1;
@@ -165,7 +174,16 @@ int main(int argc, char** argv)
         printf("\n\n");
     }
     // freeing all vectors and strings after end of the program
-    for(int i = 0; i < all_vectors_len; i++)free(all_double_vectors[i]);
+    //for(int i = 0; i < all_vectors_len; i++)free(all_double_vectors[i]); //************************** NAO SEI PORQUE NAO FUNCIONA **************************
+    if(all_vectors_len > 0)
+    {
+        free(vector_of_functions);
+        free(vector_inf_lims);
+        free(vector_sup_lims);
+        free(vector_forces_func);
+        free(vector_centroids_func);
+        free(vector_moments_func);
+    }
     if(vector_of_functions != NULL)
     {
         for(int i = 0; i < all_vectors_len; i++)free(vector_of_functions[i]); 
