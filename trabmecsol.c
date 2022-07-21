@@ -1,38 +1,72 @@
 #include "trabmecsol.h"
 
-double force_distribution_validation(double bar_size, double force_distribution_pos, char* function, double inf_lim, double* sup_lim)
+#define AMMOUNT_OF_DOUBLE_VECTORS 5 // for force, inferior limit, superior limit, centroid and moment
+
+
+double force_distribution_validation(double bar_size, double force_density_pos, char* function, double inf_lim, double* sup_lim)
 {
     double centroid_bar_pos = 0;
 
     if(function != NULL)
     {
-        if(bar_size - (force_distribution_pos + (*sup_lim-inf_lim)) >= 0 )
+        if(bar_size - (force_density_pos + (*sup_lim-inf_lim)) >= 0 ) // if the integral + the force density pos don't exceed the bar size
         {
-            centroid_bar_pos = my_math_function_centroid(function,inf_lim,*sup_lim) - inf_lim + force_distribution_pos;
+            centroid_bar_pos = my_math_function_centroid(function,inf_lim,*sup_lim) - inf_lim + force_density_pos;
         }
         else
         {
-            *sup_lim += bar_size - (force_distribution_pos + (*sup_lim-inf_lim));
+            *sup_lim += bar_size - (force_density_pos + (*sup_lim-inf_lim)); // fixing the superior_lim, so the integral + the force density pos won't exceed the bar size
             printf("\nO Maior Limite Superior que pode ser colocado foi : %.5f\n\n",*sup_lim);
-            centroid_bar_pos = my_math_function_centroid(function,inf_lim,*sup_lim) - inf_lim + force_distribution_pos;
+            centroid_bar_pos = my_math_function_centroid(function,inf_lim,*sup_lim) - inf_lim + force_density_pos;
         }
     }
    
     return centroid_bar_pos;
 }
 
-int* int_vector_one_more_space(int* int_vector, int vector_size)// if int_vector is allocated
+int* malloc_more_int_space(int* int_vector, int vector_size)// if int_vector is allocated
 {
     int* new_int_vector = NULL;
     
-    if(int_vector != NULL)
+    new_int_vector = (int*)malloc(sizeof(int) * (vector_size + 1)); // allocated one more "int" size memory
+    
+    if(new_int_vector != NULL)
     {
-        new_int_vector = (int*)malloc(sizeof(int) * (vector_size + 1)); // allocated one more "int" size memory
         for(int i = 0; i < vector_size; i++)new_int_vector[i] = int_vector[i]; // copies old vector
-        free(int_vector); // free old vector
+
+        if(int_vector!= NULL)free(int_vector); // free old vector
     }
 
     return new_int_vector;
+}
+
+double* malloc_more_double_space(double* double_vector, int vector_size)// if int_vector is allocated
+{
+    double* new_double_vector = NULL;
+    
+    new_double_vector = (double*)malloc(sizeof(double) * (vector_size + 1)); // allocated one more "int" size memory
+    if(new_double_vector != NULL)
+    {
+        for(int i = 0; i < vector_size; i++)new_double_vector[i] = double_vector[i]; // copies old vector
+        if(double_vector!= NULL)free(double_vector); // free old vector
+    }
+
+    printf("passei aqui\n");
+    return new_double_vector;
+}
+
+char** malloc_more_str_vector_space(char** str_vector, int vector_size)
+{
+    char** new_str_vector = NULL;
+    
+    new_str_vector = (char**)malloc(sizeof(char*) * (vector_size + 1)); // allocated one more "int" size memory
+    if(new_str_vector != NULL)
+    {
+        for(int i = 0; i < vector_size; i++)new_str_vector[i] = str_vector[i]; // copies old vector
+        if(str_vector!= NULL)free(str_vector); // free old vector
+    }
+
+    return new_str_vector;
 }
 
 int main(int argc, char** argv)
@@ -42,27 +76,25 @@ int main(int argc, char** argv)
     ENGST engaste;
 
     barra.size = 1;
-    double force_distribution_pos = 0;
-    char* function = "x^2";
+
+    double force_density_pos = 0;
     
-    double force_func = 0;
-    int* vector_forces_func = NULL;
-
-    double moment_func = 0;
-    int* vector_moment_func = NULL;
-
-    double centroid = 0;
-    int* vector_centroid_func = NULL;
-
     char** vector_of_functions = NULL;
 
-    double inf_lim = 0;
-    int* vector_inf_lim = NULL;
+    double* vector_inf_lims = NULL;
 
-    double sup_lim = 0;
-    int* vector_sup_lim = NULL;
+    double* vector_sup_lims = NULL;
+    
+    double* vector_forces_func = NULL;
 
-    int vector_for_function_size = 0;
+    double* vector_centroids_func = NULL;
+
+    double* vector_moments_func = NULL;
+
+    char user_option = '\0';
+
+    double* all_double_vectors[AMMOUNT_OF_DOUBLE_VECTORS] = {vector_forces_func, vector_inf_lims, vector_sup_lims, vector_centroids_func, vector_moments_func};
+    int all_vectors_len = 0;
 
     char function_scanf[30];
     char distance_scanf[30];
@@ -70,43 +102,75 @@ int main(int argc, char** argv)
     char sup_lim_scanf[30];
 
 
-    int user_wanna_continue = 1;
-
-    while(user_wanna_continue == 1)
+    int user_wanna_quit = 0;
+    while(user_wanna_quit == 0) //********************FAZER TRATAMENTO DE ERRO DEPOIS********************//
     {
-        printf("Write the distance from the bar left edge  :  ");
+        // allocating one more space for each vector
+        for(int i = 0; i < AMMOUNT_OF_DOUBLE_VECTORS; i++)all_double_vectors[i] = malloc_more_double_space(all_double_vectors[i],all_vectors_len);
+        vector_of_functions = malloc_more_str_vector_space(vector_of_functions,all_vectors_len);
+
+        printf("Escreva a distancia de onde sua funcao de carga partira (levando em consideracao que a coordenada x = 0, esta situada a esquerda da barra)  :  ");
         scanf("%s",distance_scanf);
-        force_distribution_pos = my_atof(distance_scanf);
+        force_density_pos = my_atof(distance_scanf); //getting the start of the force_density 
         printf("\n\n");
 
-        printf("Write your force distribution function :  ");
+        printf("Escreva sua funcao carga :  ");
         scanf("%s",function_scanf);
+        vector_of_functions[all_vectors_len] = remove_spaces(function_scanf); // getting and saving the force_density function
         printf("\n\n");
 
-        printf("Write your inferior limit :  ");
+        printf("Escreva o limite inferior :  ");
         scanf("%s",inf_lim_scanf);
-        inf_lim = my_atof(inf_lim_scanf);
+        vector_inf_lims[all_vectors_len] = my_atof(inf_lim_scanf); // getting and saving the inferior limit of the force_density integration (to the force calculation)
         printf("\n\n");
 
-        printf("Write your superior limit :  ");
+        printf("Escreva o limite superior :  ");
         scanf("%s",sup_lim_scanf);
-        sup_lim = my_atof(sup_lim_scanf);
+        vector_sup_lims[all_vectors_len] = my_atof(sup_lim_scanf); // getting and saving the superior limit of the force_density integration (to the force calculation)
         printf("\n\n");
-        
-        force_func = def_integral_value(function_scanf,inf_lim,sup_lim);
-        centroid = force_distribution_validation(barra.size,force_distribution_pos,function,inf_lim,&sup_lim);
 
-        user_wanna_continue = 0;
+        //getting total force 
+        vector_forces_func[all_vectors_len] = def_integral_value(vector_of_functions[all_vectors_len],vector_inf_lims[all_vectors_len],vector_sup_lims[all_vectors_len]); 
+
+        //getting function centroid considering bar coordinates /max centroid considering bar coordinates  if the (force_density_pos + (sup_lim - inf_lim)) exceeds the bar length 
+        vector_centroids_func[all_vectors_len] = force_distribution_validation(barra.size,force_density_pos,vector_of_functions[all_vectors_len],
+                                                                                vector_inf_lims[all_vectors_len],&vector_sup_lims[all_vectors_len]);
+
+        // getting moment done by the force * centroid 
+        vector_moments_func[all_vectors_len] = vector_forces_func[all_vectors_len] * vector_centroids_func[all_vectors_len];
+
+        // saving information that all vectors went up by one size of its type
+        all_vectors_len++;
+
+        while( ((user_option!= 's' || user_option!= 'S' ) || user_option != 'n') || user_option != 'N' )
+        {
+            printf("Quer colocar mais funcoes carga? (digite S ou N) : ");
+            scanf("%c",&user_option);
+        }
+        
+        if(user_option == 'n' || user_option == 'N')user_wanna_quit = 1;
 
     }
 
-    printf("A funcao e : %s\n",function_scanf);
-    printf("O limite inferior e : %.2f\n",inf_lim);
-    printf("o limite superior e : %.2f\n",sup_lim);
-    printf("A posicao do Centroide na Barra e : %.2f\n",centroid);
-    printf("A forca e : %.2f\n",force_func);
-    printf("A distancia e : %.2f\n",force_distribution_pos);
-    printf("O momento e : %.2f\n",force_func * centroid);
+    //print all functions and it's effects on the bar one by one
+    for(int i = 0; i < all_vectors_len; i++)
+    {
+        printf("A funcao e : %s\n",vector_of_functions[i]);
+        printf("O limite inferior e : %.2f\n",vector_inf_lims[i]);
+        printf("o limite superior e : %.2f\n",vector_sup_lims[i]);
+        printf("A posicao do Centroide na Barra e : %.2f\n",vector_centroids_func[i]);
+        printf("A forca e : %.2f\n",vector_forces_func[i]);
+        printf("O Inicio da Distribuicao e : %.2f\n",vector_centroids_func[i] - my_math_function_centroid(vector_of_functions[i],vector_inf_lims[i],vector_sup_lims[i]));
+        printf("O momento e : %.2f\n",vector_moments_func[i]);
+        printf("\n\n");
+    }
+    // freeing all vectors and strings after end of the program
+    for(int i = 0; i < all_vectors_len; i++)free(all_double_vectors[i]);
+    if(vector_of_functions != NULL)
+    {
+        for(int i = 0; i < all_vectors_len; i++)free(vector_of_functions[i]); 
+        free(vector_of_functions);    
+    }
 
     return 0;
 }

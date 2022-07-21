@@ -72,10 +72,12 @@ char* my_strdup(char* str) //Alocates and retuns the str;
     
     if(str != NULL)
     {
+        int i = 0;
         int str_len = my_strlen(str);
-        char* str_duplicated =(char*)malloc(sizeof(char) * (str_len + 1));
+        char* str_duplicated =(char*)malloc(sizeof(char) * (str_len + 1));// "+1" because my_strlen() doesn't count '\0' char
 
-        for(int i = 0; i < str_len+1; i++)str_duplicated[i] = str[i]; // "+1" because my_strlen() doesn't count '\0' char
+        for(i = 0; i < str_len; i++)str_duplicated[i] = str[i];
+        str_duplicated[i] = '\0'; // ending str;
     }
     return str_duplicated;
 }
