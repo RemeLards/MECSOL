@@ -195,7 +195,6 @@ int main(int argc, char** argv)
     
     if(all_vectors_len > 0)
     {
-        free(vector_of_functions);
         free(vector_inf_lims);
         free(vector_sup_lims);
         free(vector_forces_func);
