@@ -1,4 +1,5 @@
 #include "my_math.h"
+#include <stdio.h>
  
 #define CHARS_NEEDED 5 //adding chars 'x','^', '(' ,')','/' 
 
@@ -318,15 +319,23 @@ double my_math_function_centroid(char* function,double inf_lim, double sup_lim)
     char** function_list = NULL; // list containing individual functions
     int function_list_len = 0;
 
+    printf("passei aqui function centroid1\n");
+
     function_area = def_integral_value(function,inf_lim,sup_lim);
+
+    printf("passei aqui function centroid2\n");
 
     if(function_area != 0)
     {
         function_list_len = my_math_function_count(function);
+
+        printf("passei aqui function centroid3\n");
         
         if(function_list_len > 0)
         {
             function_list = my_math_function_divider(function);
+
+            printf("passei aqui function centroid4\n");
             
             if(function_list != NULL)
             {
@@ -349,6 +358,8 @@ double my_math_function_centroid(char* function,double inf_lim, double sup_lim)
                     }
                 }
             }
+
+            printf("passei aqui function centroid5\n");
         }
     }
 

@@ -1,6 +1,7 @@
 #include "trabmecsol.h"
 
 #define AMMOUNT_OF_DOUBLE_VECTORS 5 // for force, inferior limit, superior limit, centroid and moment
+#define MAX_FUNCTION_LEN 30
 
 
 double force_distribution_validation(double bar_size, double force_density_pos, char* function, double inf_lim, double* sup_lim)
@@ -96,10 +97,10 @@ int main(int argc, char** argv)
     
     int all_vectors_len = 0;
 
-    char function_scanf[30];
-    char distance_scanf[30];
-    char inf_lim_scanf[30]; 
-    char sup_lim_scanf[30];
+    char function_str[MAX_FUNCTION_LEN + 1];
+    char distance_str[MAX_FUNCTION_LEN + 1];
+    char inf_lim_str[MAX_FUNCTION_LEN + 1]; 
+    char sup_lim_str[MAX_FUNCTION_LEN + 1];
 
 
     int user_wanna_quit = 0;
@@ -117,38 +118,57 @@ int main(int argc, char** argv)
         vector_moments_func = malloc_more_double_space(vector_moments_func,all_vectors_len);
 
         printf("Escreva a distancia de onde sua funcao de carga partira (levando em consideracao que a coordenada x = 0, esta situada a esquerda da barra)  :  ");
-        scanf("%s",distance_scanf);
-        force_density_pos = my_atof(distance_scanf); //getting the start of the force_density 
+        
+        fflush(stdin); //Cleaning Keyboard Buffer
+        fgets(distance_str, 31 ,stdin); //Gets string
+        if(distance_str[my_strlen(distance_str)-1] == '\n')distance_str[my_strlen(distance_str)-1] = '\0'; // removes '\n' char that gets to the string (sometimes)
+        
+        force_density_pos = my_atof(distance_str); //getting the start of the force_density 
         printf("\n\n");
 
         printf("Escreva sua funcao carga :  ");
-        scanf("%s",function_scanf);
-        vector_of_functions[all_vectors_len] = my_strdup(function_scanf); // getting and saving the force_density function
+
+        fflush(stdin); //Cleaning Keyboard Buffer
+        fgets(function_str, 31 ,stdin); //Gets string
+        if(function_str[my_strlen(function_str)-1] == '\n')function_str[my_strlen(function_str)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+        vector_of_functions[all_vectors_len] = remove_spaces(function_str); // getting and saving the force_density function
         printf("\n\n");
 
         printf("Escreva o limite inferior :  ");
-        scanf("%s",inf_lim_scanf);
-        vector_inf_lims[all_vectors_len] = my_atof(inf_lim_scanf); // getting and saving the inferior limit of the force_density integration (to the force calculation)
+        
+        fflush(stdin); //Cleaning Keyboard Buffer
+        fgets(inf_lim_str, 31 ,stdin); //Gets string
+        if(inf_lim_str[my_strlen(inf_lim_str)-1] == '\n')inf_lim_str[my_strlen(inf_lim_str)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+        vector_inf_lims[all_vectors_len] = my_atof(inf_lim_str); // getting and saving the inferior limit of the force_density integration (to the force calculation)
         printf("\n\n");
 
         printf("Escreva o limite superior :  ");
-        scanf("%s",sup_lim_scanf);
-        vector_sup_lims[all_vectors_len] = my_atof(sup_lim_scanf); // getting and saving the superior limit of the force_density integration (to the force calculation)
+        
+        fflush(stdin); //Cleaning Keyboard Buffer
+        fgets(sup_lim_str, 31 ,stdin); //Gets string
+        if(sup_lim_str[my_strlen(sup_lim_str)-1] == '\n')sup_lim_str[my_strlen(sup_lim_str)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+        vector_sup_lims[all_vectors_len] = my_atof(sup_lim_str); // getting and saving the superior limit of the force_density integration (to the force calculation)
         printf("\n\n");
 
+        printf("passei aqui1\n");
         //getting function centroid considering bar coordinates /max centroid considering bar coordinates  if the (force_density_pos + (sup_lim - inf_lim)) exceeds the bar length
         //And fixing the superior limit if needed
-        vector_centroids_func[all_vectors_len] = force_distribution_validation(barra.size,force_density_pos,function_scanf,
+        vector_centroids_func[all_vectors_len] = force_distribution_validation(barra.size,force_density_pos,function_str,
                                                                                 vector_inf_lims[all_vectors_len],&vector_sup_lims[all_vectors_len]);
+        printf("passei aqui2\n");
         //getting total force 
-        vector_forces_func[all_vectors_len] = def_integral_value(function_scanf,vector_inf_lims[all_vectors_len],vector_sup_lims[all_vectors_len]); 
+        vector_forces_func[all_vectors_len] = def_integral_value(function_str,vector_inf_lims[all_vectors_len],vector_sup_lims[all_vectors_len]); 
 
+        printf("passei aqui3\n");
         // getting moment done by the force * centroid 
         vector_moments_func[all_vectors_len] = vector_forces_func[all_vectors_len] * vector_centroids_func[all_vectors_len];
 
+        printf("passei aqui4\n");
         // saving information that all vectors went up by one size of its type
         all_vectors_len++;
-
         while(1)
         {
             printf("Quer colocar mais funcoes carga? (digite S ou N) : ");
@@ -174,7 +194,9 @@ int main(int argc, char** argv)
         printf("\n\n");
     }
     // freeing all vectors and strings after end of the program
+    
     //for(int i = 0; i < all_vectors_len; i++)free(all_double_vectors[i]); //************************** NAO SEI PORQUE NAO FUNCIONA **************************
+    
     if(all_vectors_len > 0)
     {
         free(vector_of_functions);

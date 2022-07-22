@@ -5,7 +5,7 @@ char* remove_spaces(char* string)//Returns a allocated pointer with the minimum 
 {
     if(string != NULL)
     {
-        char character_name[my_strlen(string)];
+        char character_name[my_strlen(string) + 1];
         int x = 0, y = 0;
         int strlen;
         while(string[x] == ' ')x++;//Erasing Initial Spaces
@@ -20,11 +20,10 @@ char* remove_spaces(char* string)//Returns a allocated pointer with the minimum 
         }
         character_name[y] = '\0'; //Terminates the string with atleast one space;
         strlen = my_strlen(character_name) - 1; //Retuns the string length without counting the '\0' char
-        if(character_name[strlen] == ' ')character_name[strlen] = '\0'; //If there´s a space at the end of the str it's removed, and the last char becomes a '\0' char
-
+        if(character_name[strlen] == ' ')character_name[strlen] = '\0'; //If there´s a space at the end of the str it's removed, and the last char becomes a '\0' char        
+        
         return my_strdup(character_name);//Returns a allocated pointer with the minimum space needed to "save" the string; 
     }
-
     return string; //Else Retuns the same string, because it's NULL
 }
 
@@ -69,16 +68,16 @@ int str_count_char(char* str, char str_char) // counts ammount of "str_char" in 
 char* my_strdup(char* str) //Alocates and retuns the str; 
 {
     char* str_duplicated = NULL;
-    
     if(str != NULL)
     {
         int i = 0;
         int str_len = my_strlen(str);
-        char* str_duplicated =(char*)malloc(sizeof(char) * (str_len + 1));// "+1" because my_strlen() doesn't count '\0' char
+        str_duplicated = (char*)malloc(sizeof(char) * (str_len + 1));// "+1" because my_strlen() doesn't count '\0' char
 
         for(; i < str_len; i++)str_duplicated[i] = str[i];
         str_duplicated[i] = '\0'; // ending str;
     }
+    
     return str_duplicated;
 }
 
