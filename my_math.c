@@ -172,6 +172,7 @@ char* indef_integral_ncosnt(char* function) // positive integer polynomials only
         if(exponent != NULL)
         {   
             exponent_len = my_strlen(exponent); // Getting string length
+            printf("exponent len : %d\n", exponent_len );
 
 
             // if it's true, one more byte is needed because the next number string will have length "exponent_len + 1"
@@ -190,8 +191,11 @@ char* indef_integral_ncosnt(char* function) // positive integer polynomials only
 
                 // adding +1 to the exponent
                 exponent_value = my_atoi(exponent) + 1;
+                printf("exponent value  : %d\n", exponent_value);
                 free(exponent); // Don't need "old" exponent
+                printf("exponent value  : %d\n", exponent_value);
                 exponent = my_itoa(exponent_value); // getting new exponent
+                printf("exponent str : %s\n", exponent);
 
                 if(exponent != NULL)
                 {
@@ -319,23 +323,19 @@ double my_math_function_centroid(char* function,double inf_lim, double sup_lim)
     char** function_list = NULL; // list containing individual functions
     int function_list_len = 0;
 
-    printf("passei aqui function centroid1\n");
 
     function_area = def_integral_value(function,inf_lim,sup_lim);
 
-    printf("passei aqui function centroid2\n");
 
     if(function_area != 0)
     {
         function_list_len = my_math_function_count(function);
 
-        printf("passei aqui function centroid3\n");
         
         if(function_list_len > 0)
         {
             function_list = my_math_function_divider(function);
 
-            printf("passei aqui function centroid4\n");
             
             if(function_list != NULL)
             {
@@ -359,7 +359,6 @@ double my_math_function_centroid(char* function,double inf_lim, double sup_lim)
                 }
             }
 
-            printf("passei aqui function centroid5\n");
         }
     }
 
