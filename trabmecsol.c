@@ -153,20 +153,16 @@ int main(int argc, char** argv)
         vector_sup_lims[all_vectors_len] = my_atof(sup_lim_str); // getting and saving the superior limit of the force_density integration (to the force calculation)
         printf("\n\n");
 
-        printf("passei aqui1\n");
         //getting function centroid considering bar coordinates /max centroid considering bar coordinates  if the (force_density_pos + (sup_lim - inf_lim)) exceeds the bar length
         //And fixing the superior limit if needed
         vector_centroids_func[all_vectors_len] = force_distribution_validation(barra.size,force_density_pos,function_str,
                                                                                 vector_inf_lims[all_vectors_len],&vector_sup_lims[all_vectors_len]);
-        printf("passei aqui2\n");
         //getting total force 
         vector_forces_func[all_vectors_len] = def_integral_value(function_str,vector_inf_lims[all_vectors_len],vector_sup_lims[all_vectors_len]); 
 
-        printf("passei aqui3\n");
         // getting moment done by the force * centroid 
         vector_moments_func[all_vectors_len] = vector_forces_func[all_vectors_len] * vector_centroids_func[all_vectors_len];
 
-        printf("passei aqui4\n");
         // saving information that all vectors went up by one size of its type
         all_vectors_len++;
         while(1)
@@ -185,12 +181,12 @@ int main(int argc, char** argv)
     for(int i = 0; i < all_vectors_len; i++)
     {
         printf("A funcao e : %s\n",vector_of_functions[i]);
-        printf("O limite inferior e : %.2f\n",vector_inf_lims[i]);
-        printf("o limite superior e : %.2f\n",vector_sup_lims[i]);
-        printf("A posicao do Centroide na Barra e : %.2f\n",vector_centroids_func[i]);
-        printf("A forca e : %.2f\n",vector_forces_func[i]);
-        printf("O Inicio da Distribuicao e : %.2f\n",vector_centroids_func[i] - my_math_function_centroid(vector_of_functions[i],vector_inf_lims[i],vector_sup_lims[i]));
-        printf("O momento e : %.2f\n",vector_moments_func[i]);
+        printf("O limite inferior e : %.4f\n",vector_inf_lims[i]);
+        printf("o limite superior e : %.4f\n",vector_sup_lims[i]);
+        printf("A posicao do Centroide na Barra e : %.4f\n",vector_centroids_func[i]);
+        printf("A forca e : %.4f\n",vector_forces_func[i]);
+        printf("O Inicio da Distribuicao e : %.4f\n",vector_centroids_func[i] - my_math_function_centroid(vector_of_functions[i],vector_inf_lims[i],vector_sup_lims[i]));
+        printf("O momento e : %.4f\n",vector_moments_func[i]);
         printf("\n\n");
     }
     // freeing all vectors and strings after end of the program

@@ -192,7 +192,7 @@ char* my_itoa(int int_n) // Converts an integer number in decimal base, and retu
 
     // Calculates Integer length
     for(; int_n_copy != 0; int_n_len++)int_n_copy/= 10;
-    for(int j = 1; i < int_n_len; j++)multiplier*=10;
+    for(int j = 1; j < int_n_len; j++)multiplier*=10;
 
     n_str = (char*)malloc(sizeof(char)*(int_n_len + 1)); // +1 for the '\0' char
 

@@ -172,7 +172,6 @@ char* indef_integral_ncosnt(char* function) // positive integer polynomials only
         if(exponent != NULL)
         {   
             exponent_len = my_strlen(exponent); // Getting string length
-            printf("exponent len : %d\n", exponent_len );
 
 
             // if it's true, one more byte is needed because the next number string will have length "exponent_len + 1"
@@ -191,11 +190,8 @@ char* indef_integral_ncosnt(char* function) // positive integer polynomials only
 
                 // adding +1 to the exponent
                 exponent_value = my_atoi(exponent) + 1;
-                printf("exponent value  : %d\n", exponent_value);
                 free(exponent); // Don't need "old" exponent
-                printf("exponent value  : %d\n", exponent_value);
                 exponent = my_itoa(exponent_value); // getting new exponent
-                printf("exponent str : %s\n", exponent);
 
                 if(exponent != NULL)
                 {

@@ -1,16 +1,14 @@
 #include <stdio.h>
-#include "my_math.h"
+#include "my_strings.h"
 
 int main()
 {
-    char* functions = "x^2";
-    char* integral_ncost = indef_integral_ncosnt(functions);
+    char* int_str = my_itoa(9499);
 
-    printf("integral function : %s\n",integral_ncost);
-
+    printf("int converted : %s\n",int_str);
 
 
-    if(integral_ncost!=NULL)free(integral_ncost);
+    if(int_str !=NULL)free(int_str);
 
     return 0;
 
