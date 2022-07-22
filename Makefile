@@ -7,7 +7,7 @@ $(BINARY): $(OBJECTS)
 	$(CC) -o $@ $^ $(CFLAGS)
 
 %.o: %.c %.h
-	$(CC) -c $<
+	$(CC) -c $< $(CFLAGS)
 
 clean:
-	del *.o $(BINARY)
+	rm *.o $(BINARY)

@@ -8,7 +8,6 @@ char* remove_spaces(char* string)//Returns a allocated pointer with the minimum 
         char character_name[my_strlen(string)];
         int x = 0, y = 0;
         int strlen;
-        char* str_nspaces;
         while(string[x] == ' ')x++;//Erasing Initial Spaces
         while(string[x] != '\0')
         {
@@ -35,7 +34,7 @@ char* remove_spaces(char* string)//Returns a allocated pointer with the minimum 
 int my_strlen(char* str)
 {
     int len = 0;
-    if(str != NULL) for(len = 0; str[len] != '\0';len++); // while char isn't '\0' increment the length number
+    if(str != NULL) for(; str[len] != '\0';len++); // while char isn't '\0' increment the length number
     return len;
 }
 
@@ -45,7 +44,7 @@ int str_find_char(char* str, char str_char) // Returns "chr" pos in the "str"
     
     if(str != NULL)
     {
-        for(pos = 0; str[pos] != str_char;pos++) // while char isn't "chr" increment the length number
+        for(; str[pos] != str_char;pos++) // while char isn't "chr" increment the length number
         {
             if(str[pos] == '\0')return -1; // if "chr" isn`t in str
         }
@@ -77,7 +76,7 @@ char* my_strdup(char* str) //Alocates and retuns the str;
         int str_len = my_strlen(str);
         char* str_duplicated =(char*)malloc(sizeof(char) * (str_len + 1));// "+1" because my_strlen() doesn't count '\0' char
 
-        for(i = 0; i < str_len; i++)str_duplicated[i] = str[i];
+        for(; i < str_len; i++)str_duplicated[i] = str[i];
         str_duplicated[i] = '\0'; // ending str;
     }
     return str_duplicated;
@@ -98,11 +97,12 @@ int my_atoi(char* str) // Converts strings to integers in decimal base
         int negative = 0; // if number is negative (negative = 1) or no (negative = 0) 
         int i = 0; // iterators
 
-        if(str[0] == '-') // if number is negative
+        if(str[0] == '-') // if has the - sign
         {
             negative = 1;
+            i++;
             
-            for(i = 1; (str[i] >= '0' && str[i] <= '9'); i++)
+            for(; (str[i] >= '0' && str[i] <= '9'); i++)
             {
                 if(number_start < 0 && (str[i] >= '0' && str[i] <= '9')) number_start = i;
             }
@@ -112,7 +112,8 @@ int my_atoi(char* str) // Converts strings to integers in decimal base
         {
             if(str[0] == '+') // if has the + sign
             {
-                for(i = 1; (str[i] >= '0' && str[i] <= '9'); i++)
+                i++;
+                for(; (str[i] >= '0' && str[i] <= '9'); i++)
                 {
                     if(number_start < 0 && (str[i] >= '0' && str[i] <= '9')) number_start = i;
                 }
@@ -120,7 +121,7 @@ int my_atoi(char* str) // Converts strings to integers in decimal base
             }
             else
             {
-                for(i = 0; (str[i] >= '0' && str[i] <= '9'); i++)
+                for(; (str[i] >= '0' && str[i] <= '9'); i++)
                 {
                     if(number_start < 0 && (str[i] >= '0' && str[i] <= '9')) number_start = i;
                 }
@@ -131,11 +132,13 @@ int my_atoi(char* str) // Converts strings to integers in decimal base
 
         number_end = i - 1; // Last number pos
 
-        for(i = number_start; i < number_end; i++)multiplier*=10; // getting first number base 10 exponent to represent it in decimal base
+        i = number_start;
+        for(; i < number_end; i++)multiplier*=10; // getting first number base 10 exponent to represent it in decimal base
 
         number = 0;
-
-        for(i = number_start; i <= number_end; i++)
+        
+        i = number_start;
+        for(; i <= number_end; i++)
         {
             number += (str[i] - '0') * multiplier; // "converting" to int
             multiplier/= 10;
@@ -155,22 +158,24 @@ double my_atof(char* str) // Converts string to float in decimal base
     int number_end = 0; // last number pos
     int i = 0; // iterators
 
-    if (number != INT_MIN);
+    if (number != INT_MIN)
     {
         int dot_pos = str_find_char(str,'.'); // find dot position
 
         if(dot_pos != -1)
         {
-            for(i = dot_pos+1; (str[i] >= '0' && str[i] <= '9'); i++); // counts string length
+            i = dot_pos+1;
+            for(; (str[i] >= '0' && str[i] <= '9'); i++); // counts string length
             number_end = i - 1; // can be an integer or a float
             if(number_end == dot_pos) return number; //if there's nothing after the '.'
 
             if(number < 0)negative_multiplier = -1;
 
-            for(i = dot_pos+1; i <= number_end; i++)
+            i = dot_pos+1;
+            for(; i <= number_end; i++) // adding the pos '.' numbers
             {
                 decimal_multiplier/= 10;
-                number += (str[i] - '0') * decimal_multiplier * negative_multiplier; // adding the pos '.' float numbers
+                number += (str[i] - '0') * decimal_multiplier * negative_multiplier; 
             } 
         }
     }
@@ -187,16 +192,17 @@ char* my_itoa(int int_n) // Converts an integer number in decimal base, and retu
     int i = 0; // iterator
 
     // Calculates Integer length
-    for(int_n_len; int_n_copy != 0; int_n_len++)int_n_copy/= 10;
-    for(int i = 1; i < int_n_len; i++)multiplier*=10;
+    for(; int_n_copy != 0; int_n_len++)int_n_copy/= 10;
+    for(int j = 1; i < int_n_len; j++)multiplier*=10;
 
     n_str = (char*)malloc(sizeof(char)*(int_n_len + 1)); // +1 for the '\0' char
 
     if(n_str != NULL)
     {
-        for(i = 0; i < int_n_len; i++)
+        int n_to_char; // number to character converter
+        for(; i < int_n_len; i++)
         {
-            int n_to_char = (int_n/multiplier) - (int_n/(multiplier*10))*10; // calculates the number that will be converted to char
+            n_to_char = (int_n/multiplier) - (int_n/(multiplier*10))*10; // calculates the number that will be converted to char
             n_str[i] = n_to_char + '0';
             multiplier/=10;
         }

@@ -70,8 +70,8 @@ char** malloc_more_str_vector_space(char** str_vector, int vector_size)
 int main(int argc, char** argv)
 {
     BAR barra;
-    APOIO_L apoio_livre;
-    ENGST engaste;
+    //APOIO_L apoio_livre;
+    //ENGST engaste;
 
     barra.size = 1;
 
@@ -136,12 +136,12 @@ int main(int argc, char** argv)
         vector_sup_lims[all_vectors_len] = my_atof(sup_lim_scanf); // getting and saving the superior limit of the force_density integration (to the force calculation)
         printf("\n\n");
 
-        //getting total force 
-        vector_forces_func[all_vectors_len] = def_integral_value(function_scanf,vector_inf_lims[all_vectors_len],vector_sup_lims[all_vectors_len]); 
-
-        //getting function centroid considering bar coordinates /max centroid considering bar coordinates  if the (force_density_pos + (sup_lim - inf_lim)) exceeds the bar length 
+        //getting function centroid considering bar coordinates /max centroid considering bar coordinates  if the (force_density_pos + (sup_lim - inf_lim)) exceeds the bar length
+        //And fixing the superior limit if needed
         vector_centroids_func[all_vectors_len] = force_distribution_validation(barra.size,force_density_pos,function_scanf,
                                                                                 vector_inf_lims[all_vectors_len],&vector_sup_lims[all_vectors_len]);
+        //getting total force 
+        vector_forces_func[all_vectors_len] = def_integral_value(function_scanf,vector_inf_lims[all_vectors_len],vector_sup_lims[all_vectors_len]); 
 
         // getting moment done by the force * centroid 
         vector_moments_func[all_vectors_len] = vector_forces_func[all_vectors_len] * vector_centroids_func[all_vectors_len];
@@ -186,7 +186,10 @@ int main(int argc, char** argv)
     }
     if(vector_of_functions != NULL)
     {
-        for(int i = 0; i < all_vectors_len; i++)free(vector_of_functions[i]); 
+        for(int i = 0; i < all_vectors_len; i++)
+        {
+            if(vector_of_functions[i] != NULL)free(vector_of_functions[i]);
+        }
         free(vector_of_functions);    
     }
 

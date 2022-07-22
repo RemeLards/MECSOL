@@ -11,7 +11,7 @@ char* exponent_str(char* function)
 
     if(function_len > 0)
     {
-        for(func_i = 0; function[func_i]; func_i++) //Setting the size of the "exponent" str
+        for(; function[func_i]; func_i++) //Setting the size of the "exponent" str
         {
             if(exponent_len >= 0)
             {
@@ -27,7 +27,7 @@ char* exponent_str(char* function)
 
             if(exponent != NULL) // if exponent was allocated
             {
-                for(expo_i = 0;expo_i < exponent_len; expo_i++)exponent[expo_i] = function[(func_i-exponent_len) +expo_i];
+                for(;expo_i < exponent_len; expo_i++)exponent[expo_i] = function[(func_i-exponent_len) +expo_i];
 
                 exponent[expo_i] = '\0'; // Setting end of "exponent" str
             }  
@@ -70,7 +70,7 @@ char* mult_const_str(char* function)
     }
 
     //while the string is an integer or a float point, it'll count its length
-    for(const_i; (function[const_i]>= '0' && function[const_i]<= '9') || function[const_i]== '.'; mult_const_len++,const_i++);
+    for(; (function[const_i]>= '0' && function[const_i]<= '9') || function[const_i]== '.'; mult_const_len++,const_i++);
 
     if(mult_const_len > 0)
     {
@@ -112,7 +112,7 @@ char* div_const_str(char* function)
     char* div_const = NULL; // dividing constant str 
     int func_i = 0,const_i = 0; // iterators (function iterator, constant iterator)
     
-    for(func_i = 0; function[func_i] != '\0'; func_i++) //gets number length after the 'x' expression
+    for(; function[func_i] != '\0'; func_i++) //gets number length after the 'x' expression
     {
         if(div_const_len >= 0)
         {
@@ -131,7 +131,7 @@ char* div_const_str(char* function)
         if(div_const != NULL)
         {
             //copies the constant string
-            for(const_i = 0; const_i < div_const_len; const_i++)div_const[const_i] = function[(func_i - div_const_len) + const_i];
+            for(; const_i < div_const_len; const_i++)div_const[const_i] = function[(func_i - div_const_len) + const_i];
 
             //finalizing str
             div_const[const_i] = '\0';
@@ -225,7 +225,7 @@ char* indef_integral_ncosnt(char* function) // positive integer polynomials only
                     char* integral_of_x = "(x^2)/2";
 
                     // setting up polinomial integration string 
-                    for(integral_i = 0; integral_i < (2*exponent_len + CHARS_NEEDED); integral_i++)indef_integral_str[integral_i] = integral_of_x[integral_i];
+                    for(; integral_i < (2*exponent_len + CHARS_NEEDED); integral_i++)indef_integral_str[integral_i] = integral_of_x[integral_i];
                     indef_integral_str[integral_i] ='\0';
                 }
 
@@ -302,7 +302,7 @@ double def_integral_value(char* function, double inf_lim, double sup_lim) // pos
     }
     if(function_list != NULL)
     {
-        for(int i = 0; i < functions_count; i++)free(function_list[i]);
+        for(int k = 0; k < functions_count; k++)free(function_list[k]);
         free(function_list);
     }
 
@@ -387,19 +387,19 @@ char** my_math_function_divider(char* all_functions)
 
                 if(function_list != NULL) //if we could allocate the list of strings
                 {
-                    for(i = 0; i < functions_count; i++)function_list[i] = NULL; // initialize each pointers in "function_list" as NULL      
+                    for(; i < functions_count; i++)function_list[i] = NULL; // initialize each pointers in "function_list" as NULL      
 
                     // setting up iterators values before entering the for loop
                     i = 0;
                     past_i_value = 0;
 
-                    for(j = 0; j < functions_count; j++) // storing each individual function string
+                    for(; j < functions_count; j++) // storing each individual function string
                     {
                         single_function = (char*)malloc(sizeof(char) *(function_lens[j] + 1)); // +1 because of the '\0' char
 
                         if(single_function != NULL) // if the string was allocated
                         {
-                            for(i; i < function_lens[j] + past_i_value; i++)
+                            for(; i < function_lens[j] + past_i_value; i++)
                             {
                                 single_function[i-past_i_value] = all_functions[i]; // copies the function with it's sign 
                             }
@@ -411,8 +411,10 @@ char** my_math_function_divider(char* all_functions)
                         }
                         
                         else //some string couldn't be allocated for some reason (error or memory insufficient)
-                        {   
-                            for(i = 0; i < functions_count; i++) if(function_list[i] != NULL) free(function_list[i]); // freeing all strings allocated
+                        {
+                            i = 0;
+
+                            for(; i < functions_count; i++) if(function_list[i] != NULL) free(function_list[i]); // freeing all strings allocated
                             
                             free(function_list); // freeing the string pointer to indicate that something went wrong
 
@@ -471,16 +473,16 @@ char* x_power_increment(char* function)
                 if(exponent != NULL)
                 {
                     // copying the function till the '^' char
-                    for(i = 0; function[i] != '^'; i++)x_incremented_function[i] = function[i];
+                    for(; function[i] != '^'; i++)x_incremented_function[i] = function[i];
                     x_incremented_function[i] = '^'; // putting the power symbol
 
                     // copying the new exponent to the function
-                    for(j = 0; j < exponent_len; j++)x_incremented_function[i+j+1] = exponent[j];
+                    for(; j < exponent_len; j++)x_incremented_function[i+j+1] = exponent[j];
                     i += function_exponent_len + 1; // next loop will start after the exponent number of the function
 
                     int len_diff = exponent_len - function_exponent_len; //length difference between the two exponents strings
 
-                    for(i; function[i] != '\0'; i++)x_incremented_function[i+len_diff] = function[i]; // copying the rest of the function str
+                    for(; function[i] != '\0'; i++)x_incremented_function[i+len_diff] = function[i]; // copying the rest of the function str
                     x_incremented_function[i+len_diff] = '\0'; //finalizing the str
 
                 }            
@@ -502,9 +504,11 @@ char* x_power_increment(char* function)
                     char* increment_of_function_x = "x^2";
 
                     // copying function and increment_of_function_x
-                    for(i = 0; function[i] != 'x'; i++)x_incremented_function[i] = function[i];
-                    for(j = 0; j < 3; j++)x_incremented_function[i+j] = increment_of_function_x[j];
-                    for(i += 1; function[i] != '\0'; i++)x_incremented_function[i+j-1] = function[i];
+                    for(; function[i] != 'x'; i++)x_incremented_function[i] = function[i];
+                    for(; j < 3; j++)x_incremented_function[i+j] = increment_of_function_x[j];
+                    
+                    i += 1;// copying the "/constant";
+                    for(; function[i] != '\0'; i++)x_incremented_function[i+j-1] = function[i];
 
                     x_incremented_function[i+j-1] ='\0'; //finalizing str
                 }
@@ -528,10 +532,10 @@ char* x_power_increment(char* function)
                     // copying function and increment_of_function_C
                     if(function[0] == '+' || function[0] == '-')x_incremented_function[i++] = function[0];
 
-                    for(i; function[i] >= '0' && function[i] <= '9'; i++)x_incremented_function[i] = function[i];
+                    for(; function[i] >= '0' && function[i] <= '9'; i++)x_incremented_function[i] = function[i];
                     x_incremented_function[i] = increment_of_function_C;
 
-                    for(i; function[i] != '\0'; i++)x_incremented_function[i+1] = function[i];
+                    for(; function[i] != '\0'; i++)x_incremented_function[i+1] = function[i];
                     
                     x_incremented_function[i+1] ='\0'; //finalizing str
                 }  
@@ -555,7 +559,7 @@ int my_math_function_count(char* all_functions)
 
         // counts how many functions the function has 
         // for example the function "x^2 + x + 5" it's a sum of 3 functions, "x^2", "x" and "5" 
-        for(i; all_functions[i] != '\0'; i++)if((all_functions[i] == '+' || all_functions[i] == '-')) functions_count++;
+        for(; all_functions[i] != '\0'; i++)if((all_functions[i] == '+' || all_functions[i] == '-')) functions_count++;
     }
 
     return functions_count;
@@ -581,7 +585,7 @@ int* my_math_function_lens(char* all_functions)
             if(function_lens != NULL) // function_lens could be allocated
             {
 
-                for(i;all_functions[i] != '\0'; i++) // counts each function length based on signs and '\0' chars
+                for(;all_functions[i] != '\0'; i++) // counts each function length based on signs and '\0' chars
                 {
                     if(all_functions[i] == '+' || all_functions[i] == '-')
                     {
