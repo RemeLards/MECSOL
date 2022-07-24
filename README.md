@@ -8,8 +8,11 @@
 - Depois de baixar o "mingw32-make", vá para C:/MINGW/bin e ache "mingw32-make.exe" e altere o nome para "make.exe" -- Para Todos (Ao invés de digitar "mingw32-make" no CMD para compilar, iremos digitar apenas "make" )
 
 ## Usando o MakeFile -- (Facilita a Compilação)
+### Para Todos
 1. Abra o CMD, e escreva "cd Desktop" e depois "cd MECSOL" (Caso o Diretório do Trabalho esteja no Desktop)
-2. Para compilar digite "make" no CMD, e o executável mathi.exe será compilado :) 
+2. Para compilar digite "make" no CMD, e o executável trab.exe será compilado :) 
+
+### Para Quem Está Desenvolvendo
 3. Tenho que completar para explicar como funciona a MakeFile, mas apriori crie sempre um arquivo ".c" e ".h" com o mesmo nome
 4. No MakeFile escreva "seu_arquivo.o" na linha que tenha escrito "OBJECTS =" e escreva ele após o "=" e espaçado dos outros ".o"
 5. Após isso, salve e digite no CMD "make"
