@@ -1,13 +1,23 @@
 # MECSOL
 
-#BASICO:
+## BASICO:
 
 - Git para Windows: https://phoenixnap.com/kb/how-to-install-git-windows
 - MINGW para Windows: https://www.youtube.com/watch?v=sXW2VLrQ3Bs
 - Depois de baixar MINGW, abra o CMD e escreva "mingw-get install mingw32-make"
 - Depois de baixar o "mingw32-make", vá para C:/MINGW/bin e ache "mingw32-make.exe" e altere o nome para "make.exe"
 
-#Usando Git:
+## Usando o MakeFile
+1. Abra o CMD, e escreva "cd Desktop" e depois "cd MECSOL"
+2. Para compilar digite "make" no CMD, e o executável mathi.exe será compilado :) 
+3. Tenho que completar para explicar como funciona a MakeFile, mas apriori crie sempre um arquivo ".c" e ".h" com o mesmo nome
+4. No MakeFile escreva "seu_arquivo.o" na linha que tenha escrito "OBJECTS =" e escreva ele após o "=" e espaçado dos outros ".o"
+5. Após isso, salve e digite no CMD "make"
+5. Digite no CMD "make clean" para limpar os ".o" e o ".exe" antes de subir para o GitHub :) 
+
+
+## Para Quem Está Desenvolvendo
+### Usando Git:
 
 1. Abra o CMD, e escreva "cd Desktop"
 2. Escreva "git clone https://github.com/RemeLards/MECSOL.git", para clonar o Diretório para seu computador
@@ -19,11 +29,3 @@
 7. Após tudo isso, escreva no CMD "git push" para subir as suas alterações para este repositório do GitHub
 8. Para atualizar a pasta como o código mais novo abra o CMD, e escreva "cd Desktop" e depois "cd MECSOL", após isso escreva "git pull"
 
-
-#Usando o MakeFile
-1. Abra o CMD, e escreva "cd Desktop" e depois "cd MECSOL"
-2. Para compilar digite "make" no CMD, e o executável mathi.exe será compilado :) 
-3. Tenho que completar para explicar como funciona a MakeFile, mas apriori crie sempre um arquivo ".c" e ".h" com o mesmo nome
-4. No MakeFile escreva "seu_arquivo.o" na linha que tenha escrito "OBJECTS =" e escreva ele após o "=" e espaçado dos outros ".o"
-5. Após isso, salve e digite no CMD "make"
-5. Digite no CMD "make clean" para limpar os ".o" e o ".exe" antes de subir para o GitHub :) 

@@ -1,14 +1,10 @@
 #include <stdio.h>
-#include "my_strings.h"
+#include "my_math.h"
 
 int main()
 {
-    char* int_str = my_itoa(9499);
+    printf("centroid : %f\n",my_math_function_centroid("0.3/0.4",0,1.4));
 
-    printf("int converted : %s\n",int_str);
-
-
-    if(int_str !=NULL)free(int_str);
 
     return 0;
 

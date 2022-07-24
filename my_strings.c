@@ -27,6 +27,15 @@ char* remove_spaces(char* string)//Returns a allocated pointer with the minimum 
     return string; //Else Retuns the same string, because it's NULL
 }
 
+char* str_validation(int MAX_LEN)
+{
+    char str[MAX_LEN];
+    fflush(stdin); //Cleaning Keyboard Buffer
+    fgets(str, MAX_LEN ,stdin); //Gets string
+    if(str[my_strlen(str)-1] == '\n')str[my_strlen(str)-1] = '\0'; // removes '\n' char that gets to the string (sometimes)
+
+    return remove_spaces(str);   
+}
 
 
 

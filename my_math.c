@@ -322,7 +322,6 @@ double my_math_function_centroid(char* function,double inf_lim, double sup_lim)
 
     function_area = def_integral_value(function,inf_lim,sup_lim);
 
-
     if(function_area != 0)
     {
         function_list_len = my_math_function_count(function);
@@ -538,10 +537,11 @@ char* x_power_increment(char* function)
                     // copying function and increment_of_function_C
                     if(function[0] == '+' || function[0] == '-')x_incremented_function[i++] = function[0];
 
-                    for(; function[i] >= '0' && function[i] <= '9'; i++)x_incremented_function[i] = function[i];
+                    // copying the function multiplier constant int/float
+                    for(; ( (function[i] >= '0' && function[i] <= '9') || function[i] == '.' ); i++)x_incremented_function[i] = function[i];
                     x_incremented_function[i] = increment_of_function_C;
 
-                    for(; function[i] != '\0'; i++)x_incremented_function[i+1] = function[i];
+                    for(; function[i] != '\0'; i++)x_incremented_function[i+1] = function[i]; // copying the function divider constant int/float
                     
                     x_incremented_function[i+1] ='\0'; //finalizing str
                 }  

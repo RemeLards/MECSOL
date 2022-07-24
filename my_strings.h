@@ -11,6 +11,7 @@
 //-------------------------
 
 char* remove_spaces(char* string);//Remove extra spaces
+char* str_validation(int MAX_LEN);
 
 int my_strlen(char* str); //Returns str length
 int str_find_char(char* str, char str_char); // Returns "char" pos in the "str"
