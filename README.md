@@ -19,7 +19,7 @@
 5. Digite no CMD "make clean" para limpar os ".o" e o ".exe" antes de subir para o GitHub :) 
 
 
-## Para Quem Está Desenvolvendo
+## Somente Para Desenvolvedores
 ### Usando Git:
 
 1. Abra o CMD, e escreva "cd Desktop"
