@@ -2,10 +2,10 @@
 
 ## BASICO:
 
-- Git para Windows: https://phoenixnap.com/kb/how-to-install-git-windows
-- MINGW para Windows: https://www.youtube.com/watch?v=sXW2VLrQ3Bs
-- Depois de baixar MINGW, abra o CMD e escreva "mingw-get install mingw32-make"
-- Depois de baixar o "mingw32-make", vá para C:/MINGW/bin e ache "mingw32-make.exe" e altere o nome para "make.exe"
+- Git para Windows: https://phoenixnap.com/kb/how-to-install-git-windows -- Para Quem Esta Desenvolvendo 
+- MINGW para Windows: https://www.youtube.com/watch?v=sXW2VLrQ3Bs (Compilador De C) -- Para Todos
+- Depois de baixar MINGW, abra o CMD e escreva "mingw-get install mingw32-make" (Facilita a compilação devido ao script dentro do Makefile) -- Para Todos
+- Depois de baixar o "mingw32-make", vá para C:/MINGW/bin e ache "mingw32-make.exe" e altere o nome para "make.exe" -- Para Todos
 
 ## Usando o MakeFile
 1. Abra o CMD, e escreva "cd Desktop" e depois "cd MECSOL"
