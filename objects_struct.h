@@ -10,11 +10,11 @@ typedef struct barra
     double moment_x;
 }BAR;
 
-typedef struct apoio_livre
+typedef struct apoio_simples
 {
    double force_y;
    double moment_y;
-}APOIO_L;
+}APOIO_S;
 
 typedef struct engaste
 {
