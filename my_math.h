@@ -4,6 +4,7 @@
 #ifndef _MATH_INTEGRAL
 #define _MATH_INTEGRAL
 
+#define CHARS_NEEDED 5 //adding chars 'x','^', '(' ,')','/' 
 
 char* indef_integral_ncosnt(char* function); // Returns a allocated str containing the indifinite integral without constants included
 double def_integral_value(char* function, double inf_lim, double sup_lim); // Returns integral value

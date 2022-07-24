@@ -1,9 +1,5 @@
 #include "trabmecsol.h"
 
-#define AMMOUNT_OF_DOUBLE_VECTORS 5 // for force, inferior limit, superior limit, centroid and moment
-#define MAX_FUNCTION_LEN 30
-#define USER_CHAR 1
-
 
 double force_distribution_validation(double bar_size, double force_density_pos, char* function, double inf_lim, double* sup_lim)
 {
@@ -69,7 +65,7 @@ char** malloc_more_str_vector_space(char** str_vector, int vector_size)
     return new_str_vector;
 }
 
-int main(int argc, char** argv)
+/*int main(int argc, char** argv)
 {
     system("cls");
     printf("\n\n\n");
@@ -95,7 +91,7 @@ int main(int argc, char** argv)
 
     double* vector_moments_func = NULL;
 
-    //************************** NAO SEI PORQUE NAO FUNCIONA **************************
+    // NAO SEI PORQUE NAO FUNCIONA 
     //double* all_double_vectors[AMMOUNT_OF_DOUBLE_VECTORS] = {vector_forces_func, vector_inf_lims, vector_sup_lims, vector_centroids_func, vector_moments_func};
     
     int all_vectors_len = 0;
@@ -104,14 +100,14 @@ int main(int argc, char** argv)
     char* distance_str = NULL;
     char* inf_lim_str = NULL;
     char* sup_lim_str = NULL;
-    char* user_confirmation = NULL; // one char ('s' or 'n') and a '\0'
+    char* user_confirmation = NULL;  one char ('s' or 'n') and a '\0'
 
 
     int user_wanna_quit = 0;
-    while(user_wanna_quit == 0) //********************FAZER TRATAMENTO DE ERRO DEPOIS********************//
+    while(user_wanna_quit == 0) //FAZER TRATAMENTO DE ERRO DEPOIS
     {
         // allocating one more space for each vector
-        //************************** NAO SEI PORQUE NAO FUNCIONA **************************
+        //NAO SEI PORQUE NAO FUNCIONA 
         //for(int i = 0; i < AMMOUNT_OF_DOUBLE_VECTORS; i++)all_double_vectors[i] = malloc_more_double_space(all_double_vectors[i],all_vectors_len);
 
         vector_of_functions = malloc_more_str_vector_space(vector_of_functions,all_vectors_len);
@@ -189,7 +185,7 @@ int main(int argc, char** argv)
     }
     // freeing all vectors and strings after end of the program
     
-    //for(int i = 0; i < all_vectors_len; i++)free(all_double_vectors[i]); //************************** NAO SEI PORQUE NAO FUNCIONA **************************
+    //for(int i = 0; i < all_vectors_len; i++)free(all_double_vectors[i]); //NAO SEI PORQUE NAO FUNCIONA 
     
     if(all_vectors_len > 0)
     {
@@ -209,4 +205,4 @@ int main(int argc, char** argv)
     }
 
     return 0;
-}
+}*/

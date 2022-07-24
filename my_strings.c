@@ -1,5 +1,4 @@
 #include "my_strings.h"
-#include <stdio.h>
 
 char* remove_spaces(char* string)//Returns a allocated pointer with the minimum space needed to "save" the string; 
 {

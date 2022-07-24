@@ -5,6 +5,7 @@
 #define INT_MIN	-2147483648
 
 #include <stdlib.h>
+#include <stdio.h>
 
 //-------------------------
 //FUNCTIONS PROTOTYPES

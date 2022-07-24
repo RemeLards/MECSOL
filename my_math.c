@@ -1,7 +1,4 @@
 #include "my_math.h"
-#include <stdio.h>
- 
-#define CHARS_NEEDED 5 //adding chars 'x','^', '(' ,')','/' 
 
 char* exponent_str(char* function)
 {
