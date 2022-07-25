@@ -32,3 +32,5 @@
 7. Após tudo isso, escreva no CMD "git push" para subir as suas alterações para este repositório do GitHub
 8. Para atualizar a pasta como o código mais novo abra o CMD, e escreva "cd Desktop" e depois "cd MECSOL", após isso escreva "git pull"
 
+## Libraries Used 
+pbplot (for plotting graphs in png) = https://github.com/InductiveComputerScience/pbPlots
