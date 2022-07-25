@@ -322,6 +322,8 @@ int main ()
 
                 function_distance_str = str_validation(MAX_FUNCTION_LEN + 1);
                 vector_force_density_pos[all_continue_variables_vectors_len] = my_atof(function_distance_str); //getting the start of the force_density
+                if(vector_force_density_pos[all_continue_variables_vectors_len] > barra.size)vector_force_density_pos[all_continue_variables_vectors_len] = barra.size;
+                if(vector_force_density_pos[all_continue_variables_vectors_len] < 0)vector_force_density_pos[all_continue_variables_vectors_len] = 0;
                 free(function_distance_str);
 
                 printf("\n\n");
