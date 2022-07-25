@@ -94,10 +94,13 @@ int main ()
     
     //double point_force  = 0 , point_momento  = 0, distance = 0;
 
-    int all_discrite_variables_vectors_len = 0;
+    int all_discrete_variables_vectors_len = 0;
     double* point_force = NULL;
     double* point_moment = NULL;
-    double* distance = NULL;
+    double* point_force_distance = NULL;
+    char* distance_str = NULL;
+    char* force_str = NULL;
+    char* moment_str = NULL;
 
                                     // Continue Variables (Variáveis de Carga Distribuida)
 
@@ -113,12 +116,12 @@ int main ()
 
     // User Input
     char* function_str = NULL;
-    char* distance_str = NULL;
+    char* function_distance_str = NULL;
     char* inf_lim_str = NULL;
     char* sup_lim_str = NULL;
     char* user_confirmation = NULL;
 
-
+    barra.size = 1; //DEPOIS TIRAR
 
     // Program Start
     printTela_1();
@@ -183,19 +186,121 @@ int main ()
 
         if(userOp == FORCA)
         {
+            system("cls");
+            printf("\n\n\n");
+            printf(" OBS: Escreva numeros decimais com '.' (ex : 0.3 , 0.2465)\n\n");
+            
+            int user_wanna_quit = 0;
 
+            while(user_wanna_quit == 0)
+            {
+                point_force = malloc_more_double_space(point_force, all_discrete_variables_vectors_len);
+                point_moment = malloc_more_double_space(point_moment, all_discrete_variables_vectors_len);
+                point_force_distance = malloc_more_double_space(point_force_distance, all_discrete_variables_vectors_len);
+
+                printf("Escreva a localizacao da sua forca na barra  :  ");
+                distance_str = str_validation(MAX_FUNCTION_LEN +1);
+                point_force_distance[all_discrete_variables_vectors_len] = my_atof(distance_str);
+                if(point_force_distance[all_discrete_variables_vectors_len] > barra.size)point_force_distance[all_discrete_variables_vectors_len] = barra.size;
+                if(point_force_distance[all_discrete_variables_vectors_len] < 0)point_force_distance[all_discrete_variables_vectors_len] = 0;
+                if(distance_str != NULL) free(distance_str);
+            
+                printf("Escreva a intensidade da forca  OBS : O sentido positivo e para baixo  :  ");
+                force_str = str_validation(MAX_FUNCTION_LEN +1);
+                point_force[all_discrete_variables_vectors_len] = my_atof(force_str);
+                if(force_str != NULL) free(force_str);
+
+                point_moment[all_discrete_variables_vectors_len] = point_force[all_discrete_variables_vectors_len] * point_force_distance[all_discrete_variables_vectors_len];
+                
+                all_discrete_variables_vectors_len++; 
+                while(1)
+                {
+                    printf(" Quer colocar mais forcas? (digite S ou N) : ");
+                    user_confirmation = str_validation(USER_CHAR + 1);
+                    
+                    if( (user_confirmation[0] == 's' || user_confirmation[0] == 'S'))break;
+                    if(user_confirmation[0] == 'n' || user_confirmation[0] == 'N')
+                    {
+                        user_wanna_quit = 1;
+                        break;
+                    }
+                    free(user_confirmation);
+                }
+
+                free(user_confirmation);
+                system("cls");
+            }
+
+            for(int i = 0; i < all_discrete_variables_vectors_len; i++)
+            {
+                printf(" Sua forca e : %.4f\n",point_force[i]);
+                printf(" Sua distancia e : %.4f\n",point_force_distance[i]);
+                printf(" Seu momento e : %.4f\n",point_moment[i]);
+                printf("\n\n");
+            }
+            system("pause");
         }
         if(userOp == MOMENTO)
         {
+            system("cls");
+            printf("\n\n\n");
+            printf(" OBS: Escreva numeros decimais com '.' (ex : 0.3 , 0.2465)\n\n");
+            
+            int user_wanna_quit = 0;
 
+            while(user_wanna_quit == 0)
+            {
+                point_force = malloc_more_double_space(point_force, all_discrete_variables_vectors_len);
+                point_moment = malloc_more_double_space(point_moment, all_discrete_variables_vectors_len);
+                point_force_distance = malloc_more_double_space(point_force_distance, all_discrete_variables_vectors_len);
+
+                printf("Escreva a localizacao da sua momento na barra  :  ");
+                distance_str = str_validation(MAX_FUNCTION_LEN +1);
+                point_force_distance[all_discrete_variables_vectors_len] = my_atof(distance_str);
+                if(point_force_distance[all_discrete_variables_vectors_len] > barra.size)point_force_distance[all_discrete_variables_vectors_len] = barra.size;
+                if(point_force_distance[all_discrete_variables_vectors_len] < 0)point_force_distance[all_discrete_variables_vectors_len] = 0;
+                if(distance_str != NULL) free(distance_str);
+
+                printf("Escreva a intensidade do momento  OBS : O sentido positivo e o antihorario  :  ");
+                moment_str = str_validation(MAX_FUNCTION_LEN +1);
+                point_moment[all_discrete_variables_vectors_len] = my_atof(moment_str);
+                if(moment_str != NULL) free(moment_str);
+
+                point_force[all_discrete_variables_vectors_len] = point_moment[all_discrete_variables_vectors_len] / point_force_distance[all_discrete_variables_vectors_len];
+                
+                all_discrete_variables_vectors_len++; 
+                while(1)
+                {
+                    printf(" Quer colocar mais forcas? (digite S ou N) : ");
+                    user_confirmation = str_validation(USER_CHAR + 1);
+                    
+                    if( (user_confirmation[0] == 's' || user_confirmation[0] == 'S'))break;
+                    if(user_confirmation[0] == 'n' || user_confirmation[0] == 'N')
+                    {
+                        user_wanna_quit = 1;
+                        break;
+                    }
+                    free(user_confirmation);
+                }
+
+                free(user_confirmation);
+                system("cls");
+            }
+
+            for(int i = 0; i < all_discrete_variables_vectors_len; i++)
+            {
+                printf(" Sua forca e : %.4f\n",point_force[i]);
+                printf(" Sua distancia e : %.4f\n",point_force_distance[i]);
+                printf(" Seu momento e : %.4f\n",point_moment[i]);
+                printf("\n\n");
+            }
+            system("pause");
         }
         if(userOp == DISTRIBUICAO_DE_CARGA)
         {
             system("cls");
             printf("\n\n\n");
             printf(" OBS: Escreva numeros decimais com '.' (ex : 0.3 , 0.2465)\n\n");
-
-            barra.size = 1; //DEPOIS TIRAR
 
             int user_wanna_quit = 0;
             
@@ -215,9 +320,9 @@ int main ()
 
                 printf(" Escreva a distancia de onde sua funcao de carga partira (levando em consideracao que a coordenada x = 0, esta situada a esquerda da barra)  :  ");
 
-                distance_str = str_validation(MAX_FUNCTION_LEN + 1);
-                vector_force_density_pos[all_continue_variables_vectors_len] = my_atof(distance_str); //getting the start of the force_density
-                free(distance_str);
+                function_distance_str = str_validation(MAX_FUNCTION_LEN + 1);
+                vector_force_density_pos[all_continue_variables_vectors_len] = my_atof(function_distance_str); //getting the start of the force_density
+                free(function_distance_str);
 
                 printf("\n\n");
 
@@ -263,6 +368,8 @@ int main ()
                     }
                     free(user_confirmation);
                 }
+                free(user_confirmation);
+
                 system("cls");
 
             }
@@ -291,6 +398,12 @@ int main ()
     
     
     // Liberando Memoria (Progama Ira Fechar)
+    if(all_discrete_variables_vectors_len > 0)
+    {
+        free(point_force);
+        free(point_force_distance);
+        free(point_moment);
+    }
     if(all_continue_variables_vectors_len > 0)
     {
         free(vector_inf_lims);
