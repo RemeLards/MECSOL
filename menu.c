@@ -118,7 +118,7 @@ int main ()
     int opApoio1 = 0, opApoio2 = 0, valida = 0, op1 = 0, op2 = 0;
     double posApoio2  = 0, bar_size  = 0;
     char* tiposApoios[] = {"Apoio Simples", "Engaste", "Livre"};
-    char userInput[USER_OP + 1];
+    char userInput[30 + 1];
 
                                     //CALCULOS
     int result = 0, userOp = 0;
@@ -154,14 +154,22 @@ int main ()
     char* sup_lim_str = NULL;
     char* user_confirmation = NULL;
 
-    barra.size = 1; //DEPOIS TIRAR
-
     // Program Start
     printTela_1();
     printTela_2();
 
     while (op1 == 0)
     {
+        system("cls");
+        printf("  Digite o Tamanho da barra :    ");
+
+        fflush(stdin); //Cleaning Keyboard Buffer
+        fgets(userInput, 30 + 1 ,stdin); //Gets string
+        if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+        barra.size = my_atof(userInput);
+        
+
+        system("cls");
         printf("  Qual o tipo do apoio localizado na posicao x = 0 (Extremidade Esquerda) ? :    ");
         
         fflush(stdin); //Cleaning Keyboard Buffer
@@ -187,30 +195,22 @@ int main ()
                 else if((opApoio1 == APOIO_SIMPLES) && (opApoio2 == LIVRE)) print_UserOp_validation02();
                 else valida = 1;
             }
-            posApoio2 = bar_size; // por enquanto vamos trabalhar com apoios fixos nas extremidades
-            /*printf("\n\n Qual a posicao em 'x' do segundo apoio?");
-            scanf("%f", &posicao);*/
+            posApoio2 = bar_size; 
 
             print_Apoios_validation(tiposApoios,opApoio1,opApoio2,posApoio2);
-            //printf("   Os dados acima estão corretos? [S / N]\n");
-
-            //Fazer isso depois! OBS: scanf assim NAO VAI FUNCIONAR!!!!
-
-            //scanf(" %c", &op2);
-
-            /*if(op2 == 'S' || op2 == 's') op1 = 1;
-            else void print_posApoio2_validation(); */
         }
+           
         else
         {
             opApoio2 = ENGASTE;
-            printf("\n O Engaste foi colocado na extremidade esquerda da Barra \n");
+            printf("\n\n O Engaste foi colocado na extremidade esquerda da Barra \n\n");
             system("pause");
         }
         op1 = 1;
 
     }
     
+
     while(result == 0)
     {
         printTela_3();
@@ -432,6 +432,11 @@ int main ()
     }
 
     //plotar grafico e bla bla bla 
+
+    if(opApoio1 == APOIO_SIMPLES && opApoio2 == ENGASTE || opApoio1 == ENGASTE && opApoio2 == APOIO_SIMPLES || opApoio1 == APOIO_SIMPLES && opApoio2 == APOIO_SIMPLES)
+    {
+
+    }
     
     if(opApoio1 == ENGASTE && opApoio2 == LIVRE || opApoio1 == LIVRE && opApoio2 == ENGASTE)
     {
