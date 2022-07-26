@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS = -Wall
-OBJECTS = my_math.o my_strings.o trabmecsol.o menu.o
+OBJECTS = my_math.o my_strings.o trabmecsol.o menu.o pbPlots.o supportLib.o
 BINARY = trab.exe
 
 $(BINARY): $(OBJECTS)

@@ -1,4 +1,27 @@
 #include "menu.h"
+#include "pbPlots.h"
+#include "supportLib.h"
+
+
+typedef struct 
+{
+    double x;
+    double y;
+
+} POINT;
+
+
+int cmp_point(const void * a, const void * b)
+{
+    POINT* pA = (POINT*)a ;
+    POINT* pB = (POINT*)b ;
+    int ret;
+    if(pA->x < pB->x )ret=-1;
+    else if(pA->x > pB->x )ret=1;
+    else ret = 0;
+
+   return ( ret );
+}
 
 void printTela_1()
 {
@@ -82,6 +105,7 @@ int main ()
 {   // Declaracao de variaveis:
                                     // Menu Variables
     BAR barra;
+    ENGST Engaste;
     int opApoio1 = 0, opApoio2 = 0, valida = 0, op1 = 0, op2 = 0;
     double posApoio2  = 0, bar_size  = 0;
     char* tiposApoios[] = {"Apoio Simples", "Engaste", "Livre"};
@@ -102,9 +126,9 @@ int main ()
     char* force_str = NULL;
     char* moment_str = NULL;
 
-                                    // Continue Variables (Variáveis de Carga Distribuida)
+                                    // Continuous Variables (Variáveis de Carga Distribuida)
 
-    int all_continue_variables_vectors_len = 0;
+    int all_continuous_variables_vectors_len = 0;
     double* vector_force_density_pos = NULL;
     double* vector_inf_lims = NULL;
     double* vector_sup_lims = NULL;
@@ -169,6 +193,7 @@ int main ()
         }
         else
         {
+            opApoio2 = ENGASTE;
             printf("\n O Engaste foi colocado na extremidade esquerda da Barra \n");
             system("pause");
         }
@@ -310,53 +335,53 @@ int main ()
                 //************************** NAO SEI PORQUE NAO FUNCIONA **************************
                 //for(int i = 0; i < AMMOUNT_OF_DOUBLE_VECTORS; i++)all_double_vectors[i] = malloc_more_double_space(all_double_vectors[i],all_vectors_len);
 
-                vector_of_functions = malloc_more_str_vector_space(vector_of_functions,all_continue_variables_vectors_len);
-                vector_inf_lims = malloc_more_double_space(vector_inf_lims,all_continue_variables_vectors_len);
-                vector_sup_lims = malloc_more_double_space(vector_sup_lims,all_continue_variables_vectors_len);
-                vector_forces_func = malloc_more_double_space(vector_forces_func,all_continue_variables_vectors_len);
-                vector_centroids_func = malloc_more_double_space(vector_centroids_func,all_continue_variables_vectors_len);
-                vector_moments_func = malloc_more_double_space(vector_moments_func,all_continue_variables_vectors_len);
-                vector_force_density_pos = malloc_more_double_space(vector_force_density_pos,all_continue_variables_vectors_len);
+                vector_of_functions = malloc_more_str_vector_space(vector_of_functions,all_continuous_variables_vectors_len);
+                vector_inf_lims = malloc_more_double_space(vector_inf_lims,all_continuous_variables_vectors_len);
+                vector_sup_lims = malloc_more_double_space(vector_sup_lims,all_continuous_variables_vectors_len);
+                vector_forces_func = malloc_more_double_space(vector_forces_func,all_continuous_variables_vectors_len);
+                vector_centroids_func = malloc_more_double_space(vector_centroids_func,all_continuous_variables_vectors_len);
+                vector_moments_func = malloc_more_double_space(vector_moments_func,all_continuous_variables_vectors_len);
+                vector_force_density_pos = malloc_more_double_space(vector_force_density_pos,all_continuous_variables_vectors_len);
 
                 printf(" Escreva a distancia de onde sua funcao de carga partira (levando em consideracao que a coordenada x = 0, esta situada a esquerda da barra)  :  ");
 
                 function_distance_str = str_validation(MAX_FUNCTION_LEN + 1);
-                vector_force_density_pos[all_continue_variables_vectors_len] = my_atof(function_distance_str); //getting the start of the force_density
-                if(vector_force_density_pos[all_continue_variables_vectors_len] > barra.size)vector_force_density_pos[all_continue_variables_vectors_len] = barra.size;
-                if(vector_force_density_pos[all_continue_variables_vectors_len] < 0)vector_force_density_pos[all_continue_variables_vectors_len] = 0;
+                vector_force_density_pos[all_continuous_variables_vectors_len] = my_atof(function_distance_str); //getting the start of the force_density
+                if(vector_force_density_pos[all_continuous_variables_vectors_len] > barra.size)vector_force_density_pos[all_continuous_variables_vectors_len] = barra.size;
+                if(vector_force_density_pos[all_continuous_variables_vectors_len] < 0)vector_force_density_pos[all_continuous_variables_vectors_len] = 0;
                 free(function_distance_str);
 
                 printf("\n\n");
 
                 printf(" Escreva sua funcao carga (ex: 2x^3/5 - x que seria (2(x^3)/5) - x )  :  ");
                 function_str = str_validation(MAX_FUNCTION_LEN + 1);
-                vector_of_functions[all_continue_variables_vectors_len] = function_str; // getting and saving the force_density function
+                vector_of_functions[all_continuous_variables_vectors_len] = function_str; // getting and saving the force_density function
                 printf("\n\n");
 
                 printf(" Escreva o limite inferior de integracao :  ");
                 inf_lim_str = str_validation(MAX_FUNCTION_LEN + 1);
-                vector_inf_lims[all_continue_variables_vectors_len] = my_atof(inf_lim_str); // getting and saving the inferior limit of the force_density integration (to the force calculation)
+                vector_inf_lims[all_continuous_variables_vectors_len] = my_atof(inf_lim_str); // getting and saving the inferior limit of the force_density integration (to the force calculation)
                 free(inf_lim_str);
                 printf("\n\n");
 
                 printf(" Escreva o limite superior de integracao  :  ");
                 sup_lim_str = str_validation(MAX_FUNCTION_LEN + 1);    
-                vector_sup_lims[all_continue_variables_vectors_len] = my_atof(sup_lim_str); // getting and saving the superior limit of the force_density integration (to the force calculation)
+                vector_sup_lims[all_continuous_variables_vectors_len] = my_atof(sup_lim_str); // getting and saving the superior limit of the force_density integration (to the force calculation)
                 free(sup_lim_str);
                 printf("\n\n");
 
                 //getting function centroid considering bar coordinates /max centroid considering bar coordinates  if the (force_density_pos + (sup_lim - inf_lim)) exceeds the bar length
                 //And fixing the superior limit if needed
-                vector_centroids_func[all_continue_variables_vectors_len] = force_distribution_validation(barra.size,vector_force_density_pos[all_continue_variables_vectors_len],function_str,
-                                                                                        vector_inf_lims[all_continue_variables_vectors_len],&vector_sup_lims[all_continue_variables_vectors_len]);
+                vector_centroids_func[all_continuous_variables_vectors_len] = force_distribution_validation(barra.size,vector_force_density_pos[all_continuous_variables_vectors_len],function_str,
+                                                                                        vector_inf_lims[all_continuous_variables_vectors_len],&vector_sup_lims[all_continuous_variables_vectors_len]);
                 //getting total force 
-                vector_forces_func[all_continue_variables_vectors_len] = def_integral_value(function_str,vector_inf_lims[all_continue_variables_vectors_len],vector_sup_lims[all_continue_variables_vectors_len]); 
+                vector_forces_func[all_continuous_variables_vectors_len] = def_integral_value(function_str,vector_inf_lims[all_continuous_variables_vectors_len],vector_sup_lims[all_continuous_variables_vectors_len]); 
 
                 // getting moment done by the force * centroid 
-                vector_moments_func[all_continue_variables_vectors_len] = vector_forces_func[all_continue_variables_vectors_len] * vector_centroids_func[all_continue_variables_vectors_len];
+                vector_moments_func[all_continuous_variables_vectors_len] = vector_forces_func[all_continuous_variables_vectors_len] * vector_centroids_func[all_continuous_variables_vectors_len];
 
                 // saving information that all vectors went up by one size of its type
-                all_continue_variables_vectors_len++;
+                all_continuous_variables_vectors_len++;
                 while(1)
                 {
                     printf(" Quer colocar mais funcoes carga? (digite S ou N) : ");
@@ -375,7 +400,7 @@ int main ()
                 system("cls");
 
             }
-            for(int i = 0; i < all_continue_variables_vectors_len; i++)
+            for(int i = 0; i < all_continuous_variables_vectors_len; i++)
             {
                 printf(" A funcao de distribuicao de carga e : %s\n",vector_of_functions[i]);
                 printf(" O limite inferior e : %.4f\n",vector_inf_lims[i]);
@@ -398,6 +423,80 @@ int main ()
 
     //plotar grafico e bla bla bla 
     
+    if(opApoio1 == ENGASTE && opApoio2 == LIVRE || opApoio1 == LIVRE && opApoio2 == ENGASTE)
+    {
+        double x_cord_discrete[all_discrete_variables_vectors_len+1];
+        double y_cord_force_discrete[all_discrete_variables_vectors_len+1];
+        double y_cord_moment_discrete[all_discrete_variables_vectors_len+1];
+        POINT vector_of_moment_points[all_discrete_variables_vectors_len+1];
+
+
+
+        for(int i = 0; i < all_discrete_variables_vectors_len; i++)
+        {
+            Engaste.moment_y += -point_moment[i];
+            Engaste.force_y += -point_force[i];
+        }
+
+            //Discrete Momento Fletor
+        vector_of_moment_points[0].x = 0;
+        vector_of_moment_points[0].y = Engaste.moment_y;
+
+        printf("x : %f |   y: %f\n",vector_of_moment_points[0].x,vector_of_moment_points[0].y);
+
+        for(int i = 1; i < all_discrete_variables_vectors_len+1; i++)
+        {
+            vector_of_moment_points[i].x = point_force_distance[i-1];
+            vector_of_moment_points[i].y = point_moment[i-1];
+            printf("x : %f |   y: %f\n",point_force_distance[i],point_moment[i]);
+        }
+        printf("\n\n\n");
+
+        qsort(vector_of_moment_points,all_discrete_variables_vectors_len+1,sizeof(POINT),cmp_point);
+
+        for(int i = 0; i < all_discrete_variables_vectors_len + 1; i++)
+        {
+            x_cord_discrete[i] = vector_of_moment_points[i].x;
+            Engaste.moment_y += vector_of_moment_points[i].y;
+            y_cord_moment_discrete[i] = Engaste.moment_y;
+            printf("x : %f |   y: %f\n",x_cord_discrete[i],y_cord_moment_discrete[i]);
+        }
+
+
+        //Discrete Forca Cortante
+        
+        /*
+        double x_cord_continuous[all_continuous_variables_vectors_len + 1];
+        double y_cord_force_continuous[all_continuous_variables_vectors_len + 1];
+        double y_cord_moment_continuous[all_continuous_variables_vectors_len + 1];
+
+        for(int j = 0; j < all_continuous_variables_vectors_len; j++)
+        {
+            Engaste.force_y += -vector_forces_func[j];
+            Engaste.moment_y += -vector_moments_func[j];
+            x_cord_continuous[j] = vector_force_density_pos[j];
+            y_cord_force_continuous[j] = vector_forces_func[j];
+            y_cord_moment_continuous[j] = vector_moments_func[j];
+        }*/
+
+        //PLOTTING GRAPH
+        //RGBABitmapImageReference* imageRef1 = CreateRGBABitmapImageReference();
+        RGBABitmapImageReference* imageRef2 = CreateRGBABitmapImageReference();
+        //StringReference* ErrorMessage1;
+        StringReference* ErrorMessage2;  
+
+        //DrawScatterPlot(imageRef1, 600, 400, x_cord_discrete, all_discrete_variables_vectors_len + 1, y_cord_force_discrete, all_discrete_variables_vectors_len + 1, ErrorMessage1);
+        //size_t lenght_f;
+        //double* pngData_f = ConvertToPNG(&lenght_f, imageRef1->image);
+        //WriteToFile(pngData_f, lenght_f, "forca_cortante.png");
+
+        DrawScatterPlot(imageRef2, 600, 400, x_cord_discrete, all_discrete_variables_vectors_len + 1, y_cord_moment_discrete, all_discrete_variables_vectors_len + 1, ErrorMessage2);
+        size_t lenght_m;
+        double* pngData_m = ConvertToPNG(&lenght_m, imageRef2->image);
+        WriteToFile(pngData_m, lenght_m, "momento_fletor.png");
+
+
+    }
     
     // Liberando Memoria (Progama Ira Fechar)
     if(all_discrete_variables_vectors_len > 0)
@@ -406,7 +505,7 @@ int main ()
         free(point_force_distance);
         free(point_moment);
     }
-    if(all_continue_variables_vectors_len > 0)
+    if(all_continuous_variables_vectors_len > 0)
     {
         free(vector_inf_lims);
         free(vector_sup_lims);
@@ -417,7 +516,7 @@ int main ()
     }
     if(vector_of_functions != NULL)
     {
-        for(int i = 0; i < all_continue_variables_vectors_len; i++)
+        for(int i = 0; i < all_continuous_variables_vectors_len; i++)
         {
             if(vector_of_functions[i] != NULL)free(vector_of_functions[i]);
         }
