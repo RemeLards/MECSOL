@@ -3,7 +3,7 @@
 
 #define AMMOUNT_OF_DOUBLE_VECTORS 5 // for force, inferior limit, superior limit, centroid and moment
 #define MAX_FUNCTION_LEN 30
-#define USER_CHAR 1
+#define USER_CHAR 2
 
 #include "my_math.h"
 #include "my_strings.h"

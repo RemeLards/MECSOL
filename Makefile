@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS = -Wall
-OBJECTS = my_math.o my_strings.o trabmecsol.o menu.o pbPlots.o supportLib.o
+OBJECTS = my_math.o my_strings.o trabmecsol.o menu.o pbPlots.o supportLib.o -lm
 BINARY = trab.exe
 
 $(BINARY): $(OBJECTS)
@@ -10,4 +10,4 @@ $(BINARY): $(OBJECTS)
 	$(CC) -c $< $(CFLAGS)
 
 clean:
-	del *.o $(BINARY)
+	rm *.o $(BINARY)

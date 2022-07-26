@@ -26,7 +26,7 @@ int cmp_point(const void * a, const void * b)
 void printTela_1()
 {
     // Tela 1:
-    system("cls");
+    system("clear");
     printf(" =====================================================================\n");
     printf(" ========= Calculadora de forcas internas em vigas apoiadas  =========\n");
     printf(" =====================================================================\n");
@@ -37,7 +37,7 @@ void printTela_1()
 void printTela_2()
 {
     // Tela 2:
-    system("cls");
+    system("clear");
     printf(" =====================================================================\n");
     printf(" ========= Calculadora de forcas internas em vigas apoiadas  =========\n");
     printf(" =====================================================================\n");
@@ -53,13 +53,12 @@ void printEng_Eng_validation()
     printf("\n =====================================================================\n");
     printf("   Nao eh possivel utilizar dois engastes como apoio. Entre com \n outro tipo de apoio.\n");
     printf("   Pressione 'ENTER' para continuar.");
-    printf(" =====================================================================\n");
-    system("pause");   
+    printf(" =====================================================================\n"); 
 }
 
 void print_Apoios_validation(char** tiposApoios, int apoio1, int apoio2, double pos_apoio2)
 {
-    system("cls");
+    system("clear");
     printf(" =====================================================================\n");
     printf(" ============================ Seus Apoios ============================\n");
     printf("   Tipo do primeiro apoio: %s\n", tiposApoios[apoio1-1]);
@@ -74,13 +73,12 @@ void print_posApoio2_validation()
     printf("   Por favor entre com os dados sobre os apoios novamente.\n");
     printf("   Pressione 'ENTER' para continuar.\n");
     printf(" =====================================================================\n");
-    system("pause");
 }
 
 void printTela_3()
 {
     // Tela 3:
-    system("cls");
+    system("clear");
     printf(" =====================================================================\n");
     printf(" ========= Calculadora de forcas internas em vigas apoiadas  =========\n");
     printf(" =====================================================================\n");
@@ -96,8 +94,7 @@ void print_UserOp_validation()
 {
     printf("\n =========================================================\n");
     printf("   Opcao Invalida. Aperte Enter E Digite Uma Opcao Disponivel.\n");
-    printf(" ===========================================================\n");
-    system("pause");   
+    printf(" ===========================================================\n");  
 }
 
 void print_UserOp_validation02()
@@ -106,7 +103,7 @@ void print_UserOp_validation02()
     printf("   Nao eh possivel utilizar apoio simples com apoio livre. Entre com \n outro tipo de apoio.\n");
     printf("   Pressione 'ENTER' para continuar.\n");
     printf(" =====================================================================\n");
-    system("pause");
+
 }
 
 int main ()
@@ -119,6 +116,7 @@ int main ()
     double posApoio2  = 0, bar_size  = 0;
     char* tiposApoios[] = {"Apoio Simples", "Engaste", "Livre"};
     char userInput[30 + 1];
+    char GetChar[1 + 1];
 
                                     //CALCULOS
     int result = 0, userOp = 0;
@@ -156,6 +154,8 @@ int main ()
 
     // Program Start
     printTela_1();
+    fflush(stdin); //Cleaning Keyboard Buffer
+    fgets(GetChar, 1 + 1 ,stdin); //Gets string
 
     while (op1 == 0)
     {
@@ -171,7 +171,7 @@ int main ()
         printf("  Qual o tipo do apoio localizado na posicao x = 0 (Extremidade Esquerda) ? :    ");
         
         fflush(stdin); //Cleaning Keyboard Buffer
-        fgets(userInput, USER_OP + 1  ,stdin); //Gets string
+        fgets(userInput, 30 + 1  ,stdin); //Gets string
         if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
         
         opApoio1 = my_atoi(userInput);
@@ -184,25 +184,43 @@ int main ()
                 printf("\n\n  Qual o tipo do segundo apoio? :    ");
                 
                 fflush(stdin); //Cleaning Keyboard Buffer
-                fgets(userInput, USER_OP + 1 ,stdin); //Gets string
+                fgets(userInput, 30+1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
                 
                 opApoio2 = my_atoi(userInput);
 
-                if((opApoio1 == ENGASTE) && (opApoio2 == ENGASTE)) printEng_Eng_validation();
-                else if((opApoio1 == APOIO_SIMPLES) && (opApoio2 == LIVRE)) print_UserOp_validation02();
+                if((opApoio1 == ENGASTE) && (opApoio2 == ENGASTE)) 
+                {
+                    printEng_Eng_validation();
+                    fflush(stdin); //Cleaning Keyboard Buffer
+                    fgets(GetChar, 1 + 1 ,stdin); //Gets string
+                }
+                
+                else if((opApoio1 == APOIO_SIMPLES) && (opApoio2 == LIVRE))
+                {
+                    print_UserOp_validation02();
+                    fflush(stdin); //Cleaning Keyboard Buffer
+                    fgets(GetChar, 1 + 1 ,stdin); //Gets string
+                }
                 else valida = 1;
             }
-            posApoio2 = bar_size; 
+            posApoio2 = barra.size; 
 
             print_Apoios_validation(tiposApoios,opApoio1,opApoio2,posApoio2);
+            printf("\n   Pressione 'ENTER' para continuar.\n");
+            
+            fflush(stdin); //Cleaning Keyboard Buffer
+            fgets(GetChar, 1 + 1 ,stdin); //Gets string
         }
            
         else
         {
             opApoio2 = ENGASTE;
             printf("\n\n O Engaste foi colocado na extremidade esquerda da Barra \n\n");
-            system("pause");
+            printf("\n   Pressione 'ENTER' para continuar.\n");
+            
+            fflush(stdin); //Cleaning Keyboard Buffer
+            fgets(GetChar, 1 + 1 ,stdin); //Gets string
         }
         op1 = 1;
 
@@ -213,13 +231,13 @@ int main ()
     {
         printTela_3();
         fflush(stdin); //Cleaning Keyboard Buffer
-        fgets(userInput, USER_OP + 1  ,stdin); //Gets string
+        fgets(userInput, 30 + 1  ,stdin); //Gets string
         if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
         userOp = my_atoi(userInput);
 
         if(userOp == FORCA)
         {
-            system("cls");
+            system("clear");
             printf("\n\n\n");
             printf(" OBS: Escreva numeros decimais com '.' (ex : 0.3 , 0.2465)\n\n");
             
@@ -261,7 +279,7 @@ int main ()
                 }
 
                 free(user_confirmation);
-                system("cls");
+                system("clear");
             }
 
             for(int i = 0; i < all_discrete_variables_vectors_len; i++)
@@ -271,11 +289,16 @@ int main ()
                 printf(" Seu momento e : %.4f\n",point_moment[i]);
                 printf("\n\n");
             }
-            system("pause");
+
+            printf("\n   Pressione 'ENTER' para continuar.\n");
+            
+            fflush(stdin); //Cleaning Keyboard Buffer
+            fgets(GetChar, 1 + 1 ,stdin); //Gets string
+            
         }
         if(userOp == MOMENTO)
         {
-            system("cls");
+            system("clear");
             printf("\n\n\n");
             printf(" OBS: Escreva numeros decimais com '.' (ex : 0.3 , 0.2465)\n\n");
             
@@ -317,7 +340,7 @@ int main ()
                 }
 
                 free(user_confirmation);
-                system("cls");
+                system("clear");
             }
 
             for(int i = 0; i < all_discrete_variables_vectors_len; i++)
@@ -327,11 +350,14 @@ int main ()
                 printf(" Seu momento e : %.4f\n",point_moment[i]);
                 printf("\n\n");
             }
-            system("pause");
+            printf("\n   Pressione 'ENTER' para continuar.\n");
+            
+            fflush(stdin); //Cleaning Keyboard Buffer
+            fgets(GetChar, 1 + 1 ,stdin); //Gets string
         }
         if(userOp == DISTRIBUICAO_DE_CARGA)
         {
-            system("cls");
+            system("clear");
             printf("\n\n\n");
             printf(" OBS: Escreva numeros decimais com '.' (ex : 0.3 , 0.2465)\n\n");
 
@@ -405,7 +431,7 @@ int main ()
                 }
                 free(user_confirmation);
 
-                system("cls");
+                system("clear");
 
             }
             for(int i = 0; i < all_continuous_variables_vectors_len; i++)
@@ -419,7 +445,10 @@ int main ()
                 printf(" O momento e : %.4f\n",vector_moments_func[i]);
                 printf("\n\n");
             }
-            system("pause");
+            printf("\n   Pressione 'ENTER' para continuar.\n");
+            
+            fflush(stdin); //Cleaning Keyboard Buffer
+            fgets(GetChar, 1 + 1 ,stdin); //Gets string
 
         }
 
