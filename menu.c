@@ -100,7 +100,14 @@ void print_UserOp_validation()
     printf(" ===========================================================\n");
     system("pause");   
 }
-
+void print_UserOp_validation02()
+{
+    printf("\n =====================================================================\n");
+    printf("   Nao eh possivel utilizar apoio simples com apoio livre. Entre com \n outro tipo de apoio.\n");
+    printf("   Pressione 'ENTER' para continuar.\n");
+    printf(" =====================================================================\n");
+    system("pause");
+}
 int main ()
 {   // Declaracao de variaveis:
                                     // Menu Variables
@@ -175,6 +182,8 @@ int main ()
                 opApoio2 = my_atoi(userInput);
 
                 if((opApoio1 == ENGASTE) && (opApoio2 == ENGASTE)) printEng_Eng_validation();
+                else valida = 1;
+                if((opApoio1 == APOIO_SIMPLES) && (opApoio2 == LIVRE)) print_UserOp_validation02();
                 else valida = 1;
             }
             posApoio2 = bar_size; // por enquanto vamos trabalhar com apoios fixos nas extremidades
