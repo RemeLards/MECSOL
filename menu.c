@@ -425,10 +425,15 @@ int main ()
     
     if(opApoio1 == ENGASTE && opApoio2 == LIVRE || opApoio1 == LIVRE && opApoio2 == ENGASTE)
     {
-        double x_cord_discrete[all_discrete_variables_vectors_len+1];
-        double y_cord_force_discrete[all_discrete_variables_vectors_len+1];
-        double y_cord_moment_discrete[all_discrete_variables_vectors_len+1];
+        double x_discrete_moment[all_discrete_variables_vectors_len+1];
+        double y_moment_discrete[all_discrete_variables_vectors_len+1];
+
+        double x_discrete_force[(2*all_discrete_variables_vectors_len)+1];     
+        double y_force_discrete[(2*all_discrete_variables_vectors_len)+1];
+        
+
         POINT vector_of_moment_points[all_discrete_variables_vectors_len+1];
+        POINT vector_of_force_points[all_discrete_variables_vectors_len+1];
 
 
 
@@ -442,28 +447,71 @@ int main ()
         vector_of_moment_points[0].x = 0;
         vector_of_moment_points[0].y = Engaste.moment_y;
 
-        printf("x : %f |   y: %f\n",vector_of_moment_points[0].x,vector_of_moment_points[0].y);
 
         for(int i = 1; i < all_discrete_variables_vectors_len+1; i++)
         {
             vector_of_moment_points[i].x = point_force_distance[i-1];
             vector_of_moment_points[i].y = point_moment[i-1];
-            printf("x : %f |   y: %f\n",point_force_distance[i],point_moment[i]);
         }
-        printf("\n\n\n");
 
         qsort(vector_of_moment_points,all_discrete_variables_vectors_len+1,sizeof(POINT),cmp_point);
 
         for(int i = 0; i < all_discrete_variables_vectors_len + 1; i++)
         {
-            x_cord_discrete[i] = vector_of_moment_points[i].x;
+            x_discrete_moment[i] = vector_of_moment_points[i].x;
             Engaste.moment_y += vector_of_moment_points[i].y;
-            y_cord_moment_discrete[i] = Engaste.moment_y;
-            printf("x : %f |   y: %f\n",x_cord_discrete[i],y_cord_moment_discrete[i]);
+            y_moment_discrete[i] = Engaste.moment_y;
         }
 
 
         //Discrete Forca Cortante
+        
+        vector_of_force_points[0].x = 0;
+        vector_of_force_points[0].y = Engaste.force_y;
+
+        printf("x : %f |   y: %f\n",vector_of_force_points[0].x,vector_of_force_points[0].y);
+
+        for(int i = 1; i < all_discrete_variables_vectors_len+1; i++)
+        {
+            vector_of_force_points[i].x = point_force_distance[i-1];
+            vector_of_force_points[i].y = point_force[i-1];
+            printf("x : %f |   y: %f\n",point_force_distance[i],point_force[i]);
+        }
+        printf("\n\n\n");
+
+        qsort(vector_of_force_points,all_discrete_variables_vectors_len+1,sizeof(POINT),cmp_point);
+
+        for(int i = 0; i < all_discrete_variables_vectors_len + 1; i++)
+        {
+            if(i > 0)
+            {
+                // Fazendo um Degrau (colocando 2 valores diferentes no mesmo ponto)
+                x_discrete_force[(2*i)-1] =  vector_of_force_points[i].x;
+                y_force_discrete[(2*i)-1] = y_force_discrete[(2*i) - 2];
+
+                
+                x_discrete_force[2*i] = vector_of_force_points[i].x;
+
+                Engaste.force_y += vector_of_force_points[i].y;
+                y_force_discrete[2*i] = Engaste.force_y ;
+
+                printf("x : %f |   y: %f\n",x_discrete_force[2*i - 1],y_force_discrete[2*i - 1]);
+                printf("x : %f |   y: %f\n",x_discrete_force[2*i],y_force_discrete[2*i]);
+
+            }
+            else
+            {
+                x_discrete_force[i] = vector_of_force_points[i].x;
+                y_force_discrete[i] = vector_of_force_points[i].y;
+
+                printf("x : %f |   y: %f\n",x_discrete_force[i],y_force_discrete[i]);
+            }
+            
+        }
+
+
+
+
         
         /*
         double x_cord_continuous[all_continuous_variables_vectors_len + 1];
@@ -480,17 +528,17 @@ int main ()
         }*/
 
         //PLOTTING GRAPH
-        //RGBABitmapImageReference* imageRef1 = CreateRGBABitmapImageReference();
+        RGBABitmapImageReference* imageRef1 = CreateRGBABitmapImageReference();
         RGBABitmapImageReference* imageRef2 = CreateRGBABitmapImageReference();
-        //StringReference* ErrorMessage1;
+        StringReference* ErrorMessage1;
         StringReference* ErrorMessage2;  
 
-        //DrawScatterPlot(imageRef1, 600, 400, x_cord_discrete, all_discrete_variables_vectors_len + 1, y_cord_force_discrete, all_discrete_variables_vectors_len + 1, ErrorMessage1);
-        //size_t lenght_f;
-        //double* pngData_f = ConvertToPNG(&lenght_f, imageRef1->image);
-        //WriteToFile(pngData_f, lenght_f, "forca_cortante.png");
+        DrawScatterPlot(imageRef1, 600, 400, x_discrete_force, (2*all_discrete_variables_vectors_len) + 1, y_force_discrete, (2*all_discrete_variables_vectors_len) + 1, ErrorMessage1);
+        size_t lenght_f;
+        double* pngData_f = ConvertToPNG(&lenght_f, imageRef1->image);
+        WriteToFile(pngData_f, lenght_f, "forca_cortante.png");
 
-        DrawScatterPlot(imageRef2, 600, 400, x_cord_discrete, all_discrete_variables_vectors_len + 1, y_cord_moment_discrete, all_discrete_variables_vectors_len + 1, ErrorMessage2);
+        DrawScatterPlot(imageRef2, 600, 400, x_discrete_moment, all_discrete_variables_vectors_len + 1, y_moment_discrete, all_discrete_variables_vectors_len + 1, ErrorMessage2);
         size_t lenght_m;
         double* pngData_m = ConvertToPNG(&lenght_m, imageRef2->image);
         WriteToFile(pngData_m, lenght_m, "momento_fletor.png");
