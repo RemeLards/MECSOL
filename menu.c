@@ -31,8 +31,7 @@ void printTela_1()
     printf(" ========= Calculadora de forcas internas em vigas apoiadas  =========\n");
     printf(" =====================================================================\n");
     printf("   Pressione 'ENTER' para criar uma situacao;\n");
-    printf(" =====================================================================\n");
-    system("pause");
+    printf(" =====================================================================\n\n");
 }
 
 void printTela_2()
@@ -115,6 +114,7 @@ int main ()
                                     // Menu Variables
     BAR barra;
     ENGST Engaste;
+    APOIO_S Apoio_simples;
     int opApoio1 = 0, opApoio2 = 0, valida = 0, op1 = 0, op2 = 0;
     double posApoio2  = 0, bar_size  = 0;
     char* tiposApoios[] = {"Apoio Simples", "Engaste", "Livre"};
@@ -156,11 +156,9 @@ int main ()
 
     // Program Start
     printTela_1();
-    printTela_2();
 
     while (op1 == 0)
     {
-        system("cls");
         printf("  Digite o Tamanho da barra :    ");
 
         fflush(stdin); //Cleaning Keyboard Buffer
@@ -169,7 +167,7 @@ int main ()
         barra.size = my_atof(userInput);
         
 
-        system("cls");
+        printTela_2();
         printf("  Qual o tipo do apoio localizado na posicao x = 0 (Extremidade Esquerda) ? :    ");
         
         fflush(stdin); //Cleaning Keyboard Buffer
@@ -435,6 +433,116 @@ int main ()
 
     if(opApoio1 == APOIO_SIMPLES && opApoio2 == ENGASTE || opApoio1 == ENGASTE && opApoio2 == APOIO_SIMPLES || opApoio1 == APOIO_SIMPLES && opApoio2 == APOIO_SIMPLES)
     {
+        double x_discrete_moment[all_discrete_variables_vectors_len+2];
+        double y_moment_discrete[all_discrete_variables_vectors_len+2];
+
+        double x_discrete_force[(2*all_discrete_variables_vectors_len)+1];     
+        double y_force_discrete[(2*all_discrete_variables_vectors_len)+1];
+        
+
+        POINT vector_of_moment_points[all_discrete_variables_vectors_len+1];
+        POINT vector_of_force_points[all_discrete_variables_vectors_len+1];
+
+
+
+        for(int i = 0; i < all_discrete_variables_vectors_len; i++)
+        {
+            Apoio_simples.moment_y += -point_moment[i]/2;
+            Apoio_simples.force_y += -point_force[i]/2;
+        }
+
+            //Discrete Momento Fletor
+        vector_of_moment_points[0].x = 0;
+        vector_of_moment_points[0].y = 0;
+        vector_of_moment_points[1].x = 0;
+        vector_of_moment_points[1].y = Apoio_simples.moment_y;
+
+
+        for(int i = 2; i < all_discrete_variables_vectors_len + 2; i++)
+        {
+            vector_of_moment_points[i].x = point_force_distance[i-2];
+            vector_of_moment_points[i].y = point_moment[i-2];
+        }
+
+        qsort(vector_of_moment_points,all_discrete_variables_vectors_len+1,sizeof(POINT),cmp_point);
+        vector_of_moment_points[1].x = vector_of_moment_points[2].x;
+
+        for(int i = 0; i < all_discrete_variables_vectors_len + 2; i++)
+        {
+            x_discrete_moment[i] = vector_of_moment_points[i].x;
+            Apoio_simples.moment_y += vector_of_moment_points[i].y;
+            y_moment_discrete[i] = Apoio_simples.moment_y;
+        }
+        for(int i = 0; i < all_discrete_variables_vectors_len + 2; i++)
+        {
+            if(i < all_discrete_variables_vectors_len + 1)
+            {
+                x_discrete_moment[i] =  x_discrete_moment[i+1];
+            }
+        }
+
+
+        //Discrete Forca Cortante
+        
+        vector_of_force_points[0].x = 0;
+        vector_of_force_points[0].y = Apoio_simples.force_y;
+
+        printf("x : %f |   y: %f\n",vector_of_force_points[0].x,vector_of_force_points[0].y);
+
+        for(int i = 1; i < all_discrete_variables_vectors_len+1; i++)
+        {
+            vector_of_force_points[i].x = point_force_distance[i-1];
+            vector_of_force_points[i].y = point_force[i-1];
+            printf("x : %f |   y: %f\n",point_force_distance[i],point_force[i]);
+        }
+        printf("\n\n\n");
+
+        qsort(vector_of_force_points,all_discrete_variables_vectors_len+1,sizeof(POINT),cmp_point);
+
+        for(int i = 0; i < all_discrete_variables_vectors_len + 1; i++)
+        {
+            if(i > 0)
+            {
+                // Fazendo um Degrau (colocando 2 valores diferentes no mesmo ponto)
+                x_discrete_force[(2*i)-1] =  vector_of_force_points[i].x;
+                y_force_discrete[(2*i)-1] = y_force_discrete[(2*i) - 2];
+
+                
+                x_discrete_force[2*i] = vector_of_force_points[i].x;
+
+                Apoio_simples.force_y += vector_of_force_points[i].y;
+                y_force_discrete[2*i] = Apoio_simples.force_y ;
+
+                printf("x : %f |   y: %f\n",x_discrete_force[2*i - 1],y_force_discrete[2*i - 1]);
+                printf("x : %f |   y: %f\n",x_discrete_force[2*i],y_force_discrete[2*i]);
+
+            }
+            else
+            {
+                x_discrete_force[i] = vector_of_force_points[i].x;
+                y_force_discrete[i] = vector_of_force_points[i].y;
+
+                printf("x : %f |   y: %f\n",x_discrete_force[i],y_force_discrete[i]);
+            }
+            
+        }
+
+        //PLOTTING GRAPH
+        RGBABitmapImageReference* imageRef1 = CreateRGBABitmapImageReference();
+        RGBABitmapImageReference* imageRef2 = CreateRGBABitmapImageReference();
+        StringReference* ErrorMessage1;
+        StringReference* ErrorMessage2;  
+
+        DrawScatterPlot(imageRef1, 600, 400, x_discrete_force, (2*all_discrete_variables_vectors_len) + 1, y_force_discrete, (2*all_discrete_variables_vectors_len) + 1, ErrorMessage1);
+        size_t lenght_f;
+        double* pngData_f = ConvertToPNG(&lenght_f, imageRef1->image);
+        WriteToFile(pngData_f, lenght_f, "forca_cortante.png");
+
+        DrawScatterPlot(imageRef2, 600, 400, x_discrete_moment, all_discrete_variables_vectors_len + 2, y_moment_discrete, all_discrete_variables_vectors_len + 2, ErrorMessage2);
+        size_t lenght_m;
+        double* pngData_m = ConvertToPNG(&lenght_m, imageRef2->image);
+        WriteToFile(pngData_m, lenght_m, "momento_fletor.png");
+
 
     }
     
