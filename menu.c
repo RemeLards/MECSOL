@@ -255,11 +255,13 @@ int main ()
                 if(point_force_distance[all_discrete_variables_vectors_len] > barra.size)point_force_distance[all_discrete_variables_vectors_len] = barra.size;
                 if(point_force_distance[all_discrete_variables_vectors_len] < 0)point_force_distance[all_discrete_variables_vectors_len] = 0;
                 if(distance_str != NULL) free(distance_str);
+                printf("\n\n");
             
-                printf("Escreva a intensidade da forca  OBS : O sentido positivo e para baixo  :  ");
+                printf("Escreva a intensidade da forca (OBS : O sentido positivo e para cima) :  ");
                 force_str = str_validation(MAX_FUNCTION_LEN +1);
                 point_force[all_discrete_variables_vectors_len] = my_atof(force_str);
                 if(force_str != NULL) free(force_str);
+                printf("\n\n");
 
                 point_moment[all_discrete_variables_vectors_len] = point_force[all_discrete_variables_vectors_len] * point_force_distance[all_discrete_variables_vectors_len];
                 
@@ -276,6 +278,7 @@ int main ()
                         break;
                     }
                     free(user_confirmation);
+                    printf("\n\n");
                 }
 
                 free(user_confirmation);
@@ -316,18 +319,20 @@ int main ()
                 if(point_force_distance[all_discrete_variables_vectors_len] > barra.size)point_force_distance[all_discrete_variables_vectors_len] = barra.size;
                 if(point_force_distance[all_discrete_variables_vectors_len] < 0)point_force_distance[all_discrete_variables_vectors_len] = 0;
                 if(distance_str != NULL) free(distance_str);
+                printf("\n\n");
 
-                printf("Escreva a intensidade do momento  OBS : O sentido positivo e o antihorario  :  ");
+                printf("Escreva a intensidade do momento  (OBS : O sentido positivo e o horario)  :  ");
                 moment_str = str_validation(MAX_FUNCTION_LEN +1);
                 point_moment[all_discrete_variables_vectors_len] = my_atof(moment_str);
                 if(moment_str != NULL) free(moment_str);
+                printf("\n\n");
 
                 point_force[all_discrete_variables_vectors_len] = point_moment[all_discrete_variables_vectors_len] / point_force_distance[all_discrete_variables_vectors_len];
                 
                 all_discrete_variables_vectors_len++; 
                 while(1)
                 {
-                    printf(" Quer colocar mais forcas? (digite S ou N) : ");
+                    printf(" Quer colocar mais momentos? (digite S ou N) : ");
                     user_confirmation = str_validation(USER_CHAR + 1);
                     
                     if( (user_confirmation[0] == 's' || user_confirmation[0] == 'S'))break;
@@ -337,6 +342,7 @@ int main ()
                         break;
                     }
                     free(user_confirmation);
+                    printf("\n\n");
                 }
 
                 free(user_confirmation);
@@ -428,6 +434,7 @@ int main ()
                         break;
                     }
                     free(user_confirmation);
+                    printf("\n\n");
                 }
                 free(user_confirmation);
 
@@ -465,12 +472,12 @@ int main ()
         double x_discrete_moment[all_discrete_variables_vectors_len+2];
         double y_moment_discrete[all_discrete_variables_vectors_len+2];
 
-        double x_discrete_force[(2*all_discrete_variables_vectors_len)+1];     
-        double y_force_discrete[(2*all_discrete_variables_vectors_len)+1];
+        double x_discrete_force[2*(all_discrete_variables_vectors_len+1)];     
+        double y_force_discrete[2*(all_discrete_variables_vectors_len+1)];
         
 
         POINT vector_of_moment_points[all_discrete_variables_vectors_len+1];
-        POINT vector_of_force_points[all_discrete_variables_vectors_len+1];
+        POINT vector_of_force_points[all_discrete_variables_vectors_len+ 1];
 
 
 
@@ -512,23 +519,20 @@ int main ()
 
 
         //Discrete Forca Cortante
-        
+
         vector_of_force_points[0].x = 0;
         vector_of_force_points[0].y = Apoio_simples.force_y;
-
-        printf("x : %f |   y: %f\n",vector_of_force_points[0].x,vector_of_force_points[0].y);
 
         for(int i = 1; i < all_discrete_variables_vectors_len+1; i++)
         {
             vector_of_force_points[i].x = point_force_distance[i-1];
             vector_of_force_points[i].y = point_force[i-1];
-            printf("x : %f |   y: %f\n",point_force_distance[i],point_force[i]);
         }
-        printf("\n\n\n");
 
         qsort(vector_of_force_points,all_discrete_variables_vectors_len+1,sizeof(POINT),cmp_point);
 
-        for(int i = 0; i < all_discrete_variables_vectors_len + 1; i++)
+        int i = 0;
+        for(; i < all_discrete_variables_vectors_len + 1; i++)
         {
             if(i > 0)
             {
@@ -542,18 +546,30 @@ int main ()
                 Apoio_simples.force_y += vector_of_force_points[i].y;
                 y_force_discrete[2*i] = Apoio_simples.force_y ;
 
-                printf("x : %f |   y: %f\n",x_discrete_force[2*i - 1],y_force_discrete[2*i - 1]);
-                printf("x : %f |   y: %f\n",x_discrete_force[2*i],y_force_discrete[2*i]);
+                printf(" x : %f |  y: %f \n",x_discrete_force[2*i - 1],y_force_discrete[2*i - 1]);
+                printf(" x : %f |  y: %f \n",x_discrete_force[2*i],y_force_discrete[2*i]);
 
             }
             else
             {
                 x_discrete_force[i] = vector_of_force_points[i].x;
                 y_force_discrete[i] = vector_of_force_points[i].y;
-
-                printf("x : %f |   y: %f\n",x_discrete_force[i],y_force_discrete[i]);
+                printf(" x : %f |  y: %f \n",x_discrete_force[i],y_force_discrete[i]);
             }
             
+        }
+        if(i > 0)
+        {
+            x_discrete_force[2*i-1] = barra.size;
+            y_force_discrete[2*i-1] = y_force_discrete[2*(i-1)];
+        }
+
+        printf(" x : %f |  y: %f \n",x_discrete_force[i],y_force_discrete[i]);
+        printf("\n\n");
+
+        for(int k = 0; k < 2*(all_discrete_variables_vectors_len + 1) ; k++)
+        {
+            printf(" x : %f |  y: %f \n",x_discrete_force[k],y_force_discrete[k]);      
         }
 
         //PLOTTING GRAPH
@@ -562,7 +578,7 @@ int main ()
         StringReference* ErrorMessage1;
         StringReference* ErrorMessage2;  
 
-        DrawScatterPlot(imageRef1, 600, 400, x_discrete_force, (2*all_discrete_variables_vectors_len) + 1, y_force_discrete, (2*all_discrete_variables_vectors_len) + 1, ErrorMessage1);
+        DrawScatterPlot(imageRef1, 600, 400, x_discrete_force, 2*(all_discrete_variables_vectors_len + 1), y_force_discrete, 2*(all_discrete_variables_vectors_len + 1), ErrorMessage1);
         size_t lenght_f;
         double* pngData_f = ConvertToPNG(&lenght_f, imageRef1->image);
         WriteToFile(pngData_f, lenght_f, "forca_cortante.png");
@@ -621,15 +637,12 @@ int main ()
         vector_of_force_points[0].x = 0;
         vector_of_force_points[0].y = Engaste.force_y;
 
-        printf("x : %f |   y: %f\n",vector_of_force_points[0].x,vector_of_force_points[0].y);
 
         for(int i = 1; i < all_discrete_variables_vectors_len+1; i++)
         {
             vector_of_force_points[i].x = point_force_distance[i-1];
             vector_of_force_points[i].y = point_force[i-1];
-            printf("x : %f |   y: %f\n",point_force_distance[i],point_force[i]);
         }
-        printf("\n\n\n");
 
         qsort(vector_of_force_points,all_discrete_variables_vectors_len+1,sizeof(POINT),cmp_point);
 
@@ -647,16 +660,11 @@ int main ()
                 Engaste.force_y += vector_of_force_points[i].y;
                 y_force_discrete[2*i] = Engaste.force_y ;
 
-                printf("x : %f |   y: %f\n",x_discrete_force[2*i - 1],y_force_discrete[2*i - 1]);
-                printf("x : %f |   y: %f\n",x_discrete_force[2*i],y_force_discrete[2*i]);
-
             }
             else
             {
                 x_discrete_force[i] = vector_of_force_points[i].x;
                 y_force_discrete[i] = vector_of_force_points[i].y;
-
-                printf("x : %f |   y: %f\n",x_discrete_force[i],y_force_discrete[i]);
             }
             
         }

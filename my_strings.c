@@ -34,15 +34,9 @@ char* str_validation(int max_len)
     //fflush(stdin); //Cleaning Keyboard Buffer
     fgets(str, max_len + 1, stdin); //Gets string
 
-    printf("(str_validation) 1 [%s]\n", str);
-
     if(str[my_strlen(str)-1] == '\n')str[my_strlen(str)-1] = '\0'; // removes '\n' char that gets to the string (sometimes)
 
-    printf("(str_validation) 2 [%s]\n", str);
-
     ret = remove_spaces(str);   
-
-    printf("(str_validation) 3 [%s]\n", ret);   
 
     return (ret);
 }
