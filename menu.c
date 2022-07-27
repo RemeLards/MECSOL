@@ -105,7 +105,14 @@ void print_UserOp_validation02()
     printf(" =====================================================================\n");
 
 }
+void print_Uservalidation03()
+{
+    printf("\n =====================================================================\n");
+    printf("   Nao eh possivel utilizar engaste com apoio simples. Situacao estaticamente indetermindada\n");
+    printf("   Pressione 'ENTER' para continuar.\n");
+    printf(" =====================================================================\n");
 
+}
 int main ()
 {   // Declaracao de variaveis:
                                     // Menu Variables
@@ -189,20 +196,15 @@ int main ()
                 
                 opApoio2 = my_atoi(userInput);
 
-                if((opApoio1 == ENGASTE) && (opApoio2 == ENGASTE)) 
-                {
-                    printEng_Eng_validation();
-                    fflush(stdin); //Cleaning Keyboard Buffer
-                    fgets(GetChar, 1 + 1 ,stdin); //Gets string
-                }
+                if((opApoio1 == ENGASTE) && (opApoio2 == ENGASTE)) printEng_Eng_validation();
                 
-                else if((opApoio1 == APOIO_SIMPLES) && (opApoio2 == LIVRE))
-                {
-                    print_UserOp_validation02();
-                    fflush(stdin); //Cleaning Keyboard Buffer
-                    fgets(GetChar, 1 + 1 ,stdin); //Gets string
-                }
+                else if((opApoio1 == APOIO_SIMPLES) && (opApoio2 == LIVRE)) print_UserOp_validation02();
+               
+                else if ((opApoio1 == ENGASTE && opApoio2 == APOIO_SIMPLES) || (opApoio1 == APOIO_SIMPLES && opApoio2 == ENGASTE)) print_Uservalidation03();
+
                 else valida = 1;
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(GetChar, 1 + 1 ,stdin); //Gets string
             }
             posApoio2 = barra.size; 
 
@@ -467,7 +469,7 @@ int main ()
 
     //plotar grafico e bla bla bla 
 
-    if(opApoio1 == APOIO_SIMPLES && opApoio2 == ENGASTE || opApoio1 == ENGASTE && opApoio2 == APOIO_SIMPLES || opApoio1 == APOIO_SIMPLES && opApoio2 == APOIO_SIMPLES)
+    if(opApoio1 == APOIO_SIMPLES && opApoio2 == APOIO_SIMPLES)
     {
         double x_discrete_moment[all_discrete_variables_vectors_len+2];
         double y_moment_discrete[all_discrete_variables_vectors_len+2];
