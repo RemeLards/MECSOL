@@ -19,7 +19,7 @@ char* mult_const_str(char* function); // Returns the string containing the const
 char* div_const_str(char* function); // Returns the string containing the constant dividing the integral
 
 int exponent_value(char* function); // Returns exponent value
-double mult_const_value(char* function); // Returns the constant value multiplying the integral
-double div_const_value(char* function); // Returns the constant value dividing the integral
+double mult_const_value(char* function); // Returns the constant value multiplying the function
+double div_const_value(char* function); // Returns the constant value dividing the function
 
 #endif

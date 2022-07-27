@@ -26,7 +26,7 @@ int cmp_point(const void * a, const void * b)
 void printTela_1()
 {
     // Tela 1:
-    system("clear");
+    system("cls");
     printf(" =====================================================================\n");
     printf(" ========= Calculadora de forcas internas em vigas apoiadas  =========\n");
     printf(" =====================================================================\n");
@@ -37,7 +37,7 @@ void printTela_1()
 void printTela_2()
 {
     // Tela 2:
-    system("clear");
+    system("cls");
     printf(" =====================================================================\n");
     printf(" ========= Calculadora de forcas internas em vigas apoiadas  =========\n");
     printf(" =====================================================================\n");
@@ -58,7 +58,7 @@ void printEng_Eng_validation()
 
 void print_Apoios_validation(char** tiposApoios, int apoio1, int apoio2, double pos_apoio2)
 {
-    system("clear");
+    system("cls");
     printf(" =====================================================================\n");
     printf(" ============================ Seus Apoios ============================\n");
     printf("   Tipo do primeiro apoio: %s\n", tiposApoios[apoio1-1]);
@@ -78,7 +78,7 @@ void print_posApoio2_validation()
 void printTela_3()
 {
     // Tela 3:
-    system("clear");
+    system("cls");
     printf(" =====================================================================\n");
     printf(" ========= Calculadora de forcas internas em vigas apoiadas  =========\n");
     printf(" =====================================================================\n");
@@ -105,6 +105,7 @@ void print_UserOp_validation02()
     printf(" =====================================================================\n");
 
 }
+
 void print_Uservalidation03()
 {
     printf("\n =====================================================================\n");
@@ -113,6 +114,7 @@ void print_Uservalidation03()
     printf(" =====================================================================\n");
 
 }
+
 int main ()
 {   // Declaracao de variaveis:
                                     // Menu Variables
@@ -196,15 +198,34 @@ int main ()
                 
                 opApoio2 = my_atoi(userInput);
 
-                if((opApoio1 == ENGASTE) && (opApoio2 == ENGASTE)) printEng_Eng_validation();
+                if((opApoio1 == ENGASTE) && (opApoio2 == ENGASTE))
+                {
+                    printEng_Eng_validation();
+                    fflush(stdin); //Cleaning Keyboard Buffer
+                    fgets(GetChar, 1 + 1 ,stdin); //Gets string
+                }
                 
-                else if((opApoio1 == APOIO_SIMPLES) && (opApoio2 == LIVRE)) print_UserOp_validation02();
-               
-                else if ((opApoio1 == ENGASTE && opApoio2 == APOIO_SIMPLES) || (opApoio1 == APOIO_SIMPLES && opApoio2 == ENGASTE)) print_Uservalidation03();
+                else
+                {
+                    if((opApoio1 == APOIO_SIMPLES) && (opApoio2 == LIVRE))
+                    {
+                        print_UserOp_validation02();
+                        fflush(stdin); //Cleaning Keyboard Buffer
+                        fgets(GetChar, 1 + 1 ,stdin); //Gets string
+                    }
 
-                else valida = 1;
-                fflush(stdin); //Cleaning Keyboard Buffer
-                fgets(GetChar, 1 + 1 ,stdin); //Gets string
+                    else 
+                    {
+                        if ((opApoio1 == ENGASTE && opApoio2 == APOIO_SIMPLES) || (opApoio1 == APOIO_SIMPLES && opApoio2 == ENGASTE))
+                        {
+                            print_Uservalidation03();
+                            fflush(stdin); //Cleaning Keyboard Buffer
+                            fgets(GetChar, 1 + 1 ,stdin); //Gets string
+                        }
+                        else valida = 1;
+                    }
+                }
+
             }
             posApoio2 = barra.size; 
 
@@ -239,7 +260,7 @@ int main ()
 
         if(userOp == FORCA)
         {
-            system("clear");
+            system("cls");
             printf("\n\n\n");
             printf(" OBS: Escreva numeros decimais com '.' (ex : 0.3 , 0.2465)\n\n");
             
@@ -284,7 +305,7 @@ int main ()
                 }
 
                 free(user_confirmation);
-                system("clear");
+                system("cls");
             }
 
             for(int i = 0; i < all_discrete_variables_vectors_len; i++)
@@ -303,7 +324,7 @@ int main ()
         }
         if(userOp == MOMENTO)
         {
-            system("clear");
+            system("cls");
             printf("\n\n\n");
             printf(" OBS: Escreva numeros decimais com '.' (ex : 0.3 , 0.2465)\n\n");
             
@@ -348,7 +369,7 @@ int main ()
                 }
 
                 free(user_confirmation);
-                system("clear");
+                system("cls");
             }
 
             for(int i = 0; i < all_discrete_variables_vectors_len; i++)
@@ -365,7 +386,7 @@ int main ()
         }
         if(userOp == DISTRIBUICAO_DE_CARGA)
         {
-            system("clear");
+            system("cls");
             printf("\n\n\n");
             printf(" OBS: Escreva numeros decimais com '.' (ex : 0.3 , 0.2465)\n\n");
 
@@ -440,7 +461,7 @@ int main ()
                 }
                 free(user_confirmation);
 
-                system("clear");
+                system("cls");
 
             }
             for(int i = 0; i < all_continuous_variables_vectors_len; i++)
@@ -492,32 +513,35 @@ int main ()
             //Discrete Momento Fletor
         vector_of_moment_points[0].x = 0;
         vector_of_moment_points[0].y = 0;
-        vector_of_moment_points[1].x = 0;
-        vector_of_moment_points[1].y = Apoio_simples.moment_y;
+
+        //vector_of_moment_points[1].x = 0; // <- do proximo do momento
+        //vector_of_moment_points[1].y = Apoio_simples.moment_y;
 
 
-        for(int i = 2; i < all_discrete_variables_vectors_len + 2; i++)
+        for(int i = 1; i < all_discrete_variables_vectors_len + 1; i++)
         {
-            vector_of_moment_points[i].x = point_force_distance[i-2];
-            vector_of_moment_points[i].y = point_moment[i-2];
+            vector_of_moment_points[i].x = point_force_distance[i-1];
+            vector_of_moment_points[i].y = point_moment[i-1];
+            printf(" x : %f |  y: %f \n", vector_of_moment_points[i].x, vector_of_moment_points[i].y);
         }
+        printf("\n\n");
 
         qsort(vector_of_moment_points,all_discrete_variables_vectors_len+1,sizeof(POINT),cmp_point);
-        vector_of_moment_points[1].x = vector_of_moment_points[2].x;
 
-        for(int i = 0; i < all_discrete_variables_vectors_len + 2; i++)
+        int j = 1;
+        printf(" x : %f |  y: %f \n", x_discrete_moment[0], y_moment_discrete[0]); 
+        for(; j < all_discrete_variables_vectors_len+1; j++)
         {
-            x_discrete_moment[i] = vector_of_moment_points[i].x;
-            Apoio_simples.moment_y += vector_of_moment_points[i].y;
-            y_moment_discrete[i] = Apoio_simples.moment_y;
+            
+            x_discrete_moment[j] = vector_of_moment_points[j].x;
+            y_moment_discrete[j] = Apoio_simples.moment_y;
+            Apoio_simples.moment_y += vector_of_moment_points[j].y;
+            printf(" x : %f |  y: %f \n", x_discrete_moment[j], y_moment_discrete[j]); 
         }
-        for(int i = 0; i < all_discrete_variables_vectors_len + 2; i++)
-        {
-            if(i < all_discrete_variables_vectors_len + 1)
-            {
-                x_discrete_moment[i] =  x_discrete_moment[i+1];
-            }
-        }
+        x_discrete_moment[j] = barra.size;
+        y_moment_discrete[j] = 0;
+        printf(" x : %f |  y: %f \n", x_discrete_moment[j], y_moment_discrete[j]); 
+        printf("\n\n");
 
 
         //Discrete Forca Cortante
@@ -548,15 +572,15 @@ int main ()
                 Apoio_simples.force_y += vector_of_force_points[i].y;
                 y_force_discrete[2*i] = Apoio_simples.force_y ;
 
-                printf(" x : %f |  y: %f \n",x_discrete_force[2*i - 1],y_force_discrete[2*i - 1]);
-                printf(" x : %f |  y: %f \n",x_discrete_force[2*i],y_force_discrete[2*i]);
+                //printf(" x : %f |  y: %f \n",x_discrete_force[2*i - 1],y_force_discrete[2*i - 1]);
+                //printf(" x : %f |  y: %f \n",x_discrete_force[2*i],y_force_discrete[2*i]);
 
             }
             else
             {
                 x_discrete_force[i] = vector_of_force_points[i].x;
                 y_force_discrete[i] = vector_of_force_points[i].y;
-                printf(" x : %f |  y: %f \n",x_discrete_force[i],y_force_discrete[i]);
+                //printf(" x : %f |  y: %f \n",x_discrete_force[i],y_force_discrete[i]);
             }
             
         }
@@ -566,8 +590,8 @@ int main ()
             y_force_discrete[2*i-1] = y_force_discrete[2*(i-1)];
         }
 
-        printf(" x : %f |  y: %f \n",x_discrete_force[i],y_force_discrete[i]);
-        printf("\n\n");
+        //printf(" x : %f |  y: %f \n",x_discrete_force[i],y_force_discrete[i]);
+        //printf("\n\n");
 
         for(int k = 0; k < 2*(all_discrete_variables_vectors_len + 1) ; k++)
         {
