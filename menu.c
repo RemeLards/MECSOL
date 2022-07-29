@@ -509,8 +509,9 @@ int main ()
         POINT vector_of_moment_points[all_discrete_variables_vectors_len+1];
         POINT vector_of_force_points[all_discrete_variables_vectors_len+ 1];
 
+        int i = 0;
         // Reaction Forces and Moments caused by the forces
-        for(int i = 0; i < all_discrete_variables_vectors_len; i++)
+        for(; i < all_discrete_variables_vectors_len; i++)
         {
             Apoio_simples.moment_y += -point_moment[i]/2;
             Apoio_simples.force_y += -point_force[i]/2;
@@ -519,7 +520,8 @@ int main ()
         // Reaction Moments caused by the Pure Moments
         // There is no need for one more memory space on the moment vectors because of the Pure Moment
         // The explanation is that, the total moment will be 0 in the end 
-        for(int i = 0; i < pure_moment_len; i++) Apoio_simples.moment_y += -point_pure_moment[i];
+        i = 0;
+        for(; i < pure_moment_len; i++) Apoio_simples.moment_y += -point_pure_moment[i];
 
             //Discrete Momento Fletor
         
@@ -528,7 +530,8 @@ int main ()
         vector_of_moment_points[0].y = 0;
 
         // Adding Moment Values to be sorted by their distances
-        for(int i = 1; i < all_discrete_variables_vectors_len + 1; i++)
+        i = 1;
+        for(; i < all_discrete_variables_vectors_len + 1; i++)
         {
             vector_of_moment_points[i].x = point_force_distance[i-1];
             vector_of_moment_points[i].y = point_moment[i-1];
@@ -543,34 +546,42 @@ int main ()
         // To Plot the Moment Graph The Moment Value it's delayed by one loop, while it´s distance dont
         // It Works because when we go to the next distance, the peak moment value (old value) occurs in that distance
         // That's why it´s delayed 
-        int j = 1;
+        i = 0;
         //printf(" x : %f |  y: %f \n", x_discrete_moment[0], y_moment_discrete[0]); 
-        for(; j < all_discrete_variables_vectors_len+1; j++)
+        for(; i < all_discrete_variables_vectors_len + 1; i++)
         {
-            
-            x_discrete_moment[j] = vector_of_moment_points[j].x;
-            y_moment_discrete[j] = Apoio_simples.moment_y;
-            Apoio_simples.moment_y += vector_of_moment_points[j].y;
-            //printf(" x : %f |  y: %f \n", x_discrete_moment[j], y_moment_discrete[j]); 
+            if(i > 0)
+            {
+                x_discrete_moment[i] = vector_of_moment_points[i].x;
+                y_moment_discrete[i] = Apoio_simples.moment_y;
+                Apoio_simples.moment_y += vector_of_moment_points[i].y;
+                //printf(" x : %f |  y: %f \n", x_discrete_moment[j], y_moment_discrete[j]);
+            }
+            else
+            {
+                x_discrete_moment[i] = vector_of_moment_points[i].x;
+                y_moment_discrete[i] = vector_of_moment_points[i].y; 
+            }
         }
         //Last Moment Value and Distance 
-        x_discrete_moment[j] = barra.size;
-        y_moment_discrete[j] = 0;
+        x_discrete_moment[i] = barra.size;
+        y_moment_discrete[i] = 0;
         //printf(" x : %f |  y: %f \n", x_discrete_moment[j], y_moment_discrete[j]); 
         //printf("\n\n");
 
 
             //Discrete Forca Cortante
         
-        //First Moment and Distance Value
+        //First Force and Distance Value
         vector_of_force_points[0].x = 0;
         vector_of_force_points[0].y = Apoio_simples.force_y;
 
+        int j = 1;
         // Adding Force Values to be sorted by their distances
-        for(int i = 1; i < all_discrete_variables_vectors_len+1; i++)
+        for(; j < all_discrete_variables_vectors_len+1; j++)
         {
-            vector_of_force_points[i].x = point_force_distance[i-1];
-            vector_of_force_points[i].y = point_force[i-1];
+            vector_of_force_points[j].x = point_force_distance[j-1];
+            vector_of_force_points[j].y = point_force[j-1];
         }
         
         // "qsort()" sorts all the Moment Values, based on their distances
@@ -578,22 +589,22 @@ int main ()
 
         // Storing Sorted Forces Values and Their distances
         // But Forces Values need two points in the same distance when Force changes
-        // Because the force graph works like a sum of Heaviside functions ("u(x)")
+        // Because the Force graph works like a sum of Heaviside functions ("u(x)")
 
-        int i = 0;
-        for(; i < all_discrete_variables_vectors_len + 1; i++)
+        j = 0;
+        for(; j < all_discrete_variables_vectors_len + 1; j++)
         {
-            if(i > 0)
+            if(j > 0)
             {
                 // Fazendo um Degrau (colocando 2 valores diferentes no mesmo ponto)
-                x_discrete_force[(2*i)-1] =  vector_of_force_points[i].x;
-                y_force_discrete[(2*i)-1] = y_force_discrete[(2*i) - 2];
+                x_discrete_force[(2*j)-1] =  vector_of_force_points[j].x;
+                y_force_discrete[(2*j)-1] = y_force_discrete[(2*j) - 2];
 
                 
-                x_discrete_force[2*i] = vector_of_force_points[i].x;
+                x_discrete_force[2*j] = vector_of_force_points[j].x;
 
-                Apoio_simples.force_y += vector_of_force_points[i].y;
-                y_force_discrete[2*i] = Apoio_simples.force_y ;
+                Apoio_simples.force_y += vector_of_force_points[j].y;
+                y_force_discrete[2*j] = Apoio_simples.force_y ;
 
                 //printf(" x : %f |  y: %f \n",x_discrete_force[2*i - 1],y_force_discrete[2*i - 1]);
                 //printf(" x : %f |  y: %f \n",x_discrete_force[2*i],y_force_discrete[2*i]);
@@ -601,17 +612,17 @@ int main ()
             }
             else
             {
-                x_discrete_force[i] = vector_of_force_points[i].x;
-                y_force_discrete[i] = vector_of_force_points[i].y;
+                x_discrete_force[j] = vector_of_force_points[j].x;
+                y_force_discrete[j] = vector_of_force_points[j].y;
                 //printf(" x : %f |  y: %f \n",x_discrete_force[i],y_force_discrete[i]);
             }
             
         }
         // Last Force Value (it happens because there's two supports one on each edge )
-        if(i > 0)
+        if(j > 0)
         {
-            x_discrete_force[2*i-1] = barra.size;
-            y_force_discrete[2*i-1] = y_force_discrete[2*(i-1)];
+            x_discrete_force[2*j-1] = barra.size;
+            y_force_discrete[2*j-1] = y_force_discrete[2*(j-1)];
         }
 
         //printf(" x : %f |  y: %f \n",x_discrete_force[i],y_force_discrete[i]);
@@ -721,7 +732,7 @@ int main ()
         //    printf("Momento : %f \n\n",y_discrete_moment[i]);        
         //}
         //printf("\n\n\n");
-        
+
             //Discrete Forca Cortante
 
         int j = 0;
