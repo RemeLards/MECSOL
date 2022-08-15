@@ -2,6 +2,7 @@
 #include "pbPlots.h"
 #include "supportLib.h"
 
+#define CDW_N_OF_POINTS
 
 typedef struct 
 {
@@ -56,13 +57,14 @@ void printEng_Eng_validation()
     printf(" =====================================================================\n"); 
 }
 
-void print_Apoios_validation(char** tiposApoios, int apoio1, int apoio2, double pos_apoio2)
+void print_Apoios_validation(char** tiposApoios, int apoio1, int apoio2, double pos_apoio1, double pos_apoio2)
 {
     system("cls");
     printf(" =====================================================================\n");
     printf(" ============================ Seus Apoios ============================\n");
     printf("   Tipo do primeiro apoio: %s\n", tiposApoios[apoio1-1]);
     printf("   Tipo do segundo apoio: %s\n", tiposApoios[apoio2-1]);
+    printf("   Posicao do primeiro apoio: %.2f\n", pos_apoio1);
     printf("   Posicao do segundo apoio: %.2f\n", pos_apoio2);
     printf(" =====================================================================\n");
 }
@@ -109,7 +111,7 @@ void print_UserOp_validation02()
 void print_Uservalidation03()
 {
     printf("\n =====================================================================\n");
-    printf("   Nao eh possivel utilizar engaste com apoio simples. Situacao estaticamente indetermindada\n");
+    printf("   Nao e possivel utilizar engaste com apoio simples. Situacao estaticamente indetermindada\n");
     printf("   Pressione 'ENTER' para continuar.\n");
     printf(" =====================================================================\n");
 
@@ -119,6 +121,15 @@ int main ()
 {   // Declaracao de variaveis:
                                     // Menu Variables
     BAR barra;
+    barra.size = 0;
+
+    APOIO_S Apoio_simples_L; // Apoio simples on the Left side 
+    Apoio_simples_L.force_y = 0;
+    Apoio_simples_L.moment_y = 0;
+
+    APOIO_S Apoio_simples_R; // Apoio simples on the right side
+    Apoio_simples_R.force_y = 0;
+    Apoio_simples_R.moment_y = 0;
 
     int opApoio1 = 0, opApoio2 = 0, valida = 0, supports_chosen = 0;
     double posApoio2  = 0;
@@ -127,7 +138,7 @@ int main ()
     char GetChar[1 + 1];
 
                                     //CALCULOS
-    int result = 0, userOp = 0;
+    int actions_chosen = 0, userOp = 0;
 
                                     // Point Variable (Varíaveis Pontuais (ou seja Discretas, diferente da distruibuição de cargas))
     
@@ -189,6 +200,21 @@ int main ()
         
         opApoio1 = my_atoi(userInput);
 
+        if(opApoio1 == APOIO_SIMPLES)
+        {
+            printf("  Qual a distancia da barra (comecando da extremidade esquerda) que voce quer colocar o apoio esquerdo ? :    ");
+            
+            fflush(stdin); //Cleaning Keyboard Buffer
+            fgets(userInput, 30 + 1  ,stdin); //Gets string
+            if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+            
+            double distance_left_apoio = my_atof(userInput);
+            if(distance_left_apoio < 0) distance_left_apoio = 0;
+            if(distance_left_apoio > (barra.size/2)) distance_left_apoio = barra.size/2;
+
+            Apoio_simples_L.distance = distance_left_apoio;
+        }
+
         if(opApoio1 != LIVRE)
         {
             // Restricao dos tipos de apoio + selecao do segundo apoio
@@ -197,10 +223,30 @@ int main ()
                 printf("\n\n  Qual o tipo do segundo apoio? :    ");
                 
                 fflush(stdin); //Cleaning Keyboard Buffer
-                fgets(userInput, 30+1 ,stdin); //Gets string
+                fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
                 
                 opApoio2 = my_atoi(userInput);
+
+                if(opApoio1 == APOIO_SIMPLES && opApoio2 == APOIO_SIMPLES)
+                {
+                    printf("  Qual a distancia da barra (comecando da extremidade esquerda) que voce quer colocar o apoio direito ? :    ");
+                    
+                    fflush(stdin); //Cleaning Keyboard Buffer
+                    fgets(userInput, 30 + 1  ,stdin); //Gets string
+                    if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+                    
+                    double distance_right_apoio = my_atof(userInput);
+                    if(distance_right_apoio > barra.size) distance_right_apoio = barra.size;
+                    if(distance_right_apoio < (barra.size/2))
+                    {
+                        distance_right_apoio = barra.size/2;
+                        if(Apoio_simples_L.distance == barra.size/2)distance_right_apoio = (barra.size/1.5);
+                    }
+
+                    Apoio_simples_R.distance = distance_right_apoio;
+                }
+
 
                 if((opApoio1 == ENGASTE) && (opApoio2 == ENGASTE))
                 {
@@ -231,9 +277,8 @@ int main ()
                 }
 
             }
-            posApoio2 = barra.size; 
-
-            print_Apoios_validation(tiposApoios,opApoio1,opApoio2,posApoio2);
+            
+            print_Apoios_validation(tiposApoios,opApoio1,opApoio2,Apoio_simples_L.distance,Apoio_simples_R.distance);
             printf("\n   Pressione 'ENTER' para continuar.\n");
             
             fflush(stdin); //Cleaning Keyboard Buffer
@@ -254,7 +299,7 @@ int main ()
     }
     
 
-    while(result == 0)
+    while(actions_chosen == 0)
     {
         printTela_3();
         fflush(stdin); //Cleaning Keyboard Buffer
@@ -482,7 +527,7 @@ int main ()
 
         }
 
-        if(userOp == RESULTADO) result = 1;
+        if(userOp == RESULTADO) actions_chosen = 1;
         
         if(userOp < FORCA || userOp > RESULTADO)print_UserOp_validation();
 
@@ -492,12 +537,12 @@ int main ()
 
     if(opApoio1 == APOIO_SIMPLES && opApoio2 == APOIO_SIMPLES)
     {
-        APOIO_S Apoio_simples;
-
-        Apoio_simples.force_y = 0;
-        Apoio_simples.moment_y = 0;
+        double total_force_on_bar = 0;
 
         // Vectors that will be used to print the Force graph
+        // times 2, because every force needs a u(x) (Heaviside function) to represent it
+        // so in the same point we need two distinct values, so that we can simulate a u(x) function
+        
         double x_discrete_force[2*(all_discrete_variables_vectors_len+1)];     
         double y_force_discrete[2*(all_discrete_variables_vectors_len+1)];
 
@@ -510,18 +555,21 @@ int main ()
         POINT vector_of_force_points[all_discrete_variables_vectors_len+ 1];
 
         int i = 0;
-        // Reaction Forces and Moments caused by the forces
-        for(; i < all_discrete_variables_vectors_len; i++)
-        {
-            Apoio_simples.moment_y += -point_moment[i]/2;
-            Apoio_simples.force_y += -point_force[i]/2;
-        }
+        // Sum Of Reaction Forces caused by the forces
+        for(; i < all_discrete_variables_vectors_len; i++)total_force_on_bar += -point_force[i];
+
+        //Calculating Force on the Right and Left Apoio Simples
+        i = 0;
+        for(; i < all_discrete_variables_vectors_len; i++)Apoio_simples_R.force_y += -(point_force[i] * point_force_distance[i]);
+        Apoio_simples_R.force_y /= Apoio_simples_R.distance;
+
+        Apoio_simples_L.force_y = total_force_on_bar - Apoio_simples_R.force_y; 
 
         // Reaction Moments caused by the Pure Moments
         // There is no need for one more memory space on the moment vectors because of the Pure Moment
         // The explanation is that, the total moment will be 0 in the end 
         i = 0;
-        for(; i < pure_moment_len; i++) Apoio_simples.moment_y += -point_pure_moment[i];
+        for(; i < pure_moment_len; i++) Apoio_simples_L.moment_y += -point_pure_moment[i];
 
             //Discrete Momento Fletor
         
@@ -535,9 +583,9 @@ int main ()
         {
             vector_of_moment_points[i].x = point_force_distance[i-1];
             vector_of_moment_points[i].y = point_moment[i-1];
-            //printf(" x : %f |  y: %f \n", vector_of_moment_points[i].x, vector_of_moment_points[i].y);
+            printf(" x : %f |  y: %f \n", vector_of_moment_points[i].x, vector_of_moment_points[i].y);
         }
-        //printf("\n\n");
+        printf("\n\n");
 
         // "qsort()" sorts all the Moment Values, based on their distances
         qsort(vector_of_moment_points,all_discrete_variables_vectors_len+1,sizeof(POINT),cmp_point);
@@ -546,16 +594,33 @@ int main ()
         // To Plot the Moment Graph The Moment Value it's delayed by one loop, while it´s distance dont
         // It Works because when we go to the next distance, the peak moment value (old value) occurs in that distance
         // That's why it´s delayed 
+        
+        printf(" x : %f |  y: %f \n\n", x_discrete_moment[0], y_moment_discrete[0]);
+
+        // As the program goes to the bar sections, we add the forces of the sections
+        double Apoio_simples_resultant_force = Apoio_simples_L.force_y;
+        double Apoio_simples_resultant_moment = 0;
+        double Apoio_simples_add_moment = 0;
+
         i = 0;
-        //printf(" x : %f |  y: %f \n", x_discrete_moment[0], y_moment_discrete[0]); 
         for(; i < all_discrete_variables_vectors_len + 1; i++)
         {
             if(i > 0)
             {
                 x_discrete_moment[i] = vector_of_moment_points[i].x;
-                y_moment_discrete[i] = Apoio_simples.moment_y;
-                Apoio_simples.moment_y += vector_of_moment_points[i].y;
-                //printf(" x : %f |  y: %f \n", x_discrete_moment[j], y_moment_discrete[j]);
+
+                if(i > 1) Apoio_simples_add_moment +=  -vector_of_moment_points[i-1].y;
+                Apoio_simples_resultant_moment  = Apoio_simples_resultant_force * x_discrete_moment[i] + Apoio_simples_add_moment;
+         
+                y_moment_discrete[i] = Apoio_simples_resultant_moment ;
+
+                printf("Forca Resultante na Secao : %f\n",Apoio_simples_resultant_force );
+                printf("Momento adicionado na Secao : %f\n",Apoio_simples_add_moment );
+                printf(" x : %f |  y: %f \n", x_discrete_moment[i], y_moment_discrete[i]);
+                printf("Momento Resultante na Secao : %f\n\n",Apoio_simples_resultant_moment);
+
+                Apoio_simples_resultant_force += (vector_of_moment_points[i].y/vector_of_moment_points[i].x);
+                
             }
             else
             {
@@ -566,15 +631,15 @@ int main ()
         //Last Moment Value and Distance 
         x_discrete_moment[i] = barra.size;
         y_moment_discrete[i] = 0;
-        //printf(" x : %f |  y: %f \n", x_discrete_moment[j], y_moment_discrete[j]); 
-        //printf("\n\n");
+        printf(" x : %f |  y: %f \n", x_discrete_moment[i], y_moment_discrete[i]); 
+        printf("\n\n");
 
 
             //Discrete Forca Cortante
         
         //First Force and Distance Value
         vector_of_force_points[0].x = 0;
-        vector_of_force_points[0].y = Apoio_simples.force_y;
+        vector_of_force_points[0].y = Apoio_simples_L.force_y;
 
         int j = 1;
         // Adding Force Values to be sorted by their distances
@@ -603,8 +668,8 @@ int main ()
                 
                 x_discrete_force[2*j] = vector_of_force_points[j].x;
 
-                Apoio_simples.force_y += vector_of_force_points[j].y;
-                y_force_discrete[2*j] = Apoio_simples.force_y ;
+                Apoio_simples_L.force_y += vector_of_force_points[j].y;
+                y_force_discrete[2*j] = Apoio_simples_L.force_y ;
 
                 //printf(" x : %f |  y: %f \n",x_discrete_force[2*i - 1],y_force_discrete[2*i - 1]);
                 //printf(" x : %f |  y: %f \n",x_discrete_force[2*i],y_force_discrete[2*i]);

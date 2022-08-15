@@ -18,7 +18,7 @@
 void printTela_1();
 void printTela_2();
 void printEng_Eng_validation();
-void print_Apoios_validation(char** tiposApoios, int apoio1, int apoio2, double pos_apoio2);
+void print_Apoios_validation(char** tiposApoios, int apoio1, int apoio2, double pos_apoio1, double pos_apoio2);
 void print_posApoio2_validation();
 void printTela_3();
 void print_UserOp_validation();
