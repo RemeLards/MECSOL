@@ -560,7 +560,7 @@ int main ()
 
         //Calculating Force on the Right and Left Apoio Simples
         i = 0;
-        for(; i < all_discrete_variables_vectors_len; i++)Apoio_simples_R.force_y += -(point_force[i] * point_force_distance[i]);
+        for(; i < all_discrete_variables_vectors_len; i++)Apoio_simples_R.force_y += -(point_force[i] * (point_force_distance[i] - Apoio_simples_L.distance));
         Apoio_simples_R.force_y /= Apoio_simples_R.distance;
 
         Apoio_simples_L.force_y = total_force_on_bar - Apoio_simples_R.force_y; 
@@ -594,8 +594,6 @@ int main ()
         // To Plot the Moment Graph The Moment Value it's delayed by one loop, while it´s distance dont
         // It Works because when we go to the next distance, the peak moment value (old value) occurs in that distance
         // That's why it´s delayed 
-        
-        printf(" x : %f |  y: %f \n\n", x_discrete_moment[0], y_moment_discrete[0]);
 
         // As the program goes to the bar sections, we add the forces of the sections
         double Apoio_simples_resultant_force = Apoio_simples_L.force_y;
@@ -614,10 +612,10 @@ int main ()
          
                 y_moment_discrete[i] = Apoio_simples_resultant_moment ;
 
-                printf("Forca Resultante na Secao : %f\n",Apoio_simples_resultant_force );
-                printf("Momento adicionado na Secao : %f\n",Apoio_simples_add_moment );
+                //printf("Forca Resultante na Secao : %f\n",Apoio_simples_resultant_force );
+                //printf("Momento adicionado na Secao : %f\n",Apoio_simples_add_moment );
                 printf(" x : %f |  y: %f \n", x_discrete_moment[i], y_moment_discrete[i]);
-                printf("Momento Resultante na Secao : %f\n\n",Apoio_simples_resultant_moment);
+                //printf("Momento Resultante na Secao : %f\n\n",Apoio_simples_resultant_moment);
 
                 Apoio_simples_resultant_force += (vector_of_moment_points[i].y/vector_of_moment_points[i].x);
                 
@@ -625,7 +623,8 @@ int main ()
             else
             {
                 x_discrete_moment[i] = vector_of_moment_points[i].x;
-                y_moment_discrete[i] = vector_of_moment_points[i].y; 
+                y_moment_discrete[i] = vector_of_moment_points[i].y;
+                printf(" x : %f |  y: %f \n\n", x_discrete_moment[0], y_moment_discrete[0]); 
             }
         }
         //Last Moment Value and Distance 
