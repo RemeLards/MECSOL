@@ -3,12 +3,15 @@
 
 #include "trabmecsol.h"
 
-//Menu
-#define APOIO_SIMPLES 1
-#define ENGASTE 2
-#define LIVRE 3
+//Tipos de Apoios
+enum APOIOS
+{
+    APOIO_SIMPLES = 1,
+    ENGASTE,
+    LIVRE,
+};
 
-//Tipos de vigas
+//Tipos de Vigas
 enum VIGAS
 {
     CIRCULAR = 1,
@@ -19,11 +22,15 @@ enum VIGAS
     TIPO_I,
     TIPO_T,
 };
+
 //Acoes Externas
-#define FORCA 1
-#define MOMENTO 2
-#define DISTRIBUICAO_DE_CARGA 3
-#define RESULTADO 4
+enum ACOES_EXTERNAS
+{
+    FORCA = 1,
+    MOMENTO,
+    DISTRIBUICAO_DE_CARGA,
+    RESULTADO,
+};
 
 void printTela_1();
 void printTela_2();
