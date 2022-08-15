@@ -9,6 +9,17 @@
 #define LIVRE 3
 #define USER_OP 2
 
+//Tipos de vigas
+enum VIGAS
+{
+    CIRCULAR = 1,
+    RETANGULAR,
+    TRIANGULAR,
+    TIPO_U,
+    TIPO_H,
+    TIPO_I,
+    TIPO_T,
+};
 //Acoes Externas
 #define FORCA 1
 #define MOMENTO 2

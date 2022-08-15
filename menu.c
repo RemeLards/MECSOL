@@ -77,6 +77,21 @@ void print_posApoio2_validation()
     printf(" =====================================================================\n");
 }
 
+void print_tipos_de_perfis_de_vigas()
+{
+    printf("=====================================================================\n");
+    printf(" Agora escolha o tipo de perfis de viga.\n");
+    printf("    1. Circular\n");
+    printf("    2. Retangular\n");
+    printf("    3. Triangular\n");
+    printf("    4. Tipo U\n");
+    printf("    5. Tipo H\n");
+    printf("    6. Tipo I\n");
+    printf("    7. Tipo T\n");
+    printf(" =====================================================================\n");
+
+}
+
 void printTela_3()
 {
     // Tela 3:
@@ -137,14 +152,15 @@ int main ()
     Engaste.force_x = 0;
     Engaste.force_y = 0;
 
-    int opApoio1 = 0, opApoio2 = 0, valida = 0, supports_chosen = 0;
+    int opApoio1 = 0, opApoio2 = 0, valida = 0, userOp = 0;
     double posApoio2  = 0;
     char* tiposApoios[] = {"Apoio Simples", "Engaste", "Livre"};
+    int tiposVigas = 0;
     char userInput[30 + 1];
     char GetChar[1 + 1];
 
                                     //CALCULOS
-    int actions_chosen = 0, userOp = 0;
+    int actions_chosen = 0, supports_chosen = 0, beam_chosen = 0;
 
                                     // Point Variable (Varíaveis Pontuais (ou seja Discretas, diferente da distruibuição de cargas))
     
@@ -304,6 +320,17 @@ int main ()
 
     }
     
+    while (beam_chosen == 0)
+    {
+        print_tipos_de_perfis_de_vigas();
+
+        fflush(stdin); //Cleaning Keyboard Buffer
+        fgets(userInput, 30 + 1 ,stdin); //Gets string
+        if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+        tiposVigas = my_atoi(userInput);
+        
+    }
 
     while(actions_chosen == 0)
     {
