@@ -7,7 +7,6 @@
 #define APOIO_SIMPLES 1
 #define ENGASTE 2
 #define LIVRE 3
-#define USER_OP 2
 
 //Tipos de vigas
 enum VIGAS
