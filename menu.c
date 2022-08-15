@@ -131,6 +131,12 @@ int main ()
     Apoio_simples_R.force_y = 0;
     Apoio_simples_R.moment_y = 0;
 
+    ENGST Engaste;
+    Engaste.moment_x = 0;
+    Engaste.moment_y = 0;
+    Engaste.force_x = 0;
+    Engaste.force_y = 0;
+
     int opApoio1 = 0, opApoio2 = 0, valida = 0, supports_chosen = 0;
     double posApoio2  = 0;
     char* tiposApoios[] = {"Apoio Simples", "Engaste", "Livre"};
@@ -537,347 +543,339 @@ int main ()
 
     if(opApoio1 == APOIO_SIMPLES && opApoio2 == APOIO_SIMPLES)
     {
-        double total_force_on_bar = 0;
-
-        // Vectors that will be used to print the Force graph
-        // times 2, because every force needs a u(x) (Heaviside function) to represent it
-        // so in the same point we need two distinct values, so that we can simulate a u(x) function
-        
-        double x_discrete_force[2*(all_discrete_variables_vectors_len+1)];     
-        double y_force_discrete[2*(all_discrete_variables_vectors_len+1)];
-
-        // Vectors that will be used to print the Moment graph
-        double x_discrete_moment[all_discrete_variables_vectors_len+2];
-        double y_moment_discrete[all_discrete_variables_vectors_len+2];
-
-        // Structs that will sort the Forces and Moments based on its distance
-        POINT vector_of_moment_points[all_discrete_variables_vectors_len+1];
-        POINT vector_of_force_points[all_discrete_variables_vectors_len+ 1];
-
-        int i = 0;
-        // Sum Of Reaction Forces caused by the forces
-        for(; i < all_discrete_variables_vectors_len; i++)total_force_on_bar += -point_force[i];
-
-        //Calculating Force on the Right and Left Apoio Simples
-        i = 0;
-        for(; i < all_discrete_variables_vectors_len; i++)Apoio_simples_R.force_y += -(point_force[i] * (point_force_distance[i] - Apoio_simples_L.distance));
-        Apoio_simples_R.force_y /= Apoio_simples_R.distance;
-
-        Apoio_simples_L.force_y = total_force_on_bar - Apoio_simples_R.force_y; 
-
-        // Reaction Moments caused by the Pure Moments
-        // There is no need for one more memory space on the moment vectors because of the Pure Moment
-        // The explanation is that, the total moment will be 0 in the end 
-        i = 0;
-        for(; i < pure_moment_len; i++) Apoio_simples_L.moment_y += -point_pure_moment[i];
-
-            //Discrete Momento Fletor
-        
-        //First Moment and Distance Value
-        vector_of_moment_points[0].x = 0;
-        vector_of_moment_points[0].y = 0;
-
-        // Adding Moment Values to be sorted by their distances
-        i = 1;
-        for(; i < all_discrete_variables_vectors_len + 1; i++)
+        if(all_continuous_variables_vectors_len == 0)
         {
-            vector_of_moment_points[i].x = point_force_distance[i-1];
-            vector_of_moment_points[i].y = point_moment[i-1];
-            printf(" x : %f |  y: %f \n", vector_of_moment_points[i].x, vector_of_moment_points[i].y);
-        }
-        printf("\n\n");
+            double total_force_on_bar = 0;
 
-        // "qsort()" sorts all the Moment Values, based on their distances
-        qsort(vector_of_moment_points,all_discrete_variables_vectors_len+1,sizeof(POINT),cmp_point);
+            // Vectors that will be used to print the Force graph
+            // times 2, because every force needs a u(x) (Heaviside function) to represent it
+            // so in the same point we need two distinct values, so that we can simulate a u(x) function
+            
+            double x_discrete_force[2*(all_discrete_variables_vectors_len+1)];     
+            double y_force_discrete[2*(all_discrete_variables_vectors_len+1)];
 
-        // Storing Sorted Moment Values and Their distances
-        // To Plot the Moment Graph The Moment Value it's delayed by one loop, while it´s distance dont
-        // It Works because when we go to the next distance, the peak moment value (old value) occurs in that distance
-        // That's why it´s delayed 
+            // Vectors that will be used to print the Moment graph
+            double x_discrete_moment[all_discrete_variables_vectors_len+2];
+            double y_moment_discrete[all_discrete_variables_vectors_len+2];
 
-        // As the program goes to the bar sections, we add the forces of the sections
-        double Apoio_simples_resultant_force = Apoio_simples_L.force_y;
-        double Apoio_simples_resultant_moment = 0;
-        double Apoio_simples_add_moment = 0;
+            // Structs that will sort the Forces and Moments based on its distance
+            POINT vector_of_moment_points[all_discrete_variables_vectors_len+1];
+            POINT vector_of_force_points[all_discrete_variables_vectors_len+ 1];
 
-        i = 0;
-        for(; i < all_discrete_variables_vectors_len + 1; i++)
-        {
-            if(i > 0)
+            int i = 0;
+            // Sum Of Reaction Forces caused by the forces
+            for(; i < all_discrete_variables_vectors_len; i++)total_force_on_bar += -point_force[i];
+
+            //Calculating Force on the Right and Left Apoio Simples
+            i = 0;
+            for(; i < all_discrete_variables_vectors_len; i++)Apoio_simples_R.force_y += -(point_force[i] * (point_force_distance[i] - Apoio_simples_L.distance));
+            Apoio_simples_R.force_y /= Apoio_simples_R.distance;
+
+            Apoio_simples_L.force_y = total_force_on_bar - Apoio_simples_R.force_y; 
+
+            // Reaction Moments caused by the Pure Moments
+            // There is no need for one more memory space on the moment vectors because of the Pure Moment
+            // The explanation is that, the total moment will be 0 in the end 
+            i = 0;
+            for(; i < pure_moment_len; i++) Apoio_simples_L.moment_y += -point_pure_moment[i];
+
+                //Discrete Momento Fletor
+            
+            //First Moment and Distance Value
+            vector_of_moment_points[0].x = 0;
+            vector_of_moment_points[0].y = 0;
+
+            // Adding Moment Values to be sorted by their distances
+            i = 1;
+            for(; i < all_discrete_variables_vectors_len + 1; i++)
             {
-                x_discrete_moment[i] = vector_of_moment_points[i].x;
-
-                if(i > 1) Apoio_simples_add_moment +=  -vector_of_moment_points[i-1].y;
-                Apoio_simples_resultant_moment  = Apoio_simples_resultant_force * x_discrete_moment[i] + Apoio_simples_add_moment;
-         
-                y_moment_discrete[i] = Apoio_simples_resultant_moment ;
-
-                //printf("Forca Resultante na Secao : %f\n",Apoio_simples_resultant_force );
-                //printf("Momento adicionado na Secao : %f\n",Apoio_simples_add_moment );
-                printf(" x : %f |  y: %f \n", x_discrete_moment[i], y_moment_discrete[i]);
-                //printf("Momento Resultante na Secao : %f\n\n",Apoio_simples_resultant_moment);
-
-                Apoio_simples_resultant_force += (vector_of_moment_points[i].y/vector_of_moment_points[i].x);
-                
+                vector_of_moment_points[i].x = point_force_distance[i-1];
+                vector_of_moment_points[i].y = point_moment[i-1];
+                printf(" x : %f |  y: %f \n", vector_of_moment_points[i].x, vector_of_moment_points[i].y);
             }
-            else
+            printf("\n\n");
+
+            // "qsort()" sorts all the Moment Values, based on their distances
+            qsort(vector_of_moment_points,all_discrete_variables_vectors_len+1,sizeof(POINT),cmp_point);
+
+            // Storing Sorted Moment Values and Their distances
+            // To Plot the Moment Graph The Moment Value it's delayed by one loop, while it´s distance dont
+            // It Works because when we go to the next distance, the peak moment value (old value) occurs in that distance
+            // That's why it´s delayed 
+
+            // As the program goes to the bar sections, we add the forces of the sections
+            double Apoio_simples_resultant_force = Apoio_simples_L.force_y;
+            double Apoio_simples_resultant_moment = 0;
+            double Apoio_simples_add_moment = 0;
+
+            i = 0;
+            for(; i < all_discrete_variables_vectors_len + 1; i++)
             {
-                x_discrete_moment[i] = vector_of_moment_points[i].x;
-                y_moment_discrete[i] = vector_of_moment_points[i].y;
-                printf(" x : %f |  y: %f \n\n", x_discrete_moment[0], y_moment_discrete[0]); 
+                if(i > 0)
+                {
+                    x_discrete_moment[i] = vector_of_moment_points[i].x;
+
+                    if(i > 1) Apoio_simples_add_moment +=  -vector_of_moment_points[i-1].y;
+                    Apoio_simples_resultant_moment  = Apoio_simples_resultant_force * x_discrete_moment[i] + Apoio_simples_add_moment;
+            
+                    y_moment_discrete[i] = Apoio_simples_resultant_moment ;
+
+                    //printf("Forca Resultante na Secao : %f\n",Apoio_simples_resultant_force );
+                    //printf("Momento adicionado na Secao : %f\n",Apoio_simples_add_moment );
+                    printf(" x : %f |  y: %f \n", x_discrete_moment[i], y_moment_discrete[i]);
+                    //printf("Momento Resultante na Secao : %f\n\n",Apoio_simples_resultant_moment);
+
+                    Apoio_simples_resultant_force += (vector_of_moment_points[i].y/vector_of_moment_points[i].x);
+                    
+                }
+                else
+                {
+                    x_discrete_moment[i] = vector_of_moment_points[i].x;
+                    y_moment_discrete[i] = vector_of_moment_points[i].y;
+                    printf(" x : %f |  y: %f \n\n", x_discrete_moment[0], y_moment_discrete[0]); 
+                }
             }
-        }
-        //Last Moment Value and Distance 
-        x_discrete_moment[i] = barra.size;
-        y_moment_discrete[i] = 0;
-        printf(" x : %f |  y: %f \n", x_discrete_moment[i], y_moment_discrete[i]); 
-        printf("\n\n");
+            //Last Moment Value and Distance 
+            x_discrete_moment[i] = barra.size;
+            y_moment_discrete[i] = 0;
+            printf(" x : %f |  y: %f \n", x_discrete_moment[i], y_moment_discrete[i]); 
+            printf("\n\n");
 
 
-            //Discrete Forca Cortante
-        
-        //First Force and Distance Value
-        vector_of_force_points[0].x = 0;
-        vector_of_force_points[0].y = Apoio_simples_L.force_y;
+                //Discrete Forca Cortante
+            
+            //First Force and Distance Value
+            vector_of_force_points[0].x = 0;
+            vector_of_force_points[0].y = Apoio_simples_L.force_y;
 
-        int j = 1;
-        // Adding Force Values to be sorted by their distances
-        for(; j < all_discrete_variables_vectors_len+1; j++)
-        {
-            vector_of_force_points[j].x = point_force_distance[j-1];
-            vector_of_force_points[j].y = point_force[j-1];
-        }
-        
-        // "qsort()" sorts all the Moment Values, based on their distances
-        qsort(vector_of_force_points,all_discrete_variables_vectors_len+1,sizeof(POINT),cmp_point);
-
-        // Storing Sorted Forces Values and Their distances
-        // But Forces Values need two points in the same distance when Force changes
-        // Because the Force graph works like a sum of Heaviside functions ("u(x)")
-
-        j = 0;
-        for(; j < all_discrete_variables_vectors_len + 1; j++)
-        {
-            if(j > 0)
+            int j = 1;
+            // Adding Force Values to be sorted by their distances
+            for(; j < all_discrete_variables_vectors_len+1; j++)
             {
-                // Fazendo um Degrau (colocando 2 valores diferentes no mesmo ponto)
-                x_discrete_force[(2*j)-1] =  vector_of_force_points[j].x;
-                y_force_discrete[(2*j)-1] = y_force_discrete[(2*j) - 2];
-
-                
-                x_discrete_force[2*j] = vector_of_force_points[j].x;
-
-                Apoio_simples_L.force_y += vector_of_force_points[j].y;
-                y_force_discrete[2*j] = Apoio_simples_L.force_y ;
-
-                //printf(" x : %f |  y: %f \n",x_discrete_force[2*i - 1],y_force_discrete[2*i - 1]);
-                //printf(" x : %f |  y: %f \n",x_discrete_force[2*i],y_force_discrete[2*i]);
-
-            }
-            else
-            {
-                x_discrete_force[j] = vector_of_force_points[j].x;
-                y_force_discrete[j] = vector_of_force_points[j].y;
-                //printf(" x : %f |  y: %f \n",x_discrete_force[i],y_force_discrete[i]);
+                vector_of_force_points[j].x = point_force_distance[j-1];
+                vector_of_force_points[j].y = point_force[j-1];
             }
             
+            // "qsort()" sorts all the Moment Values, based on their distances
+            qsort(vector_of_force_points,all_discrete_variables_vectors_len+1,sizeof(POINT),cmp_point);
+
+            // Storing Sorted Forces Values and Their distances
+            // But Forces Values need two points in the same distance when Force changes
+            // Because the Force graph works like a sum of Heaviside functions ("u(x)")
+
+            j = 0;
+            for(; j < all_discrete_variables_vectors_len + 1; j++)
+            {
+                if(j > 0)
+                {
+                    // Fazendo um Degrau (colocando 2 valores diferentes no mesmo ponto)
+                    x_discrete_force[(2*j)-1] =  vector_of_force_points[j].x;
+                    y_force_discrete[(2*j)-1] = y_force_discrete[(2*j) - 2];
+
+                    
+                    x_discrete_force[2*j] = vector_of_force_points[j].x;
+
+                    Apoio_simples_L.force_y += vector_of_force_points[j].y;
+                    y_force_discrete[2*j] = Apoio_simples_L.force_y ;
+
+                    //printf(" x : %f |  y: %f \n",x_discrete_force[2*i - 1],y_force_discrete[2*i - 1]);
+                    //printf(" x : %f |  y: %f \n",x_discrete_force[2*i],y_force_discrete[2*i]);
+
+                }
+                else
+                {
+                    x_discrete_force[j] = vector_of_force_points[j].x;
+                    y_force_discrete[j] = vector_of_force_points[j].y;
+                    //printf(" x : %f |  y: %f \n",x_discrete_force[i],y_force_discrete[i]);
+                }
+                
+            }
+            // Last Force Value (it happens because there's two supports one on each edge )
+            if(j > 0)
+            {
+                x_discrete_force[2*j-1] = barra.size;
+                y_force_discrete[2*j-1] = y_force_discrete[2*(j-1)];
+            }
+
+            //printf(" x : %f |  y: %f \n",x_discrete_force[i],y_force_discrete[i]);
+            //printf("\n\n");
+
+            //for(int k = 0; k < 2*(all_discrete_variables_vectors_len + 1) ; k++)
+            //{
+            //    printf(" x : %f |  y: %f \n",x_discrete_force[k],y_force_discrete[k]);      
+            //}
+
+            //PLOTTING GRAPH
+            RGBABitmapImageReference* imageRef1 = CreateRGBABitmapImageReference();
+            RGBABitmapImageReference* imageRef2 = CreateRGBABitmapImageReference();
+            StringReference* ErrorMessage1;
+            StringReference* ErrorMessage2;  
+
+            DrawScatterPlot(imageRef1, 600, 400, x_discrete_force, 2*(all_discrete_variables_vectors_len + 1), y_force_discrete, 2*(all_discrete_variables_vectors_len + 1), ErrorMessage1);
+            size_t lenght_f;
+            double* pngData_f = ConvertToPNG(&lenght_f, imageRef1->image);
+            WriteToFile(pngData_f, lenght_f, "forca_cortante.png");
+
+            DrawScatterPlot(imageRef2, 600, 400, x_discrete_moment, all_discrete_variables_vectors_len + 2, y_moment_discrete, all_discrete_variables_vectors_len + 2, ErrorMessage2);
+            size_t lenght_m;
+            double* pngData_m = ConvertToPNG(&lenght_m, imageRef2->image);
+            WriteToFile(pngData_m, lenght_m, "momento_fletor.png");
         }
-        // Last Force Value (it happens because there's two supports one on each edge )
-        if(j > 0)
+
+        if(all_discrete_variables_vectors_len == 0)
         {
-            x_discrete_force[2*j-1] = barra.size;
-            y_force_discrete[2*j-1] = y_force_discrete[2*(j-1)];
+
         }
-
-        //printf(" x : %f |  y: %f \n",x_discrete_force[i],y_force_discrete[i]);
-        //printf("\n\n");
-
-        //for(int k = 0; k < 2*(all_discrete_variables_vectors_len + 1) ; k++)
-        //{
-        //    printf(" x : %f |  y: %f \n",x_discrete_force[k],y_force_discrete[k]);      
-        //}
-
-        //PLOTTING GRAPH
-        RGBABitmapImageReference* imageRef1 = CreateRGBABitmapImageReference();
-        RGBABitmapImageReference* imageRef2 = CreateRGBABitmapImageReference();
-        StringReference* ErrorMessage1;
-        StringReference* ErrorMessage2;  
-
-        DrawScatterPlot(imageRef1, 600, 400, x_discrete_force, 2*(all_discrete_variables_vectors_len + 1), y_force_discrete, 2*(all_discrete_variables_vectors_len + 1), ErrorMessage1);
-        size_t lenght_f;
-        double* pngData_f = ConvertToPNG(&lenght_f, imageRef1->image);
-        WriteToFile(pngData_f, lenght_f, "forca_cortante.png");
-
-        DrawScatterPlot(imageRef2, 600, 400, x_discrete_moment, all_discrete_variables_vectors_len + 2, y_moment_discrete, all_discrete_variables_vectors_len + 2, ErrorMessage2);
-        size_t lenght_m;
-        double* pngData_m = ConvertToPNG(&lenght_m, imageRef2->image);
-        WriteToFile(pngData_m, lenght_m, "momento_fletor.png");
-
 
     }
     
     if(opApoio1 == ENGASTE && opApoio2 == LIVRE || opApoio1 == LIVRE && opApoio2 == ENGASTE)
     {
-        ENGST Engaste;
-        Engaste.moment_x = 0;
-        Engaste.moment_y = 0;
-        Engaste.force_x = 0;
-        Engaste.force_y = 0;
 
-        // Vectors that will be used to print the Force graph
-        double x_discrete_force[(2*all_discrete_variables_vectors_len)+1];     
-        double y_discrete_force[(2*all_discrete_variables_vectors_len)+1];
-
-        int theres_a_pure_moment = 0;
-        if(pure_moment_len > 0)theres_a_pure_moment++;
-
-        // Vectors that will be used to print the Moment graph
-        double x_discrete_moment[all_discrete_variables_vectors_len+ 1 + theres_a_pure_moment];
-        double y_discrete_moment[all_discrete_variables_vectors_len+ 1 + theres_a_pure_moment];
-
-        // Structs that will sort the Forces and Moments based on its distance
-        POINT vector_of_moment_points[all_discrete_variables_vectors_len+1];
-        POINT vector_of_force_points[all_discrete_variables_vectors_len+1];
-
-        int i = 0;
-        // Reaction Forces and Moments caused by the forces
-
-        i = 0;
-        for(; i < all_discrete_variables_vectors_len; i++)
+        if(all_continuous_variables_vectors_len == 0)
         {
-            Engaste.moment_y += -point_moment[i];
-            Engaste.force_y += -point_force[i];
-        }
-        //printf("-------------VALORES NO ENGASTE-------------\n");
-        //printf("Momento do Engaste : %f\n",Engaste.moment_y);
-        //printf("Forca do Enagste : %f \n",Engaste.force_y);
+            // Vectors that will be used to print the Force graph
+            double x_discrete_force[(2*all_discrete_variables_vectors_len)+1];     
+            double y_discrete_force[(2*all_discrete_variables_vectors_len)+1];
 
-        // Reaction Moments caused by the Pure Moments
-        i = 0;
-        for(; i < pure_moment_len; i++)Engaste.moment_y += -point_pure_moment[i];
-        //if(theres_a_pure_moment == 1)printf("Momento do Engaste Apos Adicao Dos Momentos Puros: %f\n",Engaste.moment_y);
-        //printf("\n\n\n");
-            
-            //Discrete Momento Fletor
-        
-        // First Moment and Distance Value
-        vector_of_moment_points[0].x = 0;
-        vector_of_moment_points[0].y = Engaste.moment_y;
+            int theres_a_pure_moment = 0;
+            if(pure_moment_len > 0)theres_a_pure_moment++;
 
-        // Adding Moment Values to be sorted by their distances
-        i = 1;
-        for(; i < all_discrete_variables_vectors_len+1; i++)
-        {
-            vector_of_moment_points[i].x = point_force_distance[i-1];
-            vector_of_moment_points[i].y = point_moment[i-1];
-        }
+            // Vectors that will be used to print the Moment graph
+            double x_discrete_moment[all_discrete_variables_vectors_len+ 1 + theres_a_pure_moment];
+            double y_discrete_moment[all_discrete_variables_vectors_len+ 1 + theres_a_pure_moment];
 
-        // "qsort()" sorts all the Moment Values, based on their distances
-        qsort(vector_of_moment_points,all_discrete_variables_vectors_len+1,sizeof(POINT),cmp_point);
+            // Structs that will sort the Forces and Moments based on its distance
+            POINT vector_of_moment_points[all_discrete_variables_vectors_len+1];
+            POINT vector_of_force_points[all_discrete_variables_vectors_len+1];
 
-        // Storing Sorted Moment Values and Their distances
-        i = 0;
-        for(; i < all_discrete_variables_vectors_len + 1; i++)
-        {
-            x_discrete_moment[i] = vector_of_moment_points[i].x;
-            if(i > 0)Engaste.moment_y += vector_of_moment_points[i].y;
-            y_discrete_moment[i] = Engaste.moment_y;
-        }
-        if(theres_a_pure_moment == 1)
-        {
-            x_discrete_moment[i] = barra.size;
-            y_discrete_moment[i] = Engaste.moment_y;
-        }
-        //printf("-------------VALORES DE MOMENTOS ORDENADOS-------------\n");
-        //i = 0;
-        //for(;i < all_discrete_variables_vectors_len + 1 + theres_a_pure_moment; i++)
-        //{
-        //    printf("Distancia : %f\n",x_discrete_moment[i]);
-        //    printf("Momento : %f \n\n",y_discrete_moment[i]);        
-        //}
-        //printf("\n\n\n");
+            int i = 0;
+            // Reaction Forces and Moments caused by the forces
 
-            //Discrete Forca Cortante
-
-        int j = 0;
-        //First Force and Distance Value
-        vector_of_force_points[0].x = 0;
-        vector_of_force_points[0].y = Engaste.force_y;
-
-        j = 1;
-        // Adding Force Values to be sorted
-        for(; j < all_discrete_variables_vectors_len+1; j++)
-        {
-            vector_of_force_points[j].x = point_force_distance[j-1];
-            vector_of_force_points[j].y = point_force[j-1];
-        }
-
-        // "qsort()" sorts all the Forces Values, based on their distances
-        qsort(vector_of_force_points,all_discrete_variables_vectors_len+1,sizeof(POINT),cmp_point);
-
-        // Storing Sorted Forces Values and Their distances
-        // But Forces Values need two points in the same distance when Force changes
-        // Because the force graph works like a sum of Heaviside functions ("u(x)")
-
-        j = 0;
-        for(; j < all_discrete_variables_vectors_len + 1; j++)
-        {
-            if(j > 0)
+            i = 0;
+            for(; i < all_discrete_variables_vectors_len; i++)
             {
-                // Fazendo um Degrau (colocando 2 valores diferentes no mesmo ponto)
-                x_discrete_force[(2*j)-1] = vector_of_force_points[j].x;
-                y_discrete_force[(2*j)-1] = y_discrete_force[(2*j) - 2];
-
-                
-                x_discrete_force[2*j] = vector_of_force_points[j].x;
-
-                Engaste.force_y += vector_of_force_points[j].y;
-                y_discrete_force[2*j] = Engaste.force_y ;
-
+                Engaste.moment_y += -point_moment[i];
+                Engaste.force_y += -point_force[i];
             }
-            else
+            //printf("-------------VALORES NO ENGASTE-------------\n");
+            //printf("Momento do Engaste : %f\n",Engaste.moment_y);
+            //printf("Forca do Enagste : %f \n",Engaste.force_y);
+
+            // Reaction Moments caused by the Pure Moments
+            i = 0;
+            for(; i < pure_moment_len; i++)Engaste.moment_y += -point_pure_moment[i];
+            //if(theres_a_pure_moment == 1)printf("Momento do Engaste Apos Adicao Dos Momentos Puros: %f\n",Engaste.moment_y);
+            //printf("\n\n\n");
+                
+                //Discrete Momento Fletor
+            
+            // First Moment and Distance Value
+            vector_of_moment_points[0].x = 0;
+            vector_of_moment_points[0].y = Engaste.moment_y;
+
+            // Adding Moment Values to be sorted by their distances
+            i = 1;
+            for(; i < all_discrete_variables_vectors_len+1; i++)
             {
-                x_discrete_force[j] = vector_of_force_points[j].x;
-                y_discrete_force[j] = vector_of_force_points[j].y;
-            }  
+                vector_of_moment_points[i].x = point_force_distance[i-1];
+                vector_of_moment_points[i].y = point_moment[i-1];
+            }
+
+            // "qsort()" sorts all the Moment Values, based on their distances
+            qsort(vector_of_moment_points,all_discrete_variables_vectors_len+1,sizeof(POINT),cmp_point);
+
+            // Storing Sorted Moment Values and Their distances
+            i = 0;
+            for(; i < all_discrete_variables_vectors_len + 1; i++)
+            {
+                x_discrete_moment[i] = vector_of_moment_points[i].x;
+                if(i > 0)Engaste.moment_y += vector_of_moment_points[i].y;
+                y_discrete_moment[i] = Engaste.moment_y;
+            }
+            if(theres_a_pure_moment == 1)
+            {
+                x_discrete_moment[i] = barra.size;
+                y_discrete_moment[i] = Engaste.moment_y;
+            }
+            //printf("-------------VALORES DE MOMENTOS ORDENADOS-------------\n");
+            //i = 0;
+            //for(;i < all_discrete_variables_vectors_len + 1 + theres_a_pure_moment; i++)
+            //{
+            //    printf("Distancia : %f\n",x_discrete_moment[i]);
+            //    printf("Momento : %f \n\n",y_discrete_moment[i]);        
+            //}
+            //printf("\n\n\n");
+
+                //Discrete Forca Cortante
+
+            int j = 0;
+            //First Force and Distance Value
+            vector_of_force_points[0].x = 0;
+            vector_of_force_points[0].y = Engaste.force_y;
+
+            j = 1;
+            // Adding Force Values to be sorted
+            for(; j < all_discrete_variables_vectors_len+1; j++)
+            {
+                vector_of_force_points[j].x = point_force_distance[j-1];
+                vector_of_force_points[j].y = point_force[j-1];
+            }
+
+            // "qsort()" sorts all the Forces Values, based on their distances
+            qsort(vector_of_force_points,all_discrete_variables_vectors_len+1,sizeof(POINT),cmp_point);
+
+            // Storing Sorted Forces Values and Their distances
+            // But Forces Values need two points in the same distance when Force changes
+            // Because the force graph works like a sum of Heaviside functions ("u(x)")
+
+            j = 0;
+            for(; j < all_discrete_variables_vectors_len + 1; j++)
+            {
+                if(j > 0)
+                {
+                    // Fazendo um Degrau (colocando 2 valores diferentes no mesmo ponto)
+                    x_discrete_force[(2*j)-1] = vector_of_force_points[j].x;
+                    y_discrete_force[(2*j)-1] = y_discrete_force[(2*j) - 2];
+
+                    
+                    x_discrete_force[2*j] = vector_of_force_points[j].x;
+
+                    Engaste.force_y += vector_of_force_points[j].y;
+                    y_discrete_force[2*j] = Engaste.force_y ;
+
+                }
+                else
+                {
+                    x_discrete_force[j] = vector_of_force_points[j].x;
+                    y_discrete_force[j] = vector_of_force_points[j].y;
+                }  
+            }
+
+
+            //PLOTTING GRAPH
+            RGBABitmapImageReference* imageRef1 = CreateRGBABitmapImageReference();
+            RGBABitmapImageReference* imageRef2 = CreateRGBABitmapImageReference();
+            StringReference* ErrorMessage1;
+            StringReference* ErrorMessage2;  
+
+            DrawScatterPlot(imageRef1, 600, 400, x_discrete_force, (2*all_discrete_variables_vectors_len) + 1,
+                                                y_discrete_force, (2*all_discrete_variables_vectors_len) + 1, ErrorMessage1);
+            size_t lenght_f;
+            double* pngData_f = ConvertToPNG(&lenght_f, imageRef1->image);
+            WriteToFile(pngData_f, lenght_f, "forca_cortante.png");
+
+            DrawScatterPlot(imageRef2, 600, 400, x_discrete_moment, all_discrete_variables_vectors_len + 1 + theres_a_pure_moment,
+                                                y_discrete_moment, all_discrete_variables_vectors_len + 1 + theres_a_pure_moment, ErrorMessage2);
+            size_t lenght_m;
+            double* pngData_m = ConvertToPNG(&lenght_m, imageRef2->image);
+            WriteToFile(pngData_m, lenght_m, "momento_fletor.png");
         }
 
-
-
-
-        
-        /*
-        double x_cord_continuous[all_continuous_variables_vectors_len + 1];
-        double y_cord_force_continuous[all_continuous_variables_vectors_len + 1];
-        double y_cord_moment_continuous[all_continuous_variables_vectors_len + 1];
-
-        for(int j = 0; j < all_continuous_variables_vectors_len; j++)
+        if(all_discrete_variables_vectors_len == 0)
         {
-            Engaste.force_y += -vector_forces_func[j];
-            Engaste.moment_y += -vector_moments_func[j];
-            x_cord_continuous[j] = vector_force_density_pos[j];
-            y_cord_force_continuous[j] = vector_forces_func[j];
-            y_cord_moment_continuous[j] = vector_moments_func[j];
-        }*/
-
-        //PLOTTING GRAPH
-        RGBABitmapImageReference* imageRef1 = CreateRGBABitmapImageReference();
-        RGBABitmapImageReference* imageRef2 = CreateRGBABitmapImageReference();
-        StringReference* ErrorMessage1;
-        StringReference* ErrorMessage2;  
-
-        DrawScatterPlot(imageRef1, 600, 400, x_discrete_force, (2*all_discrete_variables_vectors_len) + 1,
-                                             y_discrete_force, (2*all_discrete_variables_vectors_len) + 1, ErrorMessage1);
-        size_t lenght_f;
-        double* pngData_f = ConvertToPNG(&lenght_f, imageRef1->image);
-        WriteToFile(pngData_f, lenght_f, "forca_cortante.png");
-
-        DrawScatterPlot(imageRef2, 600, 400, x_discrete_moment, all_discrete_variables_vectors_len + 1 + theres_a_pure_moment,
-                                             y_discrete_moment, all_discrete_variables_vectors_len + 1 + theres_a_pure_moment, ErrorMessage2);
-        size_t lenght_m;
-        double* pngData_m = ConvertToPNG(&lenght_m, imageRef2->image);
-        WriteToFile(pngData_m, lenght_m, "momento_fletor.png");
-
+            
+        }
 
     }
     
