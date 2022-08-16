@@ -963,9 +963,9 @@ int main ()
                 Engaste.moment_y += -vector_moments_func[i];
                 Engaste.force_y += -vector_forces_func[i];
             }
-            printf("-------------VALORES NO ENGASTE-------------\n");
-            printf("Momento do Engaste : %f\n",Engaste.moment_y);
-            printf("Forca do Engaste : %f \n",Engaste.force_y);
+            //printf("-------------VALORES NO ENGASTE-------------\n");
+            //printf("Momento do Engaste : %f\n",Engaste.moment_y);
+            //printf("Forca do Engaste : %f \n",Engaste.force_y);
 
             // Reaction Moments caused by the Pure Moments
             i = 0;
@@ -977,15 +977,15 @@ int main ()
             
             // First Moment and Distance Value
             vector_of_moment_points[0].x = 0;
-            vector_of_moment_points[0].y = Engaste.moment_y;
+            vector_of_moment_points[0].y = 0;
 
             // Adding Moment Values to be sorted by their distances
+            i = 1;
             for(int k = 0; k < all_continuous_variables_vectors_len; k++)
             {
-                i = 1;
                 double function_distance_parser = (vector_sup_lims[k] - vector_inf_lims[k])/CDW_N_OF_POINTS;
                 double function_force_parser = 0;
-                for(; i < CDW_N_OF_POINTS ; i++)
+                for(; i <= CDW_N_OF_POINTS ; i++)
                 {
                     vector_of_moment_points[i].x = vector_force_density_pos[k] + function_distance_parser;
                     
@@ -1004,28 +1004,29 @@ int main ()
             for(; i < (CDW_N_OF_POINTS * all_continuous_variables_vectors_len) + 1; i++)
             {
                 x_continuous_moment[i] = vector_of_moment_points[i].x;
-                if(i > 0)Engaste.moment_y += vector_of_moment_points[i].y;
-                y_continuous_moment[i] = Engaste.moment_y;
+                y_continuous_moment[i] = Engaste.moment_y + vector_of_moment_points[i].y;
+                printf("momento em y : %f\n",y_continuous_moment[i]);
             }
             if(theres_a_pure_moment == 1)
             {
                 x_continuous_moment[i] = barra.size;
                 y_continuous_moment[i] = Engaste.moment_y;
             }
+            i = 0;
 
                 //Continuous Forca Cortante
 
             int j = 0;
             //First Force and Distance Value
             vector_of_force_points[0].x = 0;
-            vector_of_force_points[0].y = Engaste.force_y;
+            vector_of_force_points[0].y = 0;
 
             // Adding Force Values to be sorted by their distances
+            j = 1;
             for(int k = 0; k < all_continuous_variables_vectors_len; k++)
             {
-                j = 1;
                 double function_distance_parser = (vector_sup_lims[k] - vector_inf_lims[k])/CDW_N_OF_POINTS;
-                for(; j < CDW_N_OF_POINTS ; j++)
+                for(; j <= CDW_N_OF_POINTS ; j++)
                 {
                     vector_of_force_points[j].x = vector_force_density_pos[k] + function_distance_parser;
                     
@@ -1044,8 +1045,9 @@ int main ()
             for(; j < (CDW_N_OF_POINTS * all_continuous_variables_vectors_len) + 1; j++)
             {
                 x_continuous_force[j] = vector_of_force_points[j].x;
-                if(i > 0)Engaste.force_y += vector_of_force_points[j].y;
-                y_continuous_force[j] = Engaste.force_y;
+                y_continuous_force[j] = Engaste.force_y + vector_of_force_points[j].y;
+                //printf("forca em y : %f\n",y_continuous_force[j]);
+
             }
 
 

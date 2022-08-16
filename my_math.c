@@ -156,93 +156,118 @@ double div_const_value(char* function)
 
 char* indef_integral_ncosnt(char* function) // positive integer polynomials only 
 {
+    char* parcial_indef_integral_str = NULL; // Parcial Indefinite Integral
     char* indef_integral_str = NULL; // Indefinite Integral
     char* exponent = NULL; // Exponent of the function
     int exponent_len = 0; // length of exponent str
     int exponent_value = 0; // Exponent value
+    double multiplying_const = 0; // Multiplying Const
+    double dividing_const = 0; // Dividing Const 
     int integral_i = 0; // exponent, function and integral Iterators
+    char** function_list = NULL; // list containing individual functions
+    int functions_count = 0; // number of functions in function_list
 
     if(function != NULL)
     {
-        exponent = exponent_str(function); // gets exponent string
+        functions_count = my_math_function_count(function);
 
-        if(exponent != NULL)
-        {   
-            exponent_len = my_strlen(exponent); // Getting string length
-
-
-            // if it's true, one more byte is needed because the next number string will have length "exponent_len + 1"
-            // and the integral will be divided by the same number, that's why is multiplied by 2 
-            if(exponent_len == str_count_char(exponent,'9')) indef_integral_str = (char*)malloc(sizeof(char) * (2*(++exponent_len) + CHARS_NEEDED + 1));
-        
-            else indef_integral_str = (char*)malloc(sizeof(char) * (2*exponent_len + CHARS_NEEDED + 1));
-
-            if(indef_integral_str != NULL)
-            {
-
-                // setting up polinomial integration string 
-                indef_integral_str[integral_i++] ='(';
-                indef_integral_str[integral_i++] ='x';
-                indef_integral_str[integral_i++] ='^';
-
-                // adding +1 to the exponent
-                exponent_value = my_atoi(exponent) + 1;
-                free(exponent); // Don't need "old" exponent
-                exponent = my_itoa(exponent_value); // getting new exponent
-
-                if(exponent != NULL)
-                {
-                    // copying the new exponent to the indefinite integral 
-                    for(int i = 0; i < exponent_len; integral_i++, i++)indef_integral_str[integral_i] = exponent[i]; 
-
-                    // setting up polinomial integration string 
-                    indef_integral_str[integral_i++] =')';
-                    indef_integral_str[integral_i++] ='/';
-
-                    // dividing the polinomial by the new exponent
-                    for(int i = 0; i < exponent_len; integral_i++, i++)indef_integral_str[integral_i] = exponent[i]; 
-                    
-                    // ending the string
-                    indef_integral_str[integral_i] = '\0';
-                }
-            }
-            
-            if(exponent != NULL) free(exponent); // freeing allocated str that won't return;
-        }
-        else
+        if(functions_count > 0)
         {
-            //if the function is "C*x"
-
-            if(str_count_char(function,'x') == 1 && str_count_char(function,'^') == 0)
+            function_list = my_math_function_divider(function);
+            
+            if(function_list != NULL)
             {
-                exponent_len = 1;
-                indef_integral_str = (char*)malloc(sizeof(char) * (2*exponent_len + CHARS_NEEDED + 1));
-
-                if(indef_integral_str != NULL)
+                for(int i = 0; i < functions_count; i++)
                 {
-                    char* integral_of_x = "(x^2)/2";
+                    exponent = exponent_str(function); // gets exponent string
 
-                    // setting up polinomial integration string 
-                    for(; integral_i < (2*exponent_len + CHARS_NEEDED); integral_i++)indef_integral_str[integral_i] = integral_of_x[integral_i];
-                    indef_integral_str[integral_i] ='\0';
+                    if(exponent != NULL)
+                    {   
+                        exponent_len = my_strlen(exponent); // Getting string length
+
+
+                        // if it's true, one more byte is needed because the next number string will have length "exponent_len + 1"
+                        // and the integral will be divided by the same number, that's why is multiplied by 2 
+                        if(exponent_len == str_count_char(exponent,'9')) parcial_indef_integral_str = (char*)malloc(sizeof(char) * (2*(++exponent_len) + CHARS_NEEDED + 1));
+                    
+                        else parcial_indef_integral_str = (char*)malloc(sizeof(char) * (2*exponent_len + CHARS_NEEDED + 1));
+
+                        if(parcial_indef_integral_str != NULL)
+                        {
+
+                            // setting up polinomial integration string 
+                            parcial_indef_integral_str[integral_i++] ='x';
+                            parcial_indef_integral_str[integral_i++] ='^';
+
+                            // adding +1 to the exponent
+                            exponent_value = my_atoi(exponent) + 1;
+                            free(exponent); // Don't need "old" exponent
+                            exponent = my_itoa(exponent_value); // getting new exponent
+
+                            if(exponent != NULL)
+                            {
+                                // copying the new exponent to the indefinite integral 
+                                for(int i = 0; i < exponent_len; integral_i++, i++)parcial_indef_integral_str[integral_i] = exponent[i]; 
+
+                                // setting up polinomial integration string 
+                                parcial_indef_integral_str[integral_i++] ='/';
+
+                                // dividing the polinomial by the new exponent
+                                for(int i = 0; i < exponent_len; integral_i++, i++)parcial_indef_integral_str[integral_i] = exponent[i]; 
+                                
+                                // ending the string
+                                parcial_indef_integral_str[integral_i] = '\0';
+                            }
+                        }
+                        
+                        if(exponent != NULL) free(exponent); // freeing allocated str that won't return;
+                    }
+                    else
+                    {
+                        //if the function is "C*x"
+
+                        if(str_count_char(function,'x') == 1 && str_count_char(function,'^') == 0)
+                        {
+                            exponent_len = 1;
+                            parcial_indef_integral_str = (char*)malloc(sizeof(char) * (2*exponent_len + CHARS_NEEDED + 1));
+
+                            if(parcial_indef_integral_str != NULL)
+                            {
+                                char* integral_of_x = "x^2/2";
+
+                                // setting up polinomial integration string 
+                                for(; integral_i < (2*exponent_len + CHARS_NEEDED); integral_i++)parcial_indef_integral_str[integral_i] = integral_of_x[integral_i];
+                                parcial_indef_integral_str[integral_i] ='\0';
+                            }
+
+                        }
+
+                        //if the function is "C"
+
+                        if(str_count_char(function,'x') == 0 && str_count_char(function,'^') == 0)
+                        {
+                            exponent_len = 0;
+                            parcial_indef_integral_str = (char*)malloc(sizeof(char) * (1 + 1));// for the 'x' and for the '\0'
+
+                            if(parcial_indef_integral_str != NULL)
+                            {
+                                parcial_indef_integral_str[integral_i++] ='x';
+                                parcial_indef_integral_str[integral_i] ='\0';
+                            }  
+                        }
+                    }
+
+                    free(function_list[i]);
+                    function_list[i] = parcial_indef_integral_str;
                 }
-
-            }
-
-            //if the function is "C"
-
-            if(str_count_char(function,'x') == 0 && str_count_char(function,'^') == 0)
-            {
-                exponent_len = 0;
-                indef_integral_str = (char*)malloc(sizeof(char) * (1 + 1));// for the 'x' and for the '\0'
-
-                if(indef_integral_str != NULL)
-                {
-                    indef_integral_str[integral_i++] ='x';
-                    indef_integral_str[integral_i] ='\0';
-                }  
             }
         }
+    }
+    
+    if(function_list != NULL)
+    {
+        for(int k = 0; k < functions_count; k++)free(function_list[k]);
+        free(function_list);
     }
 
     return indef_integral_str;
@@ -253,7 +278,6 @@ double def_integral_value(char* function, double inf_lim, double sup_lim) // pos
     int exponent = 0; // exponent number
     double inf_value = 1, sup_value = 1; // Inferior Number and Superior Number, Numbers that we get after applying the inferior and superior limits
     double def_integral = 0, constant = 0; // integral value
-    char* indef_integral_str = NULL; // Integral Indefinite string
     char** function_list = NULL; // list containing individual functions
     int functions_count = 0; // number of functions in function_list
     int function_sign = 1; // number is positive (1) or negative(-1) 
@@ -278,9 +302,7 @@ double def_integral_value(char* function, double inf_lim, double sup_lim) // pos
 
                     // Calculating Integral
 
-                    indef_integral_str = indef_integral_ncosnt(function_list[i]); // Getting the Indefinite Integral (retuns a allocated string)
-                    exponent = exponent_value(indef_integral_str); // Getting exponent value of the Indefinite Integral
-                    if(indef_integral_str != NULL)free(indef_integral_str); // Dont need the Indefinite Integral
+                    exponent = exponent_value(function) + 1; // Getting exponent value of the Indefinite Integral
 
                     if(exponent > 0) // calculating definite integral (only works with positive integer)
                     {
