@@ -27,7 +27,7 @@ int cmp_point(const void * a, const void * b)
 void printTela_1()
 {
     // Tela 1:
-    system("clear");
+    system("cls");
     printf(" =====================================================================\n");
     printf(" ========= Calculadora de forcas internas em vigas apoiadas  =========\n");
     printf(" =====================================================================\n");
@@ -38,7 +38,7 @@ void printTela_1()
 void printTela_2()
 {
     // Tela 2:
-    system("clear");
+    system("cls");
     printf(" =====================================================================\n");
     printf(" ========= Calculadora de forcas internas em vigas apoiadas  =========\n");
     printf(" =====================================================================\n");
@@ -59,7 +59,7 @@ void printEng_Eng_validation()
 
 void print_Apoios_validation(char** tiposApoios, int apoio1, int apoio2, double pos_apoio1, double pos_apoio2)
 {
-    system("clear");
+    system("cls");
     printf(" =====================================================================\n");
     printf(" ============================ Seus Apoios ============================\n");
     printf("   Tipo do primeiro apoio: %s\n", tiposApoios[apoio1-1]);
@@ -79,7 +79,6 @@ void print_posApoio2_validation()
 
 void print_tipos_de_perfis_de_vigas()
 {
-    system("clear");
     printf("=====================================================================\n");
     printf(" Agora escolha o tipo de perfis de viga.\n");
     printf("    1. Circular\n");
@@ -96,7 +95,7 @@ void print_tipos_de_perfis_de_vigas()
 void printTela_3()
 {
     // Tela 3:
-    system("clear");
+    system("cls");
     printf(" =====================================================================\n");
     printf(" ========= Calculadora de forcas internas em vigas apoiadas  =========\n");
     printf(" =====================================================================\n");
@@ -160,6 +159,22 @@ int main ()
     int tiposVigas = 0;
     char userInput[30 + 1];
     char GetChar[1 + 1];
+
+    //VIGAS
+    
+    double beam_radius = 0;
+    double beam_square = 0;
+    double beam_side_1 = 0;
+    double beam_side_2 = 0;
+    double beam_side_3 = 0;
+    double beam_height = 0;
+    double beam_width = 0;
+    double beam_thickness = 0;
+    double x_centroid = 0;
+    double y_centroid = 0;
+    double x_moment = 0;
+    double y_moment = 0;
+
 
                                     //CALCULOS
     int actions_chosen = 0, supports_chosen = 0, beam_chosen = 0;
@@ -352,7 +367,95 @@ int main ()
         if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
 
         tiposVigas = my_atoi(userInput);
-        if(tiposVigas >= CIRCULAR && tiposVigas <= TIPO_T)beam_chosen++;
+        if(tiposVigas >= CIRCULAR && tiposVigas <= TIPO_T)
+        {
+            if(tiposVigas == CIRCULAR)
+            {
+                printf("Entre com o valor do raio da viga em metros:\n");
+
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(userInput, 30 + 1 ,stdin); //Gets string
+                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                beam_radius = my_atof(userInput);
+
+                x_centroid = y_centroid = beam_radius;
+
+                x_moment = y_moment = (PI*(beam_radius*beam_radius*beam_radius*beam_radius))/4;
+            }
+            else if(tiposVigas == RETANGULAR)
+            {
+                printf("Entre com os valores de altura e largura em metros:\n");
+
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(userInput, 30 + 1 ,stdin); //Gets string
+                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(userInput, 30 + 1 ,stdin); //Gets string
+                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                beam_height = my_atof(userInput);
+                beam_width = my_atof(userInput);
+
+                x_centroid = beam_width/2;
+                y_centroid = beam_height/2;
+
+                x_moment = beam_width*(beam_height*beam_height*beam_height)/12;
+                y_moment = (beam_width*beam_width*beam_width)*beam_height/12;
+
+            }
+            else if(tiposVigas == TRIANGULAR)
+            {
+                printf("Entre com os valores de cada lado do triangulo em metros:\n");
+                
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(userInput, 30 + 1 ,stdin); //Gets string
+                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+                
+                beam_side_1 = my_atof(userInput);
+
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(userInput, 30 + 1 ,stdin); //Gets string
+                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                beam_side_2 = my_atof(userInput);
+
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(userInput, 30 + 1 ,stdin); //Gets string
+                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                beam_side_3 = my_atof(userInput);
+            
+            }
+            else if(tiposVigas >= TIPO_U && tiposVigas <= TIPO_T)
+            {
+                printf("Entre com o valor de altura em metros:\n");
+
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(userInput, 30 + 1 ,stdin); //Gets string
+                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                beam_height = my_atof(userInput);
+
+                printf("Entre com o valor da largura em metros:\n");
+
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(userInput, 30 + 1 ,stdin); //Gets string
+                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                beam_width = my_atof(userInput);
+
+                printf("Entres com o valor da espessura em metros:\n");
+
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(userInput, 30 + 1 ,stdin); //Gets string
+                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                beam_thickness = my_atof(userInput);
+            }
+            beam_chosen++;
+        }
         else
         {
             print_UserOp_validation();
@@ -372,7 +475,7 @@ int main ()
 
         if(userOp == FORCA)
         {
-            system("clear");
+            system("cls");
             printf("\n\n\n");
             printf(" OBS: Escreva numeros decimais com '.' (ex : 0.3 , 0.2465)\n\n");
             
@@ -417,7 +520,7 @@ int main ()
                 }
 
                 free(user_confirmation);
-                system("clear");
+                system("cls");
             }
 
             for(int i = 0; i < all_discrete_variables_vectors_len; i++)
@@ -436,7 +539,7 @@ int main ()
         }
         if(userOp == MOMENTO)
         {
-            system("clear");
+            system("cls");
             printf("\n\n\n");
             printf(" OBS: Escreva numeros decimais com '.' (ex : 0.3 , 0.2465)\n\n");
             
@@ -478,7 +581,7 @@ int main ()
                 }
 
                 free(user_confirmation);
-                system("clear");
+                system("cls");
             }
 
             for(int i = 0; i < pure_moment_len; i++) // Showing all moments and their distances
@@ -494,7 +597,7 @@ int main ()
         }
         if(userOp == DISTRIBUICAO_DE_CARGA)
         {
-            system("clear");
+            system("cls");
             printf("\n\n\n");
             printf(" OBS: Escreva numeros decimais com '.' (ex : 0.3 , 0.2465)\n\n");
 
@@ -569,7 +672,7 @@ int main ()
                 }
                 free(user_confirmation);
 
-                system("clear");
+                system("cls");
 
             }
             for(int i = 0; i < all_continuous_variables_vectors_len; i++)
