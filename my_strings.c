@@ -223,3 +223,40 @@ char* my_itoa(int int_n) // Converts an integer number in decimal base, and retu
 
     return n_str;
 }
+
+char* my_ftoa(double float_n)
+{
+    // DECIMAL_NUMBERS_NEEDED is set to 2
+    char* n_str = my_itoa(float_n);
+    int int_n = float_n;
+    int decimal_n_needed = 1;
+
+    for(int i = 0; i < DECIMAL_NUMBERS_NEEDED; i++)decimal_n_needed*= 10; 
+
+    int float_int_diff = float_n * decimal_n_needed - int_n * decimal_n_needed;
+
+    printf("float_int_diff : %d\n",float_int_diff);  
+
+    if(float_int_diff != 0)
+    {
+        char n_str_copy[my_strlen(n_str) + 1 + DECIMAL_NUMBERS_NEEDED + 1]; // +2 because of the '.' and the '\0' 
+        for(int i = 0; i < my_strlen(n_str); i++)n_str_copy[i] = n_str[i];
+        n_str_copy[my_strlen(n_str)] = '.';
+        
+        for(int i = 0; i < DECIMAL_NUMBERS_NEEDED; i++)
+        {
+            decimal_n_needed /= 10;
+            n_str_copy[my_strlen(n_str) + 1 + i] = '0' + ((float_int_diff/decimal_n_needed) - (float_int_diff/(decimal_n_needed*10) * 10));
+        }
+        n_str_copy[my_strlen(n_str) + 1 + DECIMAL_NUMBERS_NEEDED] = '\0';
+
+        free(n_str);
+
+        n_str = (char*)malloc(sizeof(char) * (my_strlen(n_str) + 1 + DECIMAL_NUMBERS_NEEDED + 1));
+
+        for(int i = 0; i < my_strlen(n_str) + 1 + DECIMAL_NUMBERS_NEEDED + 1; i++)n_str[i] = n_str_copy[i];
+    }
+
+    return n_str;
+
+}

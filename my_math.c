@@ -154,13 +154,16 @@ double div_const_value(char* function)
     return div_const_value;
 }
 
-char* indef_integral_ncosnt(char* function) // positive integer polynomials only (MAKING THE OUTPUT THE INTEGRAL OF THE ENTIRE FUNCTION)
+char* indef_integral(char* function) // positive integer polynomials only (MAKING THE OUTPUT THE INTEGRAL OF THE ENTIRE FUNCTION)
 {
     char* parcial_indef_integral_str = NULL; // Parcial Indefinite Integral
     char* indef_integral_str = NULL; // Indefinite Integral
-    char* exponent = NULL; // Exponent of the function
-    int exponent_len = 0; // length of exponent str
-    int exponent_value = 0; // Exponent value
+    char* exp = NULL; // Exponent of the function
+    char* multiplying_const_str = NULL; // mult const str
+    char* dividing_const_str = NULL; // div const str
+    int exp_len = 0; // length of exponent str
+    int exp_value = 0; // Exponent value
+    int const_lens = 0; // constants lenghts
     double multiplying_const = 0; // Multiplying Const
     double dividing_const = 0; // Dividing Const 
     int integral_i = 0; // exponent, function and integral Iterators
@@ -179,41 +182,51 @@ char* indef_integral_ncosnt(char* function) // positive integer polynomials only
             {
                 for(int i = 0; i < functions_count; i++)
                 {
-                    exponent = exponent_str(function); // gets exponent string
+                    exp = exponent_str(function_list[i]); // gets exponent string
+                    
+                    dividing_const = (exponent_value(exp) + 1) * div_const_value(function_list[i]);
+                    multiplying_const = mult_const_value(function_list[i]);
 
-                    if(exponent != NULL)
+                    dividing_const_str = my_ftoa(dividing_const);
+                    multiplying_const_str = my_ftoa(multiplying_const);
+
+                    const_lens = my_strlen(dividing_const_str) + my_strlen(multiplying_const_str);
+
+                    if(exp != NULL)
                     {   
-                        exponent_len = my_strlen(exponent); // Getting string length
-
+                        exp_len = my_strlen(exp); // Getting string length
 
                         // if it's true, one more byte is needed because the next number string will have length "exponent_len + 1"
                         // and the integral will be divided by the same number, that's why is multiplied by 2 
-                        if(exponent_len == str_count_char(exponent,'9')) parcial_indef_integral_str = (char*)malloc(sizeof(char) * (2*(++exponent_len) + CHARS_NEEDED + 1));
+                        if(exp_len == str_count_char(exp,'9')) parcial_indef_integral_str = (char*)malloc(sizeof(char) * (2*(++exp_len) + CHARS_NEEDED + 1 + const_lens));
                     
-                        else parcial_indef_integral_str = (char*)malloc(sizeof(char) * (2*exponent_len + CHARS_NEEDED + 1));
+                        else parcial_indef_integral_str = (char*)malloc(sizeof(char) * (2*exp_len + CHARS_NEEDED + 1 + const_lens));
 
                         if(parcial_indef_integral_str != NULL)
                         {
+                            // multiplying the polinomial by the new exponent
+                            for(int i = 0; i < my_strlen(multiplying_const_str); integral_i++, i++)parcial_indef_integral_str[integral_i] = multiplying_const_str[i]; 
 
                             // setting up polinomial integration string 
                             parcial_indef_integral_str[integral_i++] ='x';
                             parcial_indef_integral_str[integral_i++] ='^';
 
                             // adding +1 to the exponent
-                            exponent_value = my_atoi(exponent) + 1;
-                            free(exponent); // Don't need "old" exponent
-                            exponent = my_itoa(exponent_value); // getting new exponent
+                            exp_value = my_atoi(exp) + 1;
+                            free(exp); // Don't need "old" exponent
+                            exp = my_itoa(exponent_value); // getting new exponent
 
-                            if(exponent != NULL)
+
+                            if(exp != NULL)
                             {
                                 // copying the new exponent to the indefinite integral 
-                                for(int i = 0; i < exponent_len; integral_i++, i++)parcial_indef_integral_str[integral_i] = exponent[i]; 
+                                for(int i = 0; i < exp_len; integral_i++, i++)parcial_indef_integral_str[integral_i] = exp[i]; 
 
                                 // setting up polinomial integration string 
                                 parcial_indef_integral_str[integral_i++] ='/';
 
                                 // dividing the polinomial by the new exponent
-                                for(int i = 0; i < exponent_len; integral_i++, i++)parcial_indef_integral_str[integral_i] = exponent[i]; 
+                                for(int i = 0; i < my_strlen(dividing_const_str); integral_i++, i++)parcial_indef_integral_str[integral_i] = dividing_const_str[i]; 
                                 
                                 // ending the string
                                 parcial_indef_integral_str[integral_i] = '\0';
@@ -221,7 +234,7 @@ char* indef_integral_ncosnt(char* function) // positive integer polynomials only
                         }
                         
                         
-                        if(exponent != NULL) free(exponent); // freeing allocated str that won't return;
+                        if(exp != NULL) free(exp); // freeing allocated str that won't return;
                     }
                     else
                     {
@@ -229,15 +242,17 @@ char* indef_integral_ncosnt(char* function) // positive integer polynomials only
 
                         if(str_count_char(function,'x') == 1 && str_count_char(function,'^') == 0)
                         {
-                            exponent_len = 1;
-                            parcial_indef_integral_str = (char*)malloc(sizeof(char) * (2*exponent_len + CHARS_NEEDED + 1));
+                            exp_len = 1;
+                            parcial_indef_integral_str = (char*)malloc(sizeof(char) * (2*exp_len + CHARS_NEEDED + 1 + const_lens));
 
                             if(parcial_indef_integral_str != NULL)
                             {
-                                char* integral_of_x = "x^2/2";
-
-                                // setting up polinomial integration string 
-                                for(; integral_i < (2*exponent_len + CHARS_NEEDED); integral_i++)parcial_indef_integral_str[integral_i] = integral_of_x[integral_i];
+                                for(int i = 0; i < my_strlen(multiplying_const_str); integral_i++, i++)parcial_indef_integral_str[integral_i] = multiplying_const_str[i];
+                                parcial_indef_integral_str[integral_i++] ='x';
+                                parcial_indef_integral_str[integral_i++] ='^';
+                                parcial_indef_integral_str[integral_i++] ='2';
+                                parcial_indef_integral_str[integral_i++] ='/';
+                                for(int i = 0; i < my_strlen(dividing_const_str); integral_i++, i++)parcial_indef_integral_str[integral_i] = dividing_const_str[i];
                                 parcial_indef_integral_str[integral_i] ='\0';
                             }
 
@@ -247,17 +262,22 @@ char* indef_integral_ncosnt(char* function) // positive integer polynomials only
 
                         if(str_count_char(function,'x') == 0 && str_count_char(function,'^') == 0)
                         {
-                            exponent_len = 0;
-                            parcial_indef_integral_str = (char*)malloc(sizeof(char) * (1 + 1));// for the 'x' and for the '\0'
+                            exp_len = 0;
+                            parcial_indef_integral_str = (char*)malloc(sizeof(char) * (1 + 1 + 1 + const_lens));// for the 'x' and ' for the '\0'
 
                             if(parcial_indef_integral_str != NULL)
                             {
+                                for(int i = 0; i < my_strlen(multiplying_const_str); integral_i++, i++)parcial_indef_integral_str[integral_i] = multiplying_const_str[i];
                                 parcial_indef_integral_str[integral_i++] ='x';
+                                parcial_indef_integral_str[integral_i++] ='/';
+                                for(int i = 0; i < my_strlen(dividing_const_str); integral_i++, i++)parcial_indef_integral_str[integral_i] = dividing_const_str[i];
                                 parcial_indef_integral_str[integral_i] ='\0';
                             }  
                         }
                     }
-
+                    free(exp);
+                    free(dividing_const_str);
+                    free(multiplying_const_str);
                     free(function_list[i]);
                     function_list[i] = parcial_indef_integral_str;
                 }

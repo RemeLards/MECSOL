@@ -27,7 +27,7 @@ int cmp_point(const void * a, const void * b)
 void printTela_1()
 {
     // Tela 1:
-    system("cls");
+    system("clear");
     printf(" =====================================================================\n");
     printf(" ========= Calculadora de forcas internas em vigas apoiadas  =========\n");
     printf(" =====================================================================\n");
@@ -38,7 +38,7 @@ void printTela_1()
 void printTela_2()
 {
     // Tela 2:
-    system("cls");
+    system("clear");
     printf(" =====================================================================\n");
     printf(" ========= Calculadora de forcas internas em vigas apoiadas  =========\n");
     printf(" =====================================================================\n");
@@ -59,7 +59,7 @@ void printEng_Eng_validation()
 
 void print_Apoios_validation(char** tiposApoios, int apoio1, int apoio2, double pos_apoio1, double pos_apoio2)
 {
-    system("cls");
+    system("clear");
     printf(" =====================================================================\n");
     printf(" ============================ Seus Apoios ============================\n");
     printf("   Tipo do primeiro apoio: %s\n", tiposApoios[apoio1-1]);
@@ -79,6 +79,7 @@ void print_posApoio2_validation()
 
 void print_tipos_de_perfis_de_vigas()
 {
+    system("clear");
     printf("=====================================================================\n");
     printf(" Agora escolha o tipo de perfis de viga.\n");
     printf("    1. Circular\n");
@@ -95,7 +96,7 @@ void print_tipos_de_perfis_de_vigas()
 void printTela_3()
 {
     // Tela 3:
-    system("cls");
+    system("clear");
     printf(" =====================================================================\n");
     printf(" ========= Calculadora de forcas internas em vigas apoiadas  =========\n");
     printf(" =====================================================================\n");
@@ -371,7 +372,7 @@ int main ()
 
         if(userOp == FORCA)
         {
-            system("cls");
+            system("clear");
             printf("\n\n\n");
             printf(" OBS: Escreva numeros decimais com '.' (ex : 0.3 , 0.2465)\n\n");
             
@@ -416,7 +417,7 @@ int main ()
                 }
 
                 free(user_confirmation);
-                system("cls");
+                system("clear");
             }
 
             for(int i = 0; i < all_discrete_variables_vectors_len; i++)
@@ -435,7 +436,7 @@ int main ()
         }
         if(userOp == MOMENTO)
         {
-            system("cls");
+            system("clear");
             printf("\n\n\n");
             printf(" OBS: Escreva numeros decimais com '.' (ex : 0.3 , 0.2465)\n\n");
             
@@ -477,7 +478,7 @@ int main ()
                 }
 
                 free(user_confirmation);
-                system("cls");
+                system("clear");
             }
 
             for(int i = 0; i < pure_moment_len; i++) // Showing all moments and their distances
@@ -493,7 +494,7 @@ int main ()
         }
         if(userOp == DISTRIBUICAO_DE_CARGA)
         {
-            system("cls");
+            system("clear");
             printf("\n\n\n");
             printf(" OBS: Escreva numeros decimais com '.' (ex : 0.3 , 0.2465)\n\n");
 
@@ -568,7 +569,7 @@ int main ()
                 }
                 free(user_confirmation);
 
-                system("cls");
+                system("clear");
 
             }
             for(int i = 0; i < all_continuous_variables_vectors_len; i++)
