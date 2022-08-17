@@ -235,8 +235,6 @@ char* my_ftoa(double float_n)
 
     int float_int_diff = float_n * decimal_n_needed - int_n * decimal_n_needed;
 
-    printf("float_int_diff : %d\n",float_int_diff);  
-
     if(float_int_diff != 0)
     {
         char n_str_copy[my_strlen(n_str) + 1 + DECIMAL_NUMBERS_NEEDED + 1]; // +2 because of the '.' and the '\0' 

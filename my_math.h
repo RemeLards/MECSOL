@@ -4,9 +4,10 @@
 #ifndef _MATH_INTEGRAL
 #define _MATH_INTEGRAL
 
-#define CHARS_NEEDED 3 //adding chars 'x','^','/' 
+#define CHARS_NEEDED 3 //adding chars 'x','^','/'
+#define PI 3.141592
 
-char* indef_integral_ncosnt(char* function); // Returns a allocated str containing the indifinite integral without constants included
+char* indef_integral(char* function); // Returns a allocated str containing the indifinite integral without constants included
 double def_integral_value(char* function, double inf_lim, double sup_lim); // Returns integral value
 char** my_math_function_divider(char* function); // Divides polynomial function sums in a vector cointaining each polynomial of the function
 double my_math_function_centroid(char* function, double inf_lim, double sup_lim);  // Retuns function "x" value centroid 

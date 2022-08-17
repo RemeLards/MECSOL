@@ -50,7 +50,7 @@ int exponent_value(char* function)
         if(str_count_char(function,'x') == 1 && str_count_char(function,'^') == 0)exponent_value = 1; // it means the function is "C * x" , so the its exponent is 1
         if(str_count_char(function,'x') == 0 && str_count_char(function,'^') == 0)exponent_value = 0; // it means the function is "C"
     }
-
+    
     return exponent_value;
 }
 
@@ -164,15 +164,18 @@ char* indef_integral(char* function) // positive integer polynomials only (MAKIN
     int exp_len = 0; // length of exponent str
     int exp_value = 0; // Exponent value
     int const_lens = 0; // constants lenghts
+    int indef_integral_len = 0; 
     double multiplying_const = 0; // Multiplying Const
     double dividing_const = 0; // Dividing Const 
     int integral_i = 0; // exponent, function and integral Iterators
     char** function_list = NULL; // list containing individual functions
+    int* functions_lens = NULL;
     int functions_count = 0; // number of functions in function_list
 
     if(function != NULL)
     {
         functions_count = my_math_function_count(function);
+        functions_lens = (int*) malloc(sizeof(int) * (functions_count));
 
         if(functions_count > 0)
         {
@@ -182,15 +185,17 @@ char* indef_integral(char* function) // positive integer polynomials only (MAKIN
             {
                 for(int i = 0; i < functions_count; i++)
                 {
-                    exp = exponent_str(function_list[i]); // gets exponent string
-                    
-                    dividing_const = (exponent_value(exp) + 1) * div_const_value(function_list[i]);
+                    exp = exponent_str(function_list[i]);
+
+                    dividing_const = (exponent_value(function_list[i]) + 1) * div_const_value(function_list[i]);
                     multiplying_const = mult_const_value(function_list[i]);
 
                     dividing_const_str = my_ftoa(dividing_const);
                     multiplying_const_str = my_ftoa(multiplying_const);
+                
 
                     const_lens = my_strlen(dividing_const_str) + my_strlen(multiplying_const_str);
+    
 
                     if(exp != NULL)
                     {   
@@ -198,15 +203,25 @@ char* indef_integral(char* function) // positive integer polynomials only (MAKIN
 
                         // if it's true, one more byte is needed because the next number string will have length "exponent_len + 1"
                         // and the integral will be divided by the same number, that's why is multiplied by 2 
-                        if(exp_len == str_count_char(exp,'9')) parcial_indef_integral_str = (char*)malloc(sizeof(char) * (2*(++exp_len) + CHARS_NEEDED + 1 + const_lens));
+                        if(exp_len == str_count_char(exp,'9'))
+                        {
+                            parcial_indef_integral_str = (char*)malloc(sizeof(char) * ((++exp_len) + CHARS_NEEDED + 1 + const_lens + 1));// +1 because of the sign
+                            functions_lens[i] = (exp_len + CHARS_NEEDED  + const_lens);
+                        }
                     
-                        else parcial_indef_integral_str = (char*)malloc(sizeof(char) * (2*exp_len + CHARS_NEEDED + 1 + const_lens));
+                        else 
+                        {
+                            parcial_indef_integral_str = (char*)malloc(sizeof(char) * (exp_len + CHARS_NEEDED + 1 + const_lens + 1));// +1 because of the sign
+                            functions_lens[i] = (exp_len + CHARS_NEEDED  + const_lens);
+                        }
 
                         if(parcial_indef_integral_str != NULL)
                         {
+                            if(function_list[i][0] != '-')parcial_indef_integral_str[integral_i++] = '+'; 
+                            else parcial_indef_integral_str[integral_i++] =function_list[i][0];
+
                             // multiplying the polinomial by the new exponent
                             for(int i = 0; i < my_strlen(multiplying_const_str); integral_i++, i++)parcial_indef_integral_str[integral_i] = multiplying_const_str[i]; 
-
                             // setting up polinomial integration string 
                             parcial_indef_integral_str[integral_i++] ='x';
                             parcial_indef_integral_str[integral_i++] ='^';
@@ -214,9 +229,7 @@ char* indef_integral(char* function) // positive integer polynomials only (MAKIN
                             // adding +1 to the exponent
                             exp_value = my_atoi(exp) + 1;
                             free(exp); // Don't need "old" exponent
-                            exp = my_itoa(exponent_value); // getting new exponent
-
-
+                            exp = my_itoa(exp_value); // getting new exponent
                             if(exp != NULL)
                             {
                                 // copying the new exponent to the indefinite integral 
@@ -232,9 +245,7 @@ char* indef_integral(char* function) // positive integer polynomials only (MAKIN
                                 parcial_indef_integral_str[integral_i] = '\0';
                             }
                         }
-                        
-                        
-                        if(exp != NULL) free(exp); // freeing allocated str that won't return;
+                    
                     }
                     else
                     {
@@ -243,10 +254,13 @@ char* indef_integral(char* function) // positive integer polynomials only (MAKIN
                         if(str_count_char(function,'x') == 1 && str_count_char(function,'^') == 0)
                         {
                             exp_len = 1;
-                            parcial_indef_integral_str = (char*)malloc(sizeof(char) * (2*exp_len + CHARS_NEEDED + 1 + const_lens));
+                            parcial_indef_integral_str = (char*)malloc(sizeof(char) * (exp_len + CHARS_NEEDED + 1  + const_lens + 1));// +1 because of the sign
+                            functions_lens[i] = (exp_len + CHARS_NEEDED  + const_lens);
 
                             if(parcial_indef_integral_str != NULL)
                             {
+                                if(function_list[i][0] != '-')parcial_indef_integral_str[integral_i++] = '+'; 
+                                else parcial_indef_integral_str[integral_i++] =function_list[i][0];
                                 for(int i = 0; i < my_strlen(multiplying_const_str); integral_i++, i++)parcial_indef_integral_str[integral_i] = multiplying_const_str[i];
                                 parcial_indef_integral_str[integral_i++] ='x';
                                 parcial_indef_integral_str[integral_i++] ='^';
@@ -263,10 +277,13 @@ char* indef_integral(char* function) // positive integer polynomials only (MAKIN
                         if(str_count_char(function,'x') == 0 && str_count_char(function,'^') == 0)
                         {
                             exp_len = 0;
-                            parcial_indef_integral_str = (char*)malloc(sizeof(char) * (1 + 1 + 1 + const_lens));// for the 'x' and ' for the '\0'
+                            parcial_indef_integral_str = (char*)malloc(sizeof(char) * ( (CHARS_NEEDED -1) + 1 + const_lens + 1));// for the 'x', '/', sign ,and for the '\0'
+                            functions_lens[i] = ((CHARS_NEEDED -1) + const_lens);
 
                             if(parcial_indef_integral_str != NULL)
                             {
+                                if(function_list[i][0] != '-')parcial_indef_integral_str[integral_i++] = '+'; 
+                                else parcial_indef_integral_str[integral_i++] =function_list[i][0]; 
                                 for(int i = 0; i < my_strlen(multiplying_const_str); integral_i++, i++)parcial_indef_integral_str[integral_i] = multiplying_const_str[i];
                                 parcial_indef_integral_str[integral_i++] ='x';
                                 parcial_indef_integral_str[integral_i++] ='/';
@@ -275,21 +292,48 @@ char* indef_integral(char* function) // positive integer polynomials only (MAKIN
                             }  
                         }
                     }
-                    free(exp);
-                    free(dividing_const_str);
-                    free(multiplying_const_str);
-                    free(function_list[i]);
+                    if(exp != NULL) free(exp); // freeing allocated str that won't return;
+                    if(dividing_const_str != NULL)free(dividing_const_str);
+                    if(multiplying_const_str != NULL)free(multiplying_const_str);
+                    if(function_list[i]!= NULL)free(function_list[i]);
                     function_list[i] = parcial_indef_integral_str;
+
+                    integral_i = 0;
                 }
             }
         }
     }
+
+    int i = 0;
+    for(; i < functions_count; i++)indef_integral_len+= functions_lens[i];
+
     
+
+    for(int p = 0; p < functions_count; p++)
+    {
+        printf("%s\n",function_list[p]);
+    }
+
+    indef_integral_str = (char*)malloc(sizeof(char) * (indef_integral_len + 1));
+    
+    int j = 0;
+    i = 0;
+    for(; i < functions_count; i++)
+    {
+        int k = j;
+        for(; j <= my_strlen(function_list[i]); j++)indef_integral_str[j] = function_list[i][j-k];
+        
+    }
+
     if(function_list != NULL)
     {
-        for(int k = 0; k < functions_count; k++)free(function_list[k]);
+        for(int k = 0; k < functions_count; k++)
+        { 
+            if(function_list[i]!= NULL)free(function_list[k]);
+        }
         free(function_list);
     }
+    if(functions_lens != NULL)free(functions_lens);
 
     return indef_integral_str;
 }
