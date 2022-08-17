@@ -984,13 +984,15 @@ int main ()
             for(int k = 0; k < all_continuous_variables_vectors_len; k++)
             {
                 double function_distance_parser = (vector_sup_lims[k] - vector_inf_lims[k])/CDW_N_OF_POINTS;
+                double function_centroid_parser = 0;
                 double function_force_parser = 0;
                 for(; i <= CDW_N_OF_POINTS ; i++)
                 {
                     vector_of_moment_points[i].x = vector_force_density_pos[k] + function_distance_parser;
                     
                     function_force_parser = def_integral_value(vector_of_functions[k],vector_inf_lims[k],vector_inf_lims[k] + function_distance_parser);
-                    vector_of_moment_points[i].y = vector_of_moment_points[i].x * function_force_parser;
+                    function_centroid_parser = my_math_function_centroid(vector_of_functions[k],vector_inf_lims[k],vector_inf_lims[k] + function_distance_parser);
+                    vector_of_moment_points[i].y = function_centroid_parser * function_force_parser;
 
                     function_distance_parser += (vector_sup_lims[k] - vector_inf_lims[k])/CDW_N_OF_POINTS;
                 }
@@ -1005,7 +1007,7 @@ int main ()
             {
                 x_continuous_moment[i] = vector_of_moment_points[i].x;
                 y_continuous_moment[i] = Engaste.moment_y + vector_of_moment_points[i].y;
-                printf("momento em y : %f\n",y_continuous_moment[i]);
+                //printf("momento em y : %f\n",y_continuous_moment[i]);
             }
             if(theres_a_pure_moment == 1)
             {

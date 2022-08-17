@@ -154,7 +154,7 @@ double div_const_value(char* function)
     return div_const_value;
 }
 
-char* indef_integral_ncosnt(char* function) // positive integer polynomials only 
+char* indef_integral_ncosnt(char* function) // positive integer polynomials only (MAKING THE OUTPUT THE INTEGRAL OF THE ENTIRE FUNCTION)
 {
     char* parcial_indef_integral_str = NULL; // Parcial Indefinite Integral
     char* indef_integral_str = NULL; // Indefinite Integral
@@ -219,6 +219,7 @@ char* indef_integral_ncosnt(char* function) // positive integer polynomials only
                                 parcial_indef_integral_str[integral_i] = '\0';
                             }
                         }
+                        
                         
                         if(exponent != NULL) free(exponent); // freeing allocated str that won't return;
                     }
