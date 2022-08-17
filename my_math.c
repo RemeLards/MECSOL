@@ -305,14 +305,13 @@ char* indef_integral(char* function) // positive integer polynomials only (MAKIN
     }
 
     int i = 0;
-    for(; i < functions_count; i++)indef_integral_len+= functions_lens[i];
+    for(; i < functions_count; i++)indef_integral_len+= functions_lens[i] + 1;
 
-    
 
-    for(int p = 0; p < functions_count; p++)
-    {
-        printf("%s\n",function_list[p]);
-    }
+    //for(int p = 0; p < functions_count; p++)
+    //{
+    //    printf("%s\n",function_list[p]);
+    //}
 
     indef_integral_str = (char*)malloc(sizeof(char) * (indef_integral_len + 1));
     
@@ -321,7 +320,16 @@ char* indef_integral(char* function) // positive integer polynomials only (MAKIN
     for(; i < functions_count; i++)
     {
         int k = j;
-        for(; j <= my_strlen(function_list[i]); j++)indef_integral_str[j] = function_list[i][j-k];
+        for(; j < my_strlen(function_list[i])+k; j++)
+        {
+            indef_integral_str[j] = function_list[i][j-k];
+            printf("%c",function_list[i][j-k]);
+        }
+        printf("\n");
+        printf("j : %d\n",j);
+        printf("indef_integral_str : %s\n",indef_integral_str);
+
+        printf("\n\n");
         
     }
 
