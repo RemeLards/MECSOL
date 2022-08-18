@@ -79,6 +79,7 @@ void print_posApoio2_validation()
 
 void print_tipos_de_perfis_de_vigas()
 {
+    system("clear");
     printf("=====================================================================\n");
     printf(" Agora escolha o tipo de perfis de viga.\n");
     printf("    1. Circular\n");
@@ -405,11 +406,13 @@ int main ()
         {
             if(tiposVigas == CIRCULAR)
             {
-                printf("Entre com o valor do raio da viga em metros:\n");
+                printf("Entre com o valor do raio da viga em metros: ");
 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                printf("\n\n");
 
                 beam_radius = my_atof(userInput);
 
@@ -419,19 +422,23 @@ int main ()
             }
             else if(tiposVigas == RETANGULAR)
             {
-                printf("Entre com o valore de altura em metros:\n");
+                printf("Entre com o valore de altura em metros: ");
 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                printf("\n\n");
 
                 beam_height = my_atof(userInput);
                 
-                printf("Entre com o valor de largura em metros:\n");
+                printf("Entre com o valor de largura em metros: ");
 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                printf("\n\n");
 
                 beam_width = my_atof(userInput);
 
@@ -444,19 +451,23 @@ int main ()
             }
             else if(tiposVigas == TRIANGULAR)
             {
-                printf("Entre com o valor do primeiro base do triangulo em metros:\n");
+                printf("Entre com o valor do primeiro base do triangulo em metros: ");
                 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                printf("\n\n");
                 
                 beam_width = my_atof(userInput);
 
-                printf("Entre com o valor do segundo altura do triangulo em metros:\n");
+                printf("Entre com o valor do segundo altura do triangulo em metros: ");
 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                printf("\n\n");
 
                 beam_height= my_atof(userInput);
 
@@ -467,27 +478,33 @@ int main ()
             }
             else if(tiposVigas == TIPO_U)
             {
-                printf("Entre com o valor de altura em metros:\n");
+                printf("Entre com o valor de altura em metros: ");
 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                printf("\n\n");
 
                 beam_height = my_atof(userInput);
 
-                printf("Entre com o valor da largura em metros:\n");
+                printf("Entre com o valor da largura em metros: ");
 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                printf("\n\n");
 
                 beam_width = my_atof(userInput);
 
-                printf("Entres com o valor da espessura em metros:\n");
+                printf("Entres com o valor da espessura em metros: ");
 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                printf("\n\n");
 
                 beam_thickness = my_atof(userInput);
 
@@ -527,27 +544,33 @@ int main ()
             }
             else if(tiposVigas == TIPO_H)
             {
-                printf("Entre com o valor de altura em metros:\n");
+                printf("Entre com o valor de altura em metros: ");
 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                printf("\n\n");
 
                 beam_height = my_atof(userInput);
 
-                printf("Entre com o valor da largura em metros:\n");
+                printf("Entre com o valor da largura em metros: ");
 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                printf("\n\n");
 
                 beam_width = my_atof(userInput);
 
-                printf("Entres com o valor da espessura em metros:\n");
+                printf("Entre com o valor da espessura em metros: ");
 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                printf("\n\n");
 
                 beam_thickness = my_atof(userInput);
 
@@ -587,27 +610,33 @@ int main ()
             }
             else if(tiposVigas == TIPO_I)
             {
-                printf("Entre com o valor de altura em metros:\n");
+                printf("Entre com o valor de altura em metros: ");
 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                printf("\n\n");
 
                 beam_height = my_atof(userInput);
 
-                printf("Entre com o valor da largura em metros:\n");
+                printf("Entre com o valor da largura em metros: ");
 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                printf("\n\n");
 
                 beam_width = my_atof(userInput);
 
-                printf("Entre com o valor da espessura em metros:\n");
+                printf("Entre com o valor da espessura em metros: ");
 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                printf("\n\n");
 
                 beam_thickness = my_atof(userInput);
                 //VIGA I
@@ -644,27 +673,33 @@ int main ()
             }
             else if(tiposVigas == TIPO_T)
             {
-                printf("Entre com o valor de altura em metros:\n");
+                printf("Entre com o valor de altura em metros: ");
 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                printf("\n\n");
 
                 beam_height = my_atof(userInput);
 
-                printf("Entre com o valor da largura em metros:\n");
+                printf("Entre com o valor da largura em metros: ");
 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                printf("\n\n");
 
                 beam_width = my_atof(userInput);
 
-                printf("Entres com o valor da espessura em metros:\n");
+                printf("Entre com o valor da espessura em metros: ");
 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                printf("\n\n");
 
                 beam_thickness = my_atof(userInput);
 
@@ -691,7 +726,8 @@ int main ()
                 x_moment = x_moment_aux1 + x_moment_aux2;
                 y_moment = y_moment_aux1 + y_moment_aux2;
             }         
-            if(tiposVigas == TRIANGULAR){
+            if(tiposVigas == TRIANGULAR)
+            {
                 printf("O primeiro momento de area em x e:%.2f\n", x_centroid);
                 printf("O primento momento de area em y e:%.2f\n", y_centroid);
                 printf("O segundo momento de area em x e:%.2f\n", x_moment);
@@ -1385,6 +1421,7 @@ int main ()
             //    printf("Momento : %f \n\n",y_discrete_moment[i]);        
             //}
             //printf("\n\n\n");
+            Engaste.moment_y = vector_of_moment_points[0].y;
 
                 //Discrete Forca Cortante
 
@@ -1592,7 +1629,7 @@ int main ()
     
     double x_max = 0;
     double moment_max = 0;
-    
+
     while (max_strain_done == 0)
     {
         if( (opApoio1 == ENGASTE && opApoio2 == LIVRE) || (opApoio1 == LIVRE && opApoio2 == ENGASTE) && all_continuous_variables_vectors_len == 0)
@@ -1605,14 +1642,7 @@ int main ()
                     break;
                 }
             }
-            for(int i = 0; i < all_discrete_variables_vectors_len+ 1 + theres_a_pure_moment; i++)
-            {
-                if(x_discrete_moment[i] == x_max)
-                {
-                    moment_max = y_discrete_moment[i];
-                    break;
-                }
-            }
+            moment_max = Engaste.moment_y;
             max_strain_done++;      
         }
 
@@ -1626,7 +1656,42 @@ int main ()
                     break;
                 }
             }
-            for(int i = 0; i < (CDW_N_OF_POINTS * all_continuous_variables_vectors_len) + 1 + theres_a_pure_moment; i++)
+            moment_max = Engaste.moment_y;
+            max_strain_done++;
+        }
+        
+        if( opApoio1 == APOIO_SIMPLES && opApoio2 == APOIO_SIMPLES && all_continuous_variables_vectors_len == 0)
+        {
+            for(int i = 0; i < 2*(all_discrete_variables_vectors_len+1); i++)
+            {
+                if(y_discrete_force[i] == 0)
+                {
+                    x_max = x_discrete_force[i];
+                    break;
+                }
+            }
+            for(int i = 0; i < all_discrete_variables_vectors_len + 2 + 2*(pure_moment_len); i++)
+            {
+                if(x_discrete_moment[i] == x_max)
+                {
+                    moment_max = y_discrete_moment[i];
+                    break;
+                }
+            }
+            max_strain_done++;
+        }
+
+        if( opApoio1 == APOIO_SIMPLES && opApoio2 == APOIO_SIMPLES && all_discrete_variables_vectors_len == 0)
+        {
+            for(int i = 0; i < (CDW_N_OF_POINTS * all_continuous_variables_vectors_len)+1; i++)
+            {
+                if(y_continuous_force[i] == 0)
+                {
+                    x_max = x_continuous_force[i];
+                    break;
+                }
+            }
+            for(int i = 0; i < (CDW_N_OF_POINTS *all_continuous_variables_vectors_len) + 2 + 2*(pure_moment_len); i++)
             {
                 if(x_continuous_moment[i] == x_max)
                 {
@@ -1634,6 +1699,7 @@ int main ()
                     break;
                 }
             }
+               
             max_strain_done++;
         }
     }
@@ -1648,10 +1714,11 @@ int main ()
         if ((beam_height - y_centroid) > y_centroid) c = beam_height - y_centroid;
         else c = y_centroid;
     }
+
     max_strain = (moment_max*c)/x_moment;
-    printf("A tensao maxima absoluta eh: %.2f Pa;\n", max_strain);
-    printf("A posicao longitudinal eh: %.2f m;\n", x_max);
-    printf("A posicao transversal eh: %.2f m;", c);
+    printf("A tensao maxima absoluta eh: %f Pa\n", max_strain);
+    printf("A posicao longitudinal eh: %.2f m\n", x_max);
+    printf("A posicao transversal eh: %.2f m\n", c);
 
     // Liberando Memoria (Progama Ira Fechar)
     if(all_discrete_variables_vectors_len > 0)
