@@ -1069,7 +1069,7 @@ int main ()
             {
                 double function_distance_parser = (vector_sup_lims[k] - vector_inf_lims[k])/CDW_N_OF_POINTS;
                 double function_force_integral_parser = 0;
-                char* force_function_symbolic_integral = indef_integral_C_value(indef_integral(vector_of_functions[k]),Apoio_simples_L.force_y);
+                char* force_function_symbolic_integral = indef_integral_C_value(indef_integral(vector_of_functions[k]),vector_moments_func[k]);
                 printf("force_function_symbolic_integral : %s",force_function_symbolic_integral);
 
                 for(; i <= CDW_N_OF_POINTS ; i++)
