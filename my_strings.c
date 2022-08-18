@@ -201,18 +201,26 @@ char* my_itoa(int int_n) // Converts an integer number in decimal base, and retu
     int int_n_copy = int_n/10; // "int_n" have atleast 1 number, if that`s the case, "int_n_copy" will be 0;
     int int_n_len = 1; // "int_n" is atleast 1;
     char* n_str = NULL; // str to be returned
+    int char_is_negative = 0;
     int i = 0; // iterator
 
     // Calculates Integer length
     for(; int_n_copy != 0; int_n_len++)int_n_copy/= 10;
     for(int j = 1; j < int_n_len; j++)multiplier*=10;
 
-    n_str = (char*)malloc(sizeof(char)*(int_n_len + 1)); // +1 for the '\0' char
+    if(int_n < 0)
+    {
+        n_str = (char*)malloc(sizeof(char)*(int_n_len + 1 + 1)); // +2 for the '-' and '\0' char
+        n_str[i++] = '-';
+        char_is_negative++;
+        int_n *= -1;
+    }
+    else n_str = (char*)malloc(sizeof(char)*(int_n_len + 1 )); // +1 for the sign and '\0' char
 
     if(n_str != NULL)
     {
         int n_to_char; // number to character converter
-        for(; i < int_n_len; i++)
+        for(; i < int_n_len + char_is_negative; i++)
         {
             n_to_char = (int_n/multiplier) - (int_n/(multiplier*10))*10; // calculates the number that will be converted to char
             n_str[i] = n_to_char + '0';
@@ -230,6 +238,8 @@ char* my_ftoa(double float_n)
     char* n_str = my_itoa(float_n);
     int int_n = float_n;
     int decimal_n_needed = 1;
+
+    if(float_n < 0)float_n*= -1;
 
     for(int i = 0; i < DECIMAL_NUMBERS_NEEDED; i++)decimal_n_needed*= 10; 
 

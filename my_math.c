@@ -707,3 +707,34 @@ int* my_math_function_lens(char* all_functions)
 
     return function_lens;
 }
+
+char* indef_integral_C_value(char* indef_integral_str,double C_value)
+{
+    char* C_value_str = my_ftoa(C_value);
+    char indef_integral_copy[my_strlen(indef_integral_str)];
+    int indef_integral_str_len = my_strlen(indef_integral_str);
+
+    for(int i = 0; i < my_strlen(indef_integral_str); i++)indef_integral_copy[i] = indef_integral_str[i];
+    free(indef_integral_str);
+
+    if(C_value >= 0)
+    {
+        int i = 0;
+        int j = 0;
+        indef_integral_str = (char*)malloc(sizeof(char) * ( (indef_integral_str_len - 1 ) + my_strlen(C_value_str) ) );
+        for(; i < indef_integral_str_len - 1; i++)indef_integral_str[i] = indef_integral_copy[i];
+        for(; j < my_strlen(C_value_str); j++)indef_integral_str[i+j] = C_value_str[j];
+        indef_integral_str[i+j] = '\0';
+    }
+    else
+    {
+        int i = 0;
+        int j = 0;
+        indef_integral_str = (char*)malloc(sizeof(char) * ( ( indef_integral_str_len - 2 ) + my_strlen(C_value_str) ) );
+        for(; i < indef_integral_str_len - 2; i++)indef_integral_str[i] = indef_integral_copy[i];
+        for(; j < my_strlen(C_value_str); j++)indef_integral_str[i+j] = C_value_str[j];
+        indef_integral_str[i+j] = '\0';
+    } 
+
+    return indef_integral_str;
+}
