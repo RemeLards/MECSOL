@@ -174,6 +174,27 @@ int main ()
     double y_centroid = 0;
     double x_moment = 0;
     double y_moment = 0;
+    double x_centroid_aux1 = 0;
+    double y_centroid_aux1 = 0;
+    double x_moment_aux1 = 0;
+    double y_moment_aux1 = 0;
+    double x_centroid_aux2 = 0;
+    double y_centroid_aux2 = 0;
+    double x_moment_aux2 = 0;
+    double y_moment_aux2 = 0;
+    double x_centroid_aux3 = 0;
+    double y_centroid_aux3 = 0;
+    double x_moment_aux3 = 0;
+    double y_moment_aux3 = 0;
+    double area1 = 0;
+    double area2 = 0;
+    double area3 = 0;
+    double y_distance1 = 0;
+    double y_distance2 = 0;
+    double y_distance3 = 0;
+    double x_distance1 = 0;
+    double x_distance2 = 0;
+    double x_distance3 = 0;
 
 
                                     //CALCULOS
@@ -401,8 +422,8 @@ int main ()
                 x_centroid = beam_width/2;
                 y_centroid = beam_height/2;
 
-                x_moment = beam_width*(beam_height*beam_height*beam_height)/12;
-                y_moment = (beam_width*beam_width*beam_width)*beam_height/12;
+                x_moment = beam_width*(beam_height*beam_height*beam_height)/3;
+                y_moment = (beam_width*beam_width*beam_width)*beam_height/3;
 
             }
             else if(tiposVigas == TRIANGULAR)
@@ -428,7 +449,7 @@ int main ()
                 beam_side_3 = my_atof(userInput);
             
             }
-            else if(tiposVigas >= TIPO_U && tiposVigas <= TIPO_T)
+            else if(tiposVigas == TIPO_U)
             {
                 printf("Entre com o valor de altura em metros:\n");
 
@@ -454,6 +475,108 @@ int main ()
 
                 beam_thickness = my_atof(userInput);
             }
+            else if(tiposVigas == TIPO_H)
+            {
+                printf("Entre com o valor de altura em metros:\n");
+
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(userInput, 30 + 1 ,stdin); //Gets string
+                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                beam_height = my_atof(userInput);
+
+                printf("Entre com o valor da largura em metros:\n");
+
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(userInput, 30 + 1 ,stdin); //Gets string
+                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                beam_width = my_atof(userInput);
+
+                printf("Entres com o valor da espessura em metros:\n");
+
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(userInput, 30 + 1 ,stdin); //Gets string
+                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                beam_thickness = my_atof(userInput);
+            }
+            else if(tiposVigas == TIPO_I)
+            {
+                printf("Entre com o valor de altura em metros:\n");
+
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(userInput, 30 + 1 ,stdin); //Gets string
+                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                beam_height = my_atof(userInput);
+
+                printf("Entre com o valor da largura em metros:\n");
+
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(userInput, 30 + 1 ,stdin); //Gets string
+                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                beam_width = my_atof(userInput);
+
+                printf("Entres com o valor da espessura em metros:\n");
+
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(userInput, 30 + 1 ,stdin); //Gets string
+                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                beam_thickness = my_atof(userInput);
+            }
+            else if(tiposVigas == TIPO_T)
+            {
+                printf("Entre com o valor de altura em metros:\n");
+
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(userInput, 30 + 1 ,stdin); //Gets string
+                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                beam_height = my_atof(userInput);
+
+                printf("Entre com o valor da largura em metros:\n");
+
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(userInput, 30 + 1 ,stdin); //Gets string
+                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                beam_width = my_atof(userInput);
+
+                printf("Entres com o valor da espessura em metros:\n");
+
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(userInput, 30 + 1 ,stdin); //Gets string
+                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
+                beam_thickness = my_atof(userInput);
+
+                x_centroid_aux1 = beam_width/2;
+                y_centroid_aux1 = beam_height - (beam_thickness/2);
+                area1 = beam_width*beam_thickness;
+                x_centroid_aux2 = beam_width/2;
+                y_centroid_aux2 = (beam_height - beam_thickness)/2;
+                area2 = beam_thickness*(beam_height - beam_thickness);
+
+                x_centroid = ((x_centroid_aux1*area1) + (x_centroid_aux2*area2))/(area1 + area2);
+                y_centroid = ((y_centroid_aux1*area1) + ((y_centroid_aux2)*area2))/(area1 +area2);
+
+                y_distance1 = y_centroid_aux1 - y_centroid;
+                y_distance2 = y_centroid_aux2 - y_centroid;
+                x_distance1 = x_centroid_aux1 - x_centroid;
+                x_distance2 = x_centroid_aux2 - x_centroid;
+
+                x_moment_aux1 = (beam_width*(beam_thickness*beam_thickness*beam_thickness)/12) + (area1*(y_distance1*y_distance1));
+                y_moment_aux1 = (beam_thickness*(beam_width*beam_width*beam_width)/12) + (area1*(x_distance1*x_distance1));
+                x_moment_aux2 = (beam_thickness*(beam_width*beam_width*beam_width)/12) + (area2*(y_distance2*y_distance2));
+                y_moment_aux2 = (beam_width*(beam_thickness*beam_thickness*beam_thickness)/12) + (area2*(x_distance2*x_distance2));
+                
+                x_moment = x_moment_aux1 + x_moment_aux2;
+                y_moment = y_moment_aux1 + y_moment_aux2;
+            }
+            
             beam_chosen++;
         }
         else
@@ -464,6 +587,7 @@ int main ()
         }
         
     }
+
 
     while(actions_chosen == 0)
     {
