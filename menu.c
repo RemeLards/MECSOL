@@ -228,6 +228,8 @@ int main ()
 
                                     // Graph Vectors
 
+    int theres_a_pure_moment = 0;
+
                                     //Discrete
     double* x_discrete_moment = NULL;
     double* y_discrete_moment = NULL;
@@ -688,16 +690,20 @@ int main ()
                 
                 x_moment = x_moment_aux1 + x_moment_aux2;
                 y_moment = y_moment_aux1 + y_moment_aux2;
+            }         
+            if(tiposVigas == TRIANGULAR){
+                printf("O primeiro momento de area em x e:%.2f\n", x_centroid);
+                printf("O primento momento de area em y e:%.2f\n", y_centroid);
+                printf("O segundo momento de area em x e:%.2f\n", x_moment);
+                
             }
-            
-            /*for()
+            else 
             {
                 printf("O primeiro momento de area em x e:%.2f\n", x_centroid);
                 printf("O primento momento de area em y e:%.2f\n", y_centroid);
                 printf("O segundo momento de area em x e:%.2f\n", x_moment);
                 printf("O segundo momento de area em y e:%.2f\n", y_moment);
-            }*/
-
+            }
             beam_chosen++;
         }
         else
@@ -1312,7 +1318,6 @@ int main ()
             x_discrete_force = (double*)malloc(sizeof(double) * ((2*all_discrete_variables_vectors_len)+1));
             y_discrete_force = (double*)malloc(sizeof(double) * ((2*all_discrete_variables_vectors_len)+1));
 
-            int theres_a_pure_moment = 0;
             if(pure_moment_len > 0)theres_a_pure_moment++;
 
             // Vectors that will be used to print the Moment graph
@@ -1452,7 +1457,6 @@ int main ()
             x_continuous_force = (double*)malloc(sizeof(double) * ((CDW_N_OF_POINTS * all_continuous_variables_vectors_len)+1));
             y_continuous_force = (double*)malloc(sizeof(double) * ((CDW_N_OF_POINTS * all_continuous_variables_vectors_len)+1));
 
-            int theres_a_pure_moment = 0;
             if(pure_moment_len > 0)theres_a_pure_moment++;
 
             // Vectors that will be used to print the Moment graph
@@ -1586,10 +1590,69 @@ int main ()
 
     }
     
+    double x_max = 0;
+    double moment_max = 0;
+    
     while (max_strain_done == 0)
     {
-        max_strain_done++;
+        if( (opApoio1 == ENGASTE && opApoio2 == LIVRE) || (opApoio1 == LIVRE && opApoio2 == ENGASTE) && all_continuous_variables_vectors_len == 0)
+        {
+            for(int i = 0; i < (2*all_discrete_variables_vectors_len)+1; i++)
+            {
+                if(y_discrete_force[i] == 0)
+                {
+                    x_max = x_discrete_force[i];
+                    break;
+                }
+            }
+            for(int i = 0; i < all_discrete_variables_vectors_len+ 1 + theres_a_pure_moment; i++)
+            {
+                if(x_discrete_moment[i] == x_max)
+                {
+                    moment_max = y_discrete_moment[i];
+                    break;
+                }
+            }
+            max_strain_done++;      
+        }
+
+        if( (opApoio1 == ENGASTE && opApoio2 == LIVRE) || (opApoio1 == LIVRE && opApoio2 == ENGASTE) && all_discrete_variables_vectors_len == 0)
+        {
+            for(int i = 0; i < (CDW_N_OF_POINTS * all_continuous_variables_vectors_len)+1; i++)
+            {
+                if(y_continuous_force[i] == 0)
+                {
+                    x_max = x_continuous_force[i];
+                    break;
+                }
+            }
+            for(int i = 0; i < (CDW_N_OF_POINTS * all_continuous_variables_vectors_len) + 1 + theres_a_pure_moment; i++)
+            {
+                if(x_continuous_moment[i] == x_max)
+                {
+                    moment_max = y_continuous_moment[i];
+                    break;
+                }
+            }
+            max_strain_done++;
+        }
     }
+
+    double c = 0;
+    double max_strain = 0;
+    
+    //Tensão Max Abs
+    if(tiposVigas == CIRCULAR)c = beam_radius;
+    else
+    {   
+        if ((beam_height - y_centroid) > y_centroid) c = beam_height - y_centroid;
+        else c = y_centroid;
+    }
+    max_strain = (moment_max*c)/x_moment;
+    printf("A tensao maxima absoluta eh: %.2f Pa;\n", max_strain);
+    printf("A posicao longitudinal eh: %.2f m;\n", x_max);
+    printf("A posicao transversal eh: %.2f m;", c);
+
     // Liberando Memoria (Progama Ira Fechar)
     if(all_discrete_variables_vectors_len > 0)
     {
