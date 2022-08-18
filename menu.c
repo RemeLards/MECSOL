@@ -2,7 +2,7 @@
 #include "pbPlots.h"
 #include "supportLib.h"
 
-#define CDW_N_OF_POINTS 20
+#define CDW_N_OF_POINTS 10
 
 typedef struct 
 {
@@ -198,11 +198,9 @@ int main ()
 
 
                                     //CALCULOS
-    int actions_chosen = 0, supports_chosen = 0, beam_chosen = 0;
+    int actions_chosen = 0, supports_chosen = 0, beam_chosen = 0, max_strain_done = 0;
 
                                     // Point Variable (Varíaveis Pontuais (ou seja Discretas, diferente da distruibuição de cargas))
-    
-    //double point_force  = 0 , point_momento  = 0, distance = 0;
 
     int all_discrete_variables_vectors_len = 0;
     double* point_force = NULL;
@@ -228,6 +226,19 @@ int main ()
     double* vector_moments_func = NULL;
     char** vector_of_functions = NULL;
 
+                                    // Graph Vectors
+
+                                    //Discrete
+    double* x_discrete_moment = NULL;
+    double* y_discrete_moment = NULL;
+    double* x_discrete_force = NULL;     
+    double* y_discrete_force = NULL;
+                                    //Continuous
+    double* x_continuous_moment = NULL;
+    double* y_continuous_moment = NULL;
+    double* x_continuous_force = NULL;     
+    double* y_continuous_force = NULL;
+    
 
     // User Input
     char* function_str = NULL;
@@ -588,7 +599,6 @@ int main ()
         
     }
 
-
     while(actions_chosen == 0)
     {
         printTela_3();
@@ -835,13 +845,12 @@ int main ()
             // Vectors that will be used to print the Force graph
             // times 2, because every force needs a u(x) (Heaviside function) to represent it
             // so in the same point we need two distinct values, so that we can simulate a u(x) function
-            
-            double x_discrete_force[2*(all_discrete_variables_vectors_len+1)];     
-            double y_force_discrete[2*(all_discrete_variables_vectors_len+1)];
+            x_discrete_force = (double*)malloc(sizeof(double) * (2*(all_discrete_variables_vectors_len+1)));
+            y_discrete_force = (double*)malloc(sizeof(double) * (2*(all_discrete_variables_vectors_len+1)));
 
             // Vectors that will be used to print the Moment graph
-            double x_discrete_moment[all_discrete_variables_vectors_len + 2 + 2*(pure_moment_len)];
-            double y_moment_discrete[all_discrete_variables_vectors_len + 2 + 2*(pure_moment_len)];
+            x_discrete_moment = (double*)malloc(sizeof(double) * (all_discrete_variables_vectors_len + 2 + 2*(pure_moment_len)));
+            y_discrete_moment = (double*)malloc(sizeof(double) * (all_discrete_variables_vectors_len + 2 + 2*(pure_moment_len)));
 
             // Structs that will sort the Forces and Moments based on its distance
             POINT vector_of_moment_points[all_discrete_variables_vectors_len+1];
@@ -875,15 +884,13 @@ int main ()
             {
                 vector_of_moment_points[i].x = point_force_distance[i-1];
                 vector_of_moment_points[i].y = point_moment[i-1];
-                printf(" x : %f |  y: %f \n", vector_of_moment_points[i].x, vector_of_moment_points[i].y);
             }
             for(int k = 0; k < pure_moment_len; k++)
             {
                 vector_of_moment_points[i+k].x = pure_moment_distance[k];
                 vector_of_moment_points[i+k].y = point_pure_moment[k];
-                printf(" x : %f |  y: %f \n", vector_of_moment_points[i+k].x, vector_of_moment_points[i+k].y);
             }
-            printf("\n\n");
+            //printf("\n\n");
 
             // "qsort()" sorts all the Moment Values, based on their distances
             qsort(vector_of_moment_points,all_discrete_variables_vectors_len+1,sizeof(POINT),cmp_point);
@@ -908,11 +915,11 @@ int main ()
                     if(i > 1) Apoio_simples_add_moment +=  -vector_of_moment_points[i-1].y;
                     Apoio_simples_resultant_moment  = Apoio_simples_resultant_force * x_discrete_moment[i] + Apoio_simples_add_moment;
             
-                    y_moment_discrete[i] = Apoio_simples_resultant_moment ;
+                    y_discrete_moment[i] = Apoio_simples_resultant_moment ;
 
                     //printf("Forca Resultante na Secao : %f\n",Apoio_simples_resultant_force );
                     //printf("Momento adicionado na Secao : %f\n",Apoio_simples_add_moment );
-                    printf(" x : %f |  y: %f \n", x_discrete_moment[i], y_moment_discrete[i]);
+                    //printf(" x : %f |  y: %f \n", x_discrete_moment[i], y_discrete_moment[i]);
                     //printf("Momento Resultante na Secao : %f\n\n",Apoio_simples_resultant_moment);
 
                     Apoio_simples_resultant_force += (vector_of_moment_points[i].y/vector_of_moment_points[i].x);
@@ -922,15 +929,15 @@ int main ()
                 else
                 {
                     x_discrete_moment[i] = vector_of_moment_points[i].x;
-                    y_moment_discrete[i] = vector_of_moment_points[i].y;
-                    printf(" x : %f |  y: %f \n", x_discrete_moment[0], y_moment_discrete[0]); 
+                    y_discrete_moment[i] = vector_of_moment_points[i].y;
+                    //printf(" x : %f |  y: %f \n", x_discrete_moment[0], y_discrete_moment[0]); 
                 }
             }
             //Last Moment Value and Distance 
             x_discrete_moment[i] = barra.size;
-            y_moment_discrete[i] = 0;
-            printf(" x : %f |  y: %f \n", x_discrete_moment[i], y_moment_discrete[i]); 
-            printf("\n\n");
+            y_discrete_moment[i] = 0;
+            //printf(" x : %f |  y: %f \n", x_discrete_moment[i], y_discrete_moment[i]); 
+            //printf("\n\n");
 
 
                 //Discrete Forca Cortante
@@ -961,23 +968,23 @@ int main ()
                 {
                     // Fazendo um Degrau (colocando 2 valores diferentes no mesmo ponto)
                     x_discrete_force[(2*j)-1] =  vector_of_force_points[j].x;
-                    y_force_discrete[(2*j)-1] = y_force_discrete[(2*j) - 2];
+                    y_discrete_force[(2*j)-1] = y_discrete_force[(2*j) - 2];
 
                     
                     x_discrete_force[2*j] = vector_of_force_points[j].x;
 
                     Apoio_simples_L.force_y += vector_of_force_points[j].y;
-                    y_force_discrete[2*j] = Apoio_simples_L.force_y ;
+                    y_discrete_force[2*j] = Apoio_simples_L.force_y ;
 
-                    //printf(" x : %f |  y: %f \n",x_discrete_force[2*i - 1],y_force_discrete[2*i - 1]);
-                    //printf(" x : %f |  y: %f \n",x_discrete_force[2*i],y_force_discrete[2*i]);
+                    //printf(" x : %f |  y: %f \n",x_discrete_force[2*i - 1],y_discrete_force[2*i - 1]);
+                    //printf(" x : %f |  y: %f \n",x_discrete_force[2*i],y_discrete_force[2*i]);
 
                 }
                 else
                 {
                     x_discrete_force[j] = vector_of_force_points[j].x;
-                    y_force_discrete[j] = vector_of_force_points[j].y;
-                    //printf(" x : %f |  y: %f \n",x_discrete_force[i],y_force_discrete[i]);
+                    y_discrete_force[j] = vector_of_force_points[j].y;
+                    //printf(" x : %f |  y: %f \n",x_discrete_force[i],y_discrete_force[i]);
                 }
                 
             }
@@ -985,15 +992,15 @@ int main ()
             if(j > 0)
             {
                 x_discrete_force[2*j-1] = barra.size;
-                y_force_discrete[2*j-1] = y_force_discrete[2*(j-1)];
+                y_discrete_force[2*j-1] = y_discrete_force[2*(j-1)];
             }
 
-            //printf(" x : %f |  y: %f \n",x_discrete_force[i],y_force_discrete[i]);
+            //printf(" x : %f |  y: %f \n",x_discrete_force[i],y_discrete_force[i]);
             //printf("\n\n");
 
             //for(int k = 0; k < 2*(all_discrete_variables_vectors_len + 1) ; k++)
             //{
-            //    printf(" x : %f |  y: %f \n",x_discrete_force[k],y_force_discrete[k]);      
+            //    printf(" x : %f |  y: %f \n",x_discrete_force[k],y_discrete_force[k]);      
             //}
 
             //PLOTTING GRAPH
@@ -1002,14 +1009,14 @@ int main ()
             StringReference* ErrorMessage1;
             StringReference* ErrorMessage2;  
 
-            DrawScatterPlot(imageRef1, 600, 400, x_discrete_force, 2*(all_discrete_variables_vectors_len + 1), y_force_discrete,
+            DrawScatterPlot(imageRef1, 600, 400, x_discrete_force, 2*(all_discrete_variables_vectors_len + 1), y_discrete_force,
                             2*(all_discrete_variables_vectors_len + 1), ErrorMessage1);
             size_t lenght_f;
             double* pngData_f = ConvertToPNG(&lenght_f, imageRef1->image);
             WriteToFile(pngData_f, lenght_f, "forca_cortante.png");
 
             DrawScatterPlot(imageRef2, 600, 400, x_discrete_moment, all_discrete_variables_vectors_len + 2 + 2*(pure_moment_len),
-                            y_moment_discrete, all_discrete_variables_vectors_len + 2 + 2*(pure_moment_len), ErrorMessage2);
+                            y_discrete_moment, all_discrete_variables_vectors_len + 2 + 2*(pure_moment_len), ErrorMessage2);
             size_t lenght_m;
             double* pngData_m = ConvertToPNG(&lenght_m, imageRef2->image);
             WriteToFile(pngData_m, lenght_m, "momento_fletor.png");
@@ -1017,7 +1024,181 @@ int main ()
 
         if(all_discrete_variables_vectors_len == 0)
         {
+            double total_force_on_bar = 0;
+            double total_moment_on_bar = 0;
 
+            // Vectors that will be used to print the Force graph
+            // times 2, because every force needs a u(x) (Heaviside function) to represent it
+            // so in the same point we need two distinct values, so that we can simulate a u(x) function
+            x_continuous_force = (double*)malloc(sizeof(double) * ((CDW_N_OF_POINTS * all_continuous_variables_vectors_len)+1));
+            y_continuous_force = (double*)malloc(sizeof(double) * ((CDW_N_OF_POINTS * all_continuous_variables_vectors_len)+1));
+
+            // Vectors that will be used to print the Moment graph
+            x_continuous_moment = (double*)malloc(sizeof(double) * ((CDW_N_OF_POINTS *all_continuous_variables_vectors_len) + 2 + 2*(pure_moment_len)));
+            y_continuous_moment = (double*)malloc(sizeof(double) * ((CDW_N_OF_POINTS *all_continuous_variables_vectors_len) + 2 + 2*(pure_moment_len)));
+
+            // Structs that will sort the Forces and Moments based on its distance
+            POINT vector_of_moment_points[(CDW_N_OF_POINTS * all_continuous_variables_vectors_len) + 1];
+            POINT vector_of_force_points[(CDW_N_OF_POINTS * all_continuous_variables_vectors_len) + 1];
+
+            int i = 0;
+            // Sum Of Reaction Forces caused by the forces
+            for(; i < all_continuous_variables_vectors_len; i++)total_force_on_bar += -vector_forces_func[i];
+
+            // Reaction Moments caused by the Pure Moments 
+            i = 0;
+            for(; i < pure_moment_len; i++) total_moment_on_bar += -vector_moments_func[i];
+
+            //Calculating Force on the Right and Left Apoio Simples
+            i = 0;
+            for(; i < all_continuous_variables_vectors_len; i++)Apoio_simples_R.force_y += -(vector_forces_func[i] * (vector_centroids_func[i] - Apoio_simples_L.distance));
+            Apoio_simples_R.force_y += total_moment_on_bar;
+            Apoio_simples_R.force_y /= Apoio_simples_R.distance;
+
+            Apoio_simples_L.force_y = total_force_on_bar - Apoio_simples_R.force_y;
+
+                //Discrete Momento Fletor
+            
+             //First Moment and Distance Value
+            vector_of_moment_points[0].x = 0;
+            vector_of_moment_points[0].y = 0;
+
+            // Adding Moment Values to be sorted by their distances
+            i = 1;
+            for(int k = 0; k < all_continuous_variables_vectors_len; k++)
+            {
+                double function_distance_parser = (vector_sup_lims[k] - vector_inf_lims[k])/CDW_N_OF_POINTS;
+                double function_force_integral_parser = 0;
+                char* force_function_symbolic_integral = indef_integral_C_value(indef_integral(vector_of_functions[k]),Apoio_simples_L.force_y);
+                printf("force_function_symbolic_integral : %s",force_function_symbolic_integral);
+
+                for(; i <= CDW_N_OF_POINTS ; i++)
+                {
+                    vector_of_moment_points[i].x = vector_force_density_pos[k] + function_distance_parser;
+                    
+                    function_force_integral_parser = def_integral_value(force_function_symbolic_integral ,vector_inf_lims[k],vector_inf_lims[k] + function_distance_parser);
+                    vector_of_moment_points[i].y = -function_force_integral_parser;
+
+
+                    function_distance_parser += (vector_sup_lims[k] - vector_inf_lims[k])/CDW_N_OF_POINTS;
+                }
+                free(force_function_symbolic_integral);
+
+            }
+            for(int k = 0; k < pure_moment_len; k++)
+            {
+                vector_of_moment_points[i+k].x = pure_moment_distance[k];
+                vector_of_moment_points[i+k].y = point_pure_moment[k];
+                //printf(" x : %f |  y: %f \n", vector_of_moment_points[i+k].x, vector_of_moment_points[i+k].y);
+            }
+            //printf("\n\n");
+
+            // "qsort()" sorts all the Moment Values, based on their distances
+            qsort(vector_of_moment_points,all_discrete_variables_vectors_len+1,sizeof(POINT),cmp_point);
+
+            // Storing Sorted Moment Values and Their distances
+            // To Plot the Moment Graph The Moment Value it's delayed by one loop, while it´s distance dont
+            // It Works because when we go to the next distance, the peak moment value (old value) occurs in that distance
+            // That's why it´s delayed 
+
+            // As the program goes to the bar sections, we add the forces of the sections
+            double Apoio_simples_resultant_force = Apoio_simples_L.force_y;
+            double Apoio_simples_resultant_moment = 0;
+            double Apoio_simples_add_moment = 0;
+
+            // Storing Sorted Moment Values and Their distances
+            i = 0;
+            for(; i < (CDW_N_OF_POINTS *all_continuous_variables_vectors_len) + 2 + 2*(pure_moment_len); i++)
+            {
+                if(i > 0)
+                {
+                    x_continuous_moment[i] = vector_of_moment_points[i].x;
+
+                    if(i > 1) Apoio_simples_add_moment +=  -vector_of_moment_points[i-1].y;
+                    Apoio_simples_resultant_moment  = Apoio_simples_resultant_force * x_continuous_moment[i] + Apoio_simples_add_moment;
+            
+                    y_continuous_moment[i] = Apoio_simples_resultant_moment ;
+
+                    //printf("Forca Resultante na Secao : %f\n",Apoio_simples_resultant_force );
+                    //printf("Momento adicionado na Secao : %f\n",Apoio_simples_add_moment );
+                    //printf(" x : %f |  y: %f \n", x_discrete_moment[i], y_discrete_moment[i]);
+                    //printf("Momento Resultante na Secao : %f\n\n",Apoio_simples_resultant_moment);
+
+                    Apoio_simples_resultant_force += (vector_of_moment_points[i].y/vector_of_moment_points[i].x);
+
+                    
+                }
+                else
+                {
+                    x_continuous_moment[i] = vector_of_moment_points[i].x;
+                    y_continuous_moment[i] = vector_of_moment_points[i].y;
+                    //printf(" x : %f |  y: %f \n", x_discrete_moment[0], y_discrete_moment[0]); 
+                }
+            }
+            i = 0;        
+
+
+                //Continuous Forca Cortante
+            
+            int j = 0;
+            //First Force and Distance Value
+            vector_of_force_points[0].x = 0;
+            vector_of_force_points[0].y = 0;
+
+            // Adding Force Values to be sorted by their distances
+            j = 1;
+            for(int k = 0; k < all_continuous_variables_vectors_len; k++)
+            {
+                double function_distance_parser = (vector_sup_lims[k] - vector_inf_lims[k])/CDW_N_OF_POINTS;
+                for(; j <= CDW_N_OF_POINTS ; j++)
+                {
+                    vector_of_force_points[j].x = vector_force_density_pos[k] + function_distance_parser;
+                    
+                    vector_of_force_points[j].y  = def_integral_value(vector_of_functions[k],vector_inf_lims[k],vector_inf_lims[k] + function_distance_parser);
+
+                    function_distance_parser += (vector_sup_lims[k] - vector_inf_lims[k])/CDW_N_OF_POINTS;
+                }
+            }
+            // "qsort()" sorts all the Forces Values, based on their distances
+            qsort(vector_of_force_points,(CDW_N_OF_POINTS * all_continuous_variables_vectors_len) + 1,sizeof(POINT),cmp_point);
+            
+
+            // Storing Sorted Moment Values and Their distances
+            j = 0;
+            for(; j < (CDW_N_OF_POINTS * all_continuous_variables_vectors_len) + 1; j++)
+            {
+                x_continuous_force[j] = vector_of_force_points[j].x;
+                y_continuous_force[j] = Apoio_simples_L.force_y + vector_of_force_points[j].y;
+                //printf("forca em y : %f\n",y_continuous_force[j]);
+
+            }
+
+
+            //printf(" x : %f |  y: %f \n",x_discrete_force[i],y_discrete_force[i]);
+            //printf("\n\n");
+
+            //for(int k = 0; k < 2*(all_discrete_variables_vectors_len + 1) ; k++)
+            //{
+            //    printf(" x : %f |  y: %f \n",x_discrete_force[k],y_discrete_force[k]);      
+            //}
+
+            //PLOTTING GRAPH
+            RGBABitmapImageReference* imageRef1 = CreateRGBABitmapImageReference();
+            RGBABitmapImageReference* imageRef2 = CreateRGBABitmapImageReference();
+            StringReference* ErrorMessage1;
+            StringReference* ErrorMessage2;  
+
+            DrawScatterPlot(imageRef1, 600, 400, x_continuous_force, (CDW_N_OF_POINTS * all_continuous_variables_vectors_len)+1, y_continuous_force,
+                            (CDW_N_OF_POINTS * all_continuous_variables_vectors_len)+1, ErrorMessage1);
+            size_t lenght_f;
+            double* pngData_f = ConvertToPNG(&lenght_f, imageRef1->image);
+            WriteToFile(pngData_f, lenght_f, "forca_cortante.png");
+
+            DrawScatterPlot(imageRef2, 600, 400, x_continuous_moment,(CDW_N_OF_POINTS *all_continuous_variables_vectors_len) + 2 + 2*(pure_moment_len),
+                            y_continuous_moment, (CDW_N_OF_POINTS *all_continuous_variables_vectors_len) + 2 + 2*(pure_moment_len), ErrorMessage2);
+            size_t lenght_m;
+            double* pngData_m = ConvertToPNG(&lenght_m, imageRef2->image);
+            WriteToFile(pngData_m, lenght_m, "momento_fletor.png");
         }
 
     }
@@ -1028,15 +1209,15 @@ int main ()
         if(all_continuous_variables_vectors_len == 0)
         {
             // Vectors that will be used to print the Force graph
-            double x_discrete_force[(2*all_discrete_variables_vectors_len)+1];     
-            double y_discrete_force[(2*all_discrete_variables_vectors_len)+1];
+            x_discrete_force = (double*)malloc(sizeof(double) * ((2*all_discrete_variables_vectors_len)+1));
+            y_discrete_force = (double*)malloc(sizeof(double) * ((2*all_discrete_variables_vectors_len)+1));
 
             int theres_a_pure_moment = 0;
             if(pure_moment_len > 0)theres_a_pure_moment++;
 
             // Vectors that will be used to print the Moment graph
-            double x_discrete_moment[all_discrete_variables_vectors_len+ 1 + theres_a_pure_moment];
-            double y_discrete_moment[all_discrete_variables_vectors_len+ 1 + theres_a_pure_moment];
+            x_discrete_moment = (double*)malloc(sizeof(double) * (all_discrete_variables_vectors_len+ 1 + theres_a_pure_moment));
+            y_discrete_moment = (double*)malloc(sizeof(double) * (all_discrete_variables_vectors_len+ 1 + theres_a_pure_moment));
 
             // Structs that will sort the Forces and Moments based on its distance
             POINT vector_of_moment_points[all_discrete_variables_vectors_len+1];
@@ -1168,19 +1349,19 @@ int main ()
         if(all_discrete_variables_vectors_len == 0)
         {
             // Vectors that will be used to print the Force graph
-            double x_continuous_force[(CDW_N_OF_POINTS * all_continuous_variables_vectors_len)+1];     
-            double y_continuous_force[(CDW_N_OF_POINTS * all_continuous_variables_vectors_len)+1];
+            x_continuous_force = (double*)malloc(sizeof(double) * ((CDW_N_OF_POINTS * all_continuous_variables_vectors_len)+1));
+            y_continuous_force = (double*)malloc(sizeof(double) * ((CDW_N_OF_POINTS * all_continuous_variables_vectors_len)+1));
 
             int theres_a_pure_moment = 0;
             if(pure_moment_len > 0)theres_a_pure_moment++;
 
             // Vectors that will be used to print the Moment graph
-            double x_continuous_moment[(CDW_N_OF_POINTS * all_continuous_variables_vectors_len) + 1 + theres_a_pure_moment];
-            double y_continuous_moment[(CDW_N_OF_POINTS * all_continuous_variables_vectors_len) + 1 + theres_a_pure_moment];
+            x_continuous_moment = (double*)malloc(sizeof(double) * ((CDW_N_OF_POINTS * all_continuous_variables_vectors_len) + 1 + theres_a_pure_moment));
+            y_continuous_moment = (double*)malloc(sizeof(double) * ((CDW_N_OF_POINTS * all_continuous_variables_vectors_len) + 1 + theres_a_pure_moment));
 
             // Structs that will sort the Forces and Moments based on its distance
-            POINT vector_of_moment_points[(CDW_N_OF_POINTS * all_continuous_variables_vectors_len) +1];
-            POINT vector_of_force_points[(CDW_N_OF_POINTS * all_continuous_variables_vectors_len) +1];
+            POINT vector_of_moment_points[(CDW_N_OF_POINTS * all_continuous_variables_vectors_len) + 1];
+            POINT vector_of_force_points[(CDW_N_OF_POINTS * all_continuous_variables_vectors_len) + 1];
 
             int i = 0;
             // Reaction Forces and Moments caused by the forces
@@ -1305,6 +1486,10 @@ int main ()
 
     }
     
+    while (max_strain_done == 0)
+    {
+        max_strain_done++;
+    }
     // Liberando Memoria (Progama Ira Fechar)
     if(all_discrete_variables_vectors_len > 0)
     {
@@ -1333,6 +1518,40 @@ int main ()
             if(vector_of_functions[i] != NULL)free(vector_of_functions[i]);
         }
         free(vector_of_functions);    
+    }
+    if(opApoio1 == APOIO_SIMPLES && opApoio2 == APOIO_SIMPLES)
+    {
+        if(all_continuous_variables_vectors_len == 0)
+        {
+            free(x_discrete_force);
+            free(y_discrete_force);
+            free(x_discrete_moment);
+            free(y_discrete_moment);
+        }
+        if(all_discrete_variables_vectors_len == 0)
+        {
+            free(x_continuous_force);
+            free(y_continuous_force);
+            free(x_continuous_moment);
+            free(y_continuous_moment);
+        }
+    }
+    if((opApoio1 == ENGASTE && opApoio2 == LIVRE) || (opApoio1 == LIVRE && opApoio2 == ENGASTE) )
+    {
+        if(all_continuous_variables_vectors_len == 0)
+        {
+            free(x_discrete_force);
+            free(y_discrete_force);
+            free(x_discrete_moment);
+            free(y_discrete_moment);
+        }
+        if(all_discrete_variables_vectors_len == 0)
+        {
+            free(x_continuous_force);
+            free(y_continuous_force);
+            free(x_continuous_moment);
+            free(y_continuous_moment);
+        }
     }
     
     return 0;

@@ -393,7 +393,6 @@ double def_integral_value(char* function, double inf_lim, double sup_lim) // pos
                         }
                         def_integral += function_sign * constant*((sup_value-inf_value)/exponent);
                     }
-                    printf("\n\n");
 
                     inf_value = 1;
                     sup_value = 1;
