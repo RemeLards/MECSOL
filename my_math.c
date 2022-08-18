@@ -190,8 +190,14 @@ char* indef_integral(char* function) // positive integer polynomials only (MAKIN
                     dividing_const = (exponent_value(function_list[i]) + 1) * div_const_value(function_list[i]);
                     multiplying_const = mult_const_value(function_list[i]);
 
+                    //printf("dividing_const : %f\n",dividing_const);
+                    //printf("multiplying_const : %f\n",multiplying_const);
+
                     dividing_const_str = my_ftoa(dividing_const);
                     multiplying_const_str = my_ftoa(multiplying_const);
+
+                    //printf("dividing_const_str : %s\n",dividing_const_str);
+                    //printf("multiplying_const_str : %s\n",multiplying_const_str);
                 
 
                     const_lens = my_strlen(dividing_const_str) + my_strlen(multiplying_const_str);
@@ -251,7 +257,7 @@ char* indef_integral(char* function) // positive integer polynomials only (MAKIN
                     {
                         //if the function is "C*x"
 
-                        if(str_count_char(function,'x') == 1 && str_count_char(function,'^') == 0)
+                        if(str_count_char(function_list[i],'x') == 1 && str_count_char(function_list[i],'^') == 0)
                         {
                             exp_len = 1;
                             parcial_indef_integral_str = (char*)malloc(sizeof(char) * (exp_len + CHARS_NEEDED + 1  + const_lens + 1));// +1 because of the sign
@@ -260,21 +266,26 @@ char* indef_integral(char* function) // positive integer polynomials only (MAKIN
                             if(parcial_indef_integral_str != NULL)
                             {
                                 if(function_list[i][0] != '-')parcial_indef_integral_str[integral_i++] = '+'; 
-                                else parcial_indef_integral_str[integral_i++] =function_list[i][0];
+                                else parcial_indef_integral_str[integral_i++] = function_list[i][0];
+                                
                                 for(int i = 0; i < my_strlen(multiplying_const_str); integral_i++, i++)parcial_indef_integral_str[integral_i] = multiplying_const_str[i];
+                                
                                 parcial_indef_integral_str[integral_i++] ='x';
                                 parcial_indef_integral_str[integral_i++] ='^';
                                 parcial_indef_integral_str[integral_i++] ='2';
                                 parcial_indef_integral_str[integral_i++] ='/';
+                                
                                 for(int i = 0; i < my_strlen(dividing_const_str); integral_i++, i++)parcial_indef_integral_str[integral_i] = dividing_const_str[i];
                                 parcial_indef_integral_str[integral_i] ='\0';
+
+                                //printf(" parcial_indef_integral_str: %s\n", parcial_indef_integral_str);
                             }
 
                         }
 
                         //if the function is "C"
 
-                        if(str_count_char(function,'x') == 0 && str_count_char(function,'^') == 0)
+                        if(str_count_char(function_list[i],'x') == 0 && str_count_char(function_list[i],'^') == 0)
                         {
                             exp_len = 0;
                             parcial_indef_integral_str = (char*)malloc(sizeof(char) * ( (CHARS_NEEDED -1) + 1 + const_lens + 1));// for the 'x', '/', sign ,and for the '\0'
@@ -284,14 +295,19 @@ char* indef_integral(char* function) // positive integer polynomials only (MAKIN
                             {
                                 if(function_list[i][0] != '-')parcial_indef_integral_str[integral_i++] = '+'; 
                                 else parcial_indef_integral_str[integral_i++] =function_list[i][0]; 
+                                
                                 for(int i = 0; i < my_strlen(multiplying_const_str); integral_i++, i++)parcial_indef_integral_str[integral_i] = multiplying_const_str[i];
+                                
                                 parcial_indef_integral_str[integral_i++] ='x';
                                 parcial_indef_integral_str[integral_i++] ='/';
+                                
                                 for(int i = 0; i < my_strlen(dividing_const_str); integral_i++, i++)parcial_indef_integral_str[integral_i] = dividing_const_str[i];
                                 parcial_indef_integral_str[integral_i] ='\0';
-                            }  
+                            }
+                            //printf(" parcial_indef_integral_str: %s\n", parcial_indef_integral_str);  
                         }
                     }
+
                     if(exp != NULL) free(exp); // freeing allocated str that won't return;
                     if(dividing_const_str != NULL)free(dividing_const_str);
                     if(multiplying_const_str != NULL)free(multiplying_const_str);
@@ -299,6 +315,8 @@ char* indef_integral(char* function) // positive integer polynomials only (MAKIN
                     function_list[i] = parcial_indef_integral_str;
 
                     integral_i = 0;
+
+                    //printf("\n\n");
                 }
             }
         }
@@ -307,13 +325,7 @@ char* indef_integral(char* function) // positive integer polynomials only (MAKIN
     int i = 0;
     for(; i < functions_count; i++)indef_integral_len+= functions_lens[i] + 1;
 
-
-    //for(int p = 0; p < functions_count; p++)
-    //{
-    //    printf("%s\n",function_list[p]);
-    //}
-
-    indef_integral_str = (char*)malloc(sizeof(char) * (indef_integral_len + 1));
+    indef_integral_str = (char*)malloc(sizeof(char) * (indef_integral_len + 1 + 1 + 1)); // +2 for '+' and 'C'
     
     int j = 0;
     i = 0;
@@ -323,15 +335,11 @@ char* indef_integral(char* function) // positive integer polynomials only (MAKIN
         for(; j < my_strlen(function_list[i])+k; j++)
         {
             indef_integral_str[j] = function_list[i][j-k];
-            printf("%c",function_list[i][j-k]);
         }
-        printf("\n");
-        printf("j : %d\n",j);
-        printf("indef_integral_str : %s\n",indef_integral_str);
-
-        printf("\n\n");
-        
     }
+    indef_integral_str[j++] = '+';
+    indef_integral_str[j++] = 'C';
+    indef_integral_str[j] = '\0';
 
     if(function_list != NULL)
     {
