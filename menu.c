@@ -417,47 +417,50 @@ int main ()
             }
             else if(tiposVigas == RETANGULAR)
             {
-                printf("Entre com os valores de altura e largura em metros:\n");
-
-                fflush(stdin); //Cleaning Keyboard Buffer
-                fgets(userInput, 30 + 1 ,stdin); //Gets string
-                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+                printf("Entre com o valore de altura em metros:\n");
 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
 
                 beam_height = my_atof(userInput);
+                
+                printf("Entre com o valor de largura em metros:\n");
+
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(userInput, 30 + 1 ,stdin); //Gets string
+                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+
                 beam_width = my_atof(userInput);
 
                 x_centroid = beam_width/2;
                 y_centroid = beam_height/2;
 
-                x_moment = beam_width*(beam_height*beam_height*beam_height)/3;
-                y_moment = (beam_width*beam_width*beam_width)*beam_height/3;
+                x_moment = beam_width*(beam_height*beam_height*beam_height)/12;
+                y_moment = (beam_width*beam_width*beam_width)*beam_height/12;
 
             }
             else if(tiposVigas == TRIANGULAR)
             {
-                printf("Entre com os valores de cada lado do triangulo em metros:\n");
+                printf("Entre com o valor do primeiro base do triangulo em metros:\n");
                 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
                 
-                beam_side_1 = my_atof(userInput);
+                beam_width = my_atof(userInput);
+
+                printf("Entre com o valor do segundo altura do triangulo em metros:\n");
 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
 
-                beam_side_2 = my_atof(userInput);
+                beam_height= my_atof(userInput);
 
-                fflush(stdin); //Cleaning Keyboard Buffer
-                fgets(userInput, 30 + 1 ,stdin); //Gets string
-                if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
+                y_centroid = beam_height/3;
 
-                beam_side_3 = my_atof(userInput);
+                x_moment = (beam_width*(beam_height*beam_height*beam_height))/36;
             
             }
             else if(tiposVigas == TIPO_U)
@@ -485,6 +488,40 @@ int main ()
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
 
                 beam_thickness = my_atof(userInput);
+
+                //VIGA U
+                //CENTROIDE
+                x_centroid_aux1 = beam_thickness/2;
+                y_centroid_aux1 = beam_height/2;
+                area1 = beam_height*beam_thickness;
+                x_centroid_aux2 = beam_width/2;
+                y_centroid_aux2 = beam_thickness/2;
+                area2 = beam_thickness*(beam_width -(2*beam_thickness));
+                x_centroid_aux3 = beam_width - (beam_thickness/2);
+                //y_centroid_aux3 = y_centroid_aux1
+                //area3 = area1
+
+                x_centroid = ((x_centroid_aux1*area1) + (x_centroid_aux2*area2) + (x_centroid_aux3*area1))/(2*area1 + area2);
+                y_centroid = ((2*y_centroid_aux1*area1) + ((y_centroid_aux2)*area2))/(2*area1 + area2);
+
+                //MOMENTO
+                y_distance1 = y_centroid_aux1 - y_centroid;
+                y_distance2 = y_centroid_aux2 - y_centroid;
+                //y_distance3 = y_centroid_aux1
+                x_distance1 = x_centroid_aux1 - x_centroid;
+                x_distance2 = x_centroid_aux2 - x_centroid;
+                x_distance3 = x_centroid_aux3 - x_centroid;
+
+                x_moment_aux1 = (beam_thickness*(beam_height*beam_height*beam_height)/12) + (area1*(y_distance1*y_distance1));
+                y_moment_aux1 = (beam_height*(beam_thickness*beam_thickness*beam_thickness)/12) + (area1*(x_distance1*x_distance1));
+                x_moment_aux2 = ((beam_width - (beam_thickness/2))*(beam_thickness*beam_thickness*beam_thickness)/12) + (area2*(y_distance2*y_distance2));
+                y_moment_aux2 = (beam_thickness*((beam_width - (beam_thickness/2))*(beam_width - (beam_thickness/2))*(beam_width - (beam_thickness/2)))/12) + (area2*(x_distance2*x_distance2));
+                //x_moment_aux3 = x_moment_aux1;
+                y_moment_aux3 = (beam_height*(beam_thickness*beam_thickness*beam_thickness)/12) + (area1*(x_distance3*x_distance3));
+
+                x_moment = (2*x_moment_aux1) + x_moment_aux2;
+                y_moment = y_moment_aux1 + y_moment_aux2 + y_moment_aux3;
+
             }
             else if(tiposVigas == TIPO_H)
             {
@@ -511,6 +548,40 @@ int main ()
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
 
                 beam_thickness = my_atof(userInput);
+
+                //VIGA H
+                //CENTROIDE
+                x_centroid_aux1 = beam_thickness/2;
+                y_centroid_aux1 = beam_height/2;
+                area1 = beam_height*beam_thickness;
+                x_centroid_aux2 = beam_width/2;
+                y_centroid_aux2 = beam_height/2;
+                area2 = beam_thickness*(beam_width -(2*beam_thickness));
+                x_centroid_aux3 = beam_width - (beam_thickness/2);
+                //y_centroid_aux3 = y_centroid_aux1
+                //area3 = area1
+
+                x_centroid = ((x_centroid_aux1*area1) + (x_centroid_aux2*area2) + (x_centroid_aux3*area1))/(2*area1 + area2);
+                y_centroid = ((2*y_centroid_aux1*area1) + ((y_centroid_aux2)*area2))/(2*area1 + area2);
+
+                //MOMENTO
+                y_distance1 = y_centroid_aux1 - y_centroid;
+                y_distance2 = y_centroid_aux2 - y_centroid;
+                //y_distance3 = y_centroid_aux1
+                x_distance1 = x_centroid_aux1 - x_centroid;
+                x_distance2 = x_centroid_aux2 - x_centroid;
+                x_distance3 = x_centroid_aux3 - x_centroid;
+
+                x_moment_aux1 = (beam_thickness*(beam_height*beam_height*beam_height)/12) + (area1*(y_distance1*y_distance1));
+                y_moment_aux1 = (beam_height*(beam_thickness*beam_thickness*beam_thickness)/12) + (area1*(x_distance1*x_distance1));
+                x_moment_aux2 = ((beam_width - (beam_thickness/2))*(beam_thickness*beam_thickness*beam_thickness)/12) + (area2*(y_distance2*y_distance2));
+                y_moment_aux2 = (beam_thickness*((beam_width - (beam_thickness/2))*(beam_width - (beam_thickness/2))*(beam_width - (beam_thickness/2)))/12) + (area2*(x_distance2*x_distance2));
+                //x_moment_aux3 = x_moment_aux1;
+                y_moment_aux3 = (beam_height*(beam_thickness*beam_thickness*beam_thickness)/12) + (area1*(x_distance3*x_distance3));
+
+                x_moment = (2*x_moment_aux1) + x_moment_aux2;
+                y_moment = y_moment_aux1 + y_moment_aux2 + y_moment_aux3;
+
             }
             else if(tiposVigas == TIPO_I)
             {
@@ -530,13 +601,44 @@ int main ()
 
                 beam_width = my_atof(userInput);
 
-                printf("Entres com o valor da espessura em metros:\n");
+                printf("Entre com o valor da espessura em metros:\n");
 
                 fflush(stdin); //Cleaning Keyboard Buffer
                 fgets(userInput, 30 + 1 ,stdin); //Gets string
                 if(userInput[my_strlen(userInput)-1] == '\n')userInput[my_strlen(userInput)-1] = '\0';// removes '\n' char that gets to the string (sometimes)
 
                 beam_thickness = my_atof(userInput);
+                //VIGA I
+                //CENTROIDE
+                x_centroid_aux1 = beam_width/2;
+                y_centroid_aux1 = beam_height - (beam_thickness/2);
+                area1 = beam_width*beam_thickness;
+                x_centroid_aux2 = beam_width/2;
+                y_centroid_aux2 = ((beam_height - (beam_thickness*2))/2) + beam_thickness;
+                area2 = beam_thickness*(beam_height -(2*beam_thickness));
+                //x_centroid_aux3 = x_centroid_aux1
+                y_centroid_aux3 = beam_thickness/2;
+                //area3 = area1
+                
+                x_centroid = ((2*x_centroid_aux1*area1) + (x_centroid_aux2*area2))/(2*area1 + area2);
+                y_centroid = ((y_centroid_aux1*area1) + ((y_centroid_aux2)*area2) + (y_centroid_aux3*area1))/(2*area1 + area2);
+
+                //MOMENTO
+                y_distance1 = y_centroid_aux1 - y_centroid;
+                y_distance2 = y_centroid_aux2 - y_centroid;
+                y_distance3 = y_centroid_aux3 - y_centroid;
+                x_distance1 = x_centroid_aux1 - x_centroid;
+                x_distance2 = x_centroid_aux2 - x_centroid;
+                // x_distance3 = x_distance1
+                x_moment_aux1 = (beam_width*(beam_thickness*beam_thickness*beam_thickness)/12) + (area1*(y_distance1*y_distance1));
+                y_moment_aux1 = (beam_thickness*(beam_width*beam_width*beam_width)/12) + (area1*(x_distance1*x_distance1));
+                x_moment_aux2 = (beam_thickness*(beam_width*beam_width*beam_width)/12) + (area2*(y_distance2*y_distance2));
+                y_moment_aux2 = (beam_width*(beam_thickness*beam_thickness*beam_thickness)/12) + (area2*(x_distance2*x_distance2));
+                x_moment_aux3 = (beam_width*(beam_thickness*beam_thickness*beam_thickness)/12) + (area1*(y_distance3*y_distance3));
+                //y_moment_aux3 = y_moment_aux1
+
+                x_moment = x_moment_aux1 + x_moment_aux2 + x_moment_aux3;
+                y_moment = 2*y_moment_aux1 + y_moment_aux2;
             }
             else if(tiposVigas == TIPO_T)
             {
@@ -588,6 +690,14 @@ int main ()
                 y_moment = y_moment_aux1 + y_moment_aux2;
             }
             
+            /*for()
+            {
+                printf("O primeiro momento de area em x e:%.2f\n", x_centroid);
+                printf("O primento momento de area em y e:%.2f\n", y_centroid);
+                printf("O segundo momento de area em x e:%.2f\n", x_moment);
+                printf("O segundo momento de area em y e:%.2f\n", y_moment);
+            }*/
+
             beam_chosen++;
         }
         else
@@ -1069,8 +1179,8 @@ int main ()
             {
                 double function_distance_parser = (vector_sup_lims[k] - vector_inf_lims[k])/CDW_N_OF_POINTS;
                 double function_force_integral_parser = 0;
-                char* force_function_symbolic_integral = indef_integral_C_value(indef_integral(vector_of_functions[k]),vector_moments_func[k]);
-                printf("force_function_symbolic_integral : %s",force_function_symbolic_integral);
+                char* force_function_symbolic_integral = indef_integral_C_value(indef_integral(vector_of_functions[k]),Apoio_simples_L.force_y*2);
+                //printf("force_function_symbolic_integral : %s\n",force_function_symbolic_integral);
 
                 for(; i <= CDW_N_OF_POINTS ; i++)
                 {
@@ -1078,12 +1188,13 @@ int main ()
                     
                     function_force_integral_parser = def_integral_value(force_function_symbolic_integral ,vector_inf_lims[k],vector_inf_lims[k] + function_distance_parser);
                     vector_of_moment_points[i].y = -function_force_integral_parser;
+                    //printf("vector_of_moment_points[i].y  : %f\n",vector_of_moment_points[i].y );
 
 
                     function_distance_parser += (vector_sup_lims[k] - vector_inf_lims[k])/CDW_N_OF_POINTS;
                 }
                 free(force_function_symbolic_integral);
-
+                //printf("\n\n");
             }
             for(int k = 0; k < pure_moment_len; k++)
             {
@@ -1114,19 +1225,16 @@ int main ()
                 {
                     x_continuous_moment[i] = vector_of_moment_points[i].x;
 
-                    if(i > 1) Apoio_simples_add_moment +=  -vector_of_moment_points[i-1].y;
+                    if(i > 1) Apoio_simples_add_moment +=  vector_of_moment_points[i-1].y;
                     Apoio_simples_resultant_moment  = Apoio_simples_resultant_force * x_continuous_moment[i] + Apoio_simples_add_moment;
             
                     y_continuous_moment[i] = Apoio_simples_resultant_moment ;
 
-                    //printf("Forca Resultante na Secao : %f\n",Apoio_simples_resultant_force );
-                    //printf("Momento adicionado na Secao : %f\n",Apoio_simples_add_moment );
-                    //printf(" x : %f |  y: %f \n", x_discrete_moment[i], y_discrete_moment[i]);
-                    //printf("Momento Resultante na Secao : %f\n\n",Apoio_simples_resultant_moment);
-
-                    Apoio_simples_resultant_force += (vector_of_moment_points[i].y/vector_of_moment_points[i].x);
-
-                    
+                    printf("Apoio_simples_resultant_force * x_continuous_moment[i]: %f\n",Apoio_simples_resultant_force * x_continuous_moment[i] );
+                    printf("Apoio_simples_add_moment : %f\n",Apoio_simples_add_moment );
+                    printf(" x : %f |  y: %f \n", x_continuous_moment[i], y_continuous_moment[i]);
+                    //printf("Momento Resultante na Secao : %f\n\n", y_continuous_moment[i]);
+                    printf("\n\n")
                 }
                 else
                 {
