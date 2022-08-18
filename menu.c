@@ -27,7 +27,7 @@ int cmp_point(const void * a, const void * b)
 void printTela_1()
 {
     // Tela 1:
-    system("cls");
+    system("clear");
     printf(" =====================================================================\n");
     printf(" ========= Calculadora de forcas internas em vigas apoiadas  =========\n");
     printf(" =====================================================================\n");
@@ -38,7 +38,7 @@ void printTela_1()
 void printTela_2()
 {
     // Tela 2:
-    system("cls");
+    system("clear");
     printf(" =====================================================================\n");
     printf(" ========= Calculadora de forcas internas em vigas apoiadas  =========\n");
     printf(" =====================================================================\n");
@@ -59,7 +59,7 @@ void printEng_Eng_validation()
 
 void print_Apoios_validation(char** tiposApoios, int apoio1, int apoio2, double pos_apoio1, double pos_apoio2)
 {
-    system("cls");
+    system("clear");
     printf(" =====================================================================\n");
     printf(" ============================ Seus Apoios ============================\n");
     printf("   Tipo do primeiro apoio: %s\n", tiposApoios[apoio1-1]);
@@ -95,7 +95,7 @@ void print_tipos_de_perfis_de_vigas()
 void printTela_3()
 {
     // Tela 3:
-    system("cls");
+    system("clear");
     printf(" =====================================================================\n");
     printf(" ========= Calculadora de forcas internas em vigas apoiadas  =========\n");
     printf(" =====================================================================\n");
@@ -719,7 +719,7 @@ int main ()
 
         if(userOp == FORCA)
         {
-            system("cls");
+            system("clear");
             printf("\n\n\n");
             printf(" OBS: Escreva numeros decimais com '.' (ex : 0.3 , 0.2465)\n\n");
             
@@ -764,7 +764,7 @@ int main ()
                 }
 
                 free(user_confirmation);
-                system("cls");
+                system("clear");
             }
 
             for(int i = 0; i < all_discrete_variables_vectors_len; i++)
@@ -783,7 +783,7 @@ int main ()
         }
         if(userOp == MOMENTO)
         {
-            system("cls");
+            system("clear");
             printf("\n\n\n");
             printf(" OBS: Escreva numeros decimais com '.' (ex : 0.3 , 0.2465)\n\n");
             
@@ -825,7 +825,7 @@ int main ()
                 }
 
                 free(user_confirmation);
-                system("cls");
+                system("clear");
             }
 
             for(int i = 0; i < pure_moment_len; i++) // Showing all moments and their distances
@@ -841,7 +841,7 @@ int main ()
         }
         if(userOp == DISTRIBUICAO_DE_CARGA)
         {
-            system("cls");
+            system("clear");
             printf("\n\n\n");
             printf(" OBS: Escreva numeros decimais com '.' (ex : 0.3 , 0.2465)\n\n");
 
@@ -916,7 +916,7 @@ int main ()
                 }
                 free(user_confirmation);
 
-                system("cls");
+                system("clear");
 
             }
             for(int i = 0; i < all_continuous_variables_vectors_len; i++)
@@ -1179,21 +1179,22 @@ int main ()
             {
                 double function_distance_parser = (vector_sup_lims[k] - vector_inf_lims[k])/CDW_N_OF_POINTS;
                 double function_force_integral_parser = 0;
-                char* force_function_symbolic_integral = indef_integral_C_value(indef_integral(vector_of_functions[k]),Apoio_simples_L.force_y*2);
+                char* force_function_symbolic_integral = indef_integral_C_value(indef_integral(vector_of_functions[k]),Apoio_simples_L.force_y);
+                char* moment_function_symbolic_integral = indef_integral(force_function_symbolic_integral);
                 //printf("force_function_symbolic_integral : %s\n",force_function_symbolic_integral);
+                //printf("moment_function_symbolic_integral : %s\n",moment_function_symbolic_integral);
 
                 for(; i <= CDW_N_OF_POINTS ; i++)
                 {
                     vector_of_moment_points[i].x = vector_force_density_pos[k] + function_distance_parser;
                     
                     function_force_integral_parser = def_integral_value(force_function_symbolic_integral ,vector_inf_lims[k],vector_inf_lims[k] + function_distance_parser);
-                    vector_of_moment_points[i].y = -function_force_integral_parser;
-                    //printf("vector_of_moment_points[i].y  : %f\n",vector_of_moment_points[i].y );
-
+                    vector_of_moment_points[i].y = function_force_integral_parser;
 
                     function_distance_parser += (vector_sup_lims[k] - vector_inf_lims[k])/CDW_N_OF_POINTS;
                 }
-                free(force_function_symbolic_integral);
+                //free(force_function_symbolic_integral);
+                //free(moment_function_symbolic_integral);
                 //printf("\n\n");
             }
             for(int k = 0; k < pure_moment_len; k++)
@@ -1213,9 +1214,6 @@ int main ()
             // That's why it´s delayed 
 
             // As the program goes to the bar sections, we add the forces of the sections
-            double Apoio_simples_resultant_force = Apoio_simples_L.force_y;
-            double Apoio_simples_resultant_moment = 0;
-            double Apoio_simples_add_moment = 0;
 
             // Storing Sorted Moment Values and Their distances
             i = 0;
@@ -1225,16 +1223,10 @@ int main ()
                 {
                     x_continuous_moment[i] = vector_of_moment_points[i].x;
 
-                    if(i > 1) Apoio_simples_add_moment +=  vector_of_moment_points[i-1].y;
-                    Apoio_simples_resultant_moment  = Apoio_simples_resultant_force * x_continuous_moment[i] + Apoio_simples_add_moment;
-            
-                    y_continuous_moment[i] = Apoio_simples_resultant_moment ;
 
-                    printf("Apoio_simples_resultant_force * x_continuous_moment[i]: %f\n",Apoio_simples_resultant_force * x_continuous_moment[i] );
-                    printf("Apoio_simples_add_moment : %f\n",Apoio_simples_add_moment );
-                    printf(" x : %f |  y: %f \n", x_continuous_moment[i], y_continuous_moment[i]);
+                    y_continuous_moment[i] =  vector_of_moment_points[i].y;
+
                     //printf("Momento Resultante na Secao : %f\n\n", y_continuous_moment[i]);
-                    printf("\n\n")
                 }
                 else
                 {
