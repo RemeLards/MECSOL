@@ -2,7 +2,7 @@
 #include "pbPlots.h"
 #include "supportLib.h"
 
-#define CDW_N_OF_POINTS 10
+#define CDW_N_OF_POINTS 20
 
 typedef struct 
 {
@@ -1088,18 +1088,21 @@ int main ()
             for(int k = 0; k < all_continuous_variables_vectors_len; k++)
             {
                 double function_distance_parser = (vector_sup_lims[k] - vector_inf_lims[k])/CDW_N_OF_POINTS;
-                double function_centroid_parser = 0;
-                double function_force_parser = 0;
+                double function_force_integral_parser = 0;
+                char* force_function_symbolic_integral = indef_integral_C_value(indef_integral(vector_of_functions[k]),Engaste.force_y);
+
                 for(; i <= CDW_N_OF_POINTS ; i++)
                 {
                     vector_of_moment_points[i].x = vector_force_density_pos[k] + function_distance_parser;
                     
-                    function_force_parser = def_integral_value(vector_of_functions[k],vector_inf_lims[k],vector_inf_lims[k] + function_distance_parser);
-                    function_centroid_parser = my_math_function_centroid(vector_of_functions[k],vector_inf_lims[k],vector_inf_lims[k] + function_distance_parser);
-                    vector_of_moment_points[i].y = function_centroid_parser * function_force_parser;
+                    function_force_integral_parser = def_integral_value(force_function_symbolic_integral ,vector_inf_lims[k],vector_inf_lims[k] + function_distance_parser);
+                    vector_of_moment_points[i].y = -function_force_integral_parser;
+
 
                     function_distance_parser += (vector_sup_lims[k] - vector_inf_lims[k])/CDW_N_OF_POINTS;
                 }
+                free(force_function_symbolic_integral);
+
             }
 
             // "qsort()" sorts all the Moment Values, based on their distances

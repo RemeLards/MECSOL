@@ -50,7 +50,6 @@ int exponent_value(char* function)
         if(str_count_char(function,'x') == 1 && str_count_char(function,'^') == 0)exponent_value = 1; // it means the function is "C * x" , so the its exponent is 1
         if(str_count_char(function,'x') == 0 && str_count_char(function,'^') == 0)exponent_value = 0; // it means the function is "C"
     }
-    
     return exponent_value;
 }
 
@@ -383,7 +382,7 @@ double def_integral_value(char* function, double inf_lim, double sup_lim) // pos
 
                     // Calculating Integral
 
-                    exponent = exponent_value(function) + 1; // Getting exponent value of the Indefinite Integral
+                    exponent = exponent_value(function_list[i]) + 1; // Getting exponent value of the Indefinite Integral
 
                     if(exponent > 0) // calculating definite integral (only works with positive integer)
                     {
@@ -392,8 +391,9 @@ double def_integral_value(char* function, double inf_lim, double sup_lim) // pos
                             inf_value*=inf_lim;
                             sup_value*=sup_lim;
                         }
-                        def_integral += function_sign * constant*((sup_value-inf_value)/exponent); 
+                        def_integral += function_sign * constant*((sup_value-inf_value)/exponent);
                     }
+                    printf("\n\n");
 
                     inf_value = 1;
                     sup_value = 1;
