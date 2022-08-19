@@ -731,6 +731,10 @@ int main ()
                 printf("O primeiro momento de area em x e:%.2f\n", x_centroid);
                 printf("O primento momento de area em y e:%.2f\n", y_centroid);
                 printf("O segundo momento de area em x e:%.2f\n", x_moment);
+                printf("   Pressione 'ENTER' para continuar.\n");
+
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(GetChar, 1 + 1 ,stdin); //Gets string
                 
             }
             else 
@@ -739,6 +743,10 @@ int main ()
                 printf("O primento momento de area em y e:%.2f\n", y_centroid);
                 printf("O segundo momento de area em x e:%.2f\n", x_moment);
                 printf("O segundo momento de area em y e:%.2f\n", y_moment);
+                printf("   Pressione 'ENTER' para continuar.\n");
+
+                fflush(stdin); //Cleaning Keyboard Buffer
+                fgets(GetChar, 1 + 1 ,stdin); //Gets string
             }
             beam_chosen++;
         }
